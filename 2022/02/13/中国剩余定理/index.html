@@ -28,7 +28,7 @@
 <meta property="og:description" content="Native中国剩余定理用于求解线性同余方程组。 描述为： 设自然数$m_1,m_2,m_3,…,m_r$两两互质，并记$M&#x3D;\prod^r_{i&#x3D;1}m_i$，则">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-13T06:45:56.000Z">
-<meta property="article:modified_time" content="2022-03-16T15:03:58.209Z">
+<meta property="article:modified_time" content="2022-03-16T15:12:29.243Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -186,7 +186,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-16 23:03:58" itemprop="dateModified" datetime="2022-03-16T23:03:58+08:00">2022-03-16</time>
+                <time title="Modified: 2022-03-16 23:12:29" itemprop="dateModified" datetime="2022-03-16T23:12:29+08:00">2022-03-16</time>
               </span>
 
           
@@ -270,10 +270,10 @@
 <h5 id="求解-1"><a href="#求解-1" class="headerlink" title="求解"></a>求解</h5><p>对于$m_i$之间不互质的同余方程组的解法已经呼之欲出了：考虑从上到下合并每个同余式，用裴蜀定理检验最终求解。</p>
 <p>但是证明和实现之间总是有千山万水的距离，让我们再把理论和算法拉近一点，如何合并？</p>
 <p>我们根据之前的通解假设已经构造出前$k-1$个方程的通解</p>
-<script type="math/tex; mode=display">x=x^*+t*lcm(m_1,m_2...m_{k-1}),t\in\mathbb{Z}</script><p>那么对于加入了第$k$个方程的通解，就是要求解一个新的$t$，;使得：</p>
+<script type="math/tex; mode=display">x=x^*+t*lcm(m_1,m_2...m_{k-1}),t\in\mathbb{Z}</script><p>那么对于加入了第$k$个方程的通解，就是要求解一个新的$t$，使得：</p>
 <script type="math/tex; mode=display">x^* + t*lcm(m_1,m_2...m_k)\equiv a_k(mod \ m_k)</script><p>我们可以考虑移项得到一个不定方程：</p>
 <script type="math/tex; mode=display">t*lcm(m_1,m_2...m_k)\equiv a_k-x^* (mod \ m_k)</script><p>每次使用裴蜀定理检测再使用$exgcd$求解新的同余方程是否有解即可。</p>
-<p>小tip:$EXCRT$可以解决中国剩余定理的问题，所以推荐学完$EXCRT$就可以忘掉中国剩余定理了。</p>
+<p>小$tip$:$EXCRT$可以解决中国剩余定理的问题，所以推荐学完$EXCRT$就可以忘掉中国剩余定理了。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//EXCRT luogu P4777</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 100050</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ll long long</span></span><br><span class="line">ll W[MAXN],B[MAXN],k;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> ll <span class="title">ksc</span><span class="params">(ll a,ll b, ll mod)</span></span>&#123;</span><br><span class="line">	ll ans=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(b)&#123;</span><br><span class="line">		<span class="keyword">if</span>(b&amp;<span class="number">1</span>)ans=(ans+a)%mod;</span><br><span class="line">		a=(a+a)%mod;</span><br><span class="line">		b&gt;&gt;=<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ll <span class="title">exgcd</span><span class="params">(ll a,ll b,ll &amp;x,ll &amp;y)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!b)&#123;x=<span class="number">1</span>,y=<span class="number">0</span>;<span class="keyword">return</span> a;&#125;</span><br><span class="line">	ll gcd=<span class="built_in">exgcd</span>(b,a%b,x,y);</span><br><span class="line">	<span class="keyword">int</span> temp=x;x=y;y=temp-(a/b)*y;</span><br><span class="line">	<span class="keyword">return</span> gcd;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	cin&gt;&gt;k;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=k;++i)cin&gt;&gt;W[i]&gt;&gt;B[i];</span><br><span class="line">	ll ans=B[<span class="number">1</span>],M=W[<span class="number">1</span>],t,y;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=k;++i)&#123;</span><br><span class="line">		ll a=M,b=W[i],c=(B[i]-ans%b+b)%b;</span><br><span class="line">		ll gcd=<span class="built_in">exgcd</span>(a,b,t,y);</span><br><span class="line">		<span class="comment">//构造出 M*t+mi*y≡mi-Ans(mod mi)的式子</span></span><br><span class="line">		ans+=<span class="built_in">ksc</span>(t,c/gcd,b)*M;<span class="comment">//求出线性同余方程的一组解</span></span><br><span class="line">		M*=b/gcd;<span class="comment">//更新M为新的lcm</span></span><br><span class="line">		ans=(ans%M+M)%M;</span><br><span class="line">	&#125;</span><br><span class="line">	cout&lt;&lt;ans&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h4><ul>
 <li>感谢洛谷的《深入浅出进阶篇》中对$CRT$部分的证明对本篇文章的启发。</li>
