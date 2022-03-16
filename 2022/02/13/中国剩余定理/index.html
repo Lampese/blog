@@ -28,7 +28,7 @@
 <meta property="og:description" content="Native中国剩余定理用于求解线性同余方程组。 描述为： 设自然数$m_1,m_2,m_3,…,m_r$两两互质，并记$M&#x3D;\prod^r_{i&#x3D;1}m_i$，则">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-13T06:45:56.000Z">
-<meta property="article:modified_time" content="2022-03-16T15:00:53.667Z">
+<meta property="article:modified_time" content="2022-03-16T15:03:58.209Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -186,7 +186,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-16 23:00:53" itemprop="dateModified" datetime="2022-03-16T23:00:53+08:00">2022-03-16</time>
+                <time title="Modified: 2022-03-16 23:03:58" itemprop="dateModified" datetime="2022-03-16T23:03:58+08:00">2022-03-16</time>
               </span>
 
           
@@ -265,7 +265,7 @@
 <p>针对方程</p>
 <script type="math/tex; mode=display">\left\{\begin{array}{l} x \equiv a_1(mod \ m_1) \\ x\equiv a_2(mod \ m_2)\end{array} \right.\left\{\begin{array}{l} y \equiv a_1(mod \ m_1) \\ y\equiv a_2(mod \ m_2)\end{array} \right.(x,y\in[0,lcm(m_1,m_2)])</script><p>我们可以假设$x&gt;=y$，然后就可以发现</p>
 <script type="math/tex; mode=display">\left\{\begin{array}{l} x-y \equiv a_1(mod \ m_1) \\ x-y\equiv a_2(mod \ m_2)\end{array} \right.</script><p>也就可以得出$lcm(m_1,m_2)|(x-y)$。</p>
-<p>这时候思考一下，$x,y&lt;lcm(m_1,m_2)$的数，所以$x-y&lt;lcm(m_1,m_2)$，但是如果要令$lcm(m_1,m_2)|(x-y)$，那么就必须要让$x=y$。</p>
+<p>这时候思考一下，$x,y&lt;=lcm(m_1,m_2)$，所以$x-y&lt;lcm(m_1,m_2)$，但是如果要令$lcm(m_1,m_2)|(x-y)$，那么就必须要让$x=y$。</p>
 <p>刚才的证明同时证明了该通解的周期和在周期内的唯一性，所以通解成立。</p>
 <h5 id="求解-1"><a href="#求解-1" class="headerlink" title="求解"></a>求解</h5><p>对于$m_i$之间不互质的同余方程组的解法已经呼之欲出了：考虑从上到下合并每个同余式，用裴蜀定理检验最终求解。</p>
 <p>但是证明和实现之间总是有千山万水的距离，让我们再把理论和算法拉近一点，如何合并？</p>
