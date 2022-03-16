@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lampese.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Native中国剩余定理用于求解线性同余方程组。 描述为： 设自然数$m_1,m_2,m_3,…,m_r$两两互质，并记$M&#x3D;\prod^r_{i&#x3D;1}m_i$，则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="中国剩余定理">
+<meta property="og:url" content="https://lampese.com/2022/02/13/%E4%B8%AD%E5%9B%BD%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86/index.html">
+<meta property="og:site_name" content="东灯的寒舍">
+<meta property="og:description" content="Native中国剩余定理用于求解线性同余方程组。 描述为： 设自然数$m_1,m_2,m_3,…,m_r$两两互质，并记$M&#x3D;\prod^r_{i&#x3D;1}m_i$，则">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-13T06:45:56.000Z">
+<meta property="article:modified_time" content="2022-03-16T13:11:37.635Z">
+<meta property="article:author" content="东灯">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lampese.com/2022/02/13/%E4%B8%AD%E5%9B%BD%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>中国剩余定理 | 东灯的寒舍</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">东灯的寒舍</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">你特别好，我喜欢你 </p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-coding">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Coding</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-friends">
+
+    <a href="/friends/" rel="section"><i class="fa fa-fw fa-heartbeat"></i>Friends</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lampese.com/2022/02/13/%E4%B8%AD%E5%9B%BD%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.luogu.com.cn/upload/image_hosting/dhpjvh0c.png">
+      <meta itemprop="name" content="东灯">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="东灯的寒舍">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          中国剩余定理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-13 14:45:56" itemprop="dateCreated datePublished" datetime="2022-02-13T14:45:56+08:00">2022-02-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-16 21:11:37" itemprop="dateModified" datetime="2022-03-16T21:11:37+08:00">2022-03-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="Native"><a href="#Native" class="headerlink" title="Native"></a>Native</h4><p>中国剩余定理用于求解线性同余方程组。</p>
+<p>描述为：</p>
+<p>设自然数$m_1,m_2,m_3,…,m_r$两两互质，并记$M=\prod^r_{i=1}m_i$，则</p>
+<span id="more"></span>
+<script type="math/tex; mode=display">\left\{\begin{array}{l} x \equiv a_1(mod \ m_1) \\ x \equiv a_2 (mod \ m_2) \\ ... \\ ... \\ x \equiv a_n(mod \ m_n) \end{array} \right.</script><p>在模$M$同余的意义下有唯一解。</p>
+<h5 id="求解"><a href="#求解" class="headerlink" title="求解"></a>求解</h5><p>对于解</p>
+<script type="math/tex; mode=display">\begin{vmatrix} a \\ b \\ c \\ d \end{vmatrix}=a\begin{vmatrix} 1 \\ 0 \\ 0 \\ 0 \end{vmatrix}+b\begin{vmatrix} 0 \\ 1 \\ 0 \\ 0 \end{vmatrix}+c\begin{vmatrix} 0 \\ 0 \\ 1 \\ 0 \end{vmatrix}+\begin{vmatrix} 0 \\ 0 \\ 0 \\ 1 \end{vmatrix}</script><p>上面的看的太不明白了，让我们看着定理内容倒推证明一下正确性：</p>
+<p>我们设$M_i=\frac{M}{m_1}$，再假设$t_i=M^{-1}$那么$x$的通解为$x=a_1t_1M_1+a_2t_2M_2+…+a_nt_nM_n+KM,K\in\mathbb{Z}$</p>
+<p>为什么呢，我们下面给出证明：</p>
+<ul>
+<li><p>对于刚才那组加和中$i$不是自己的情况(比如设$i\not=j$)，那么$m_i|M_j$，因此$a_jt_jM_j\equiv0(mod \ m_i)$，所以它的贡献是没有的。</p>
+</li>
+<li><p>那么如果$i=j$，$t_iM_i\equiv1(mod \ m_i)$，对总解的贡献仅有$a_i$，因此对于每个方程可以满足$x\equiv a_i(mod \ m_i)$。</p>
+</li>
+<li><p>最后通解加上了$KM$，显然可以由同理第一条证明。</p>
+</li>
+</ul>
+<p>由此我们通过先看通解构造再反证明的方式证明了中国剩余定理的正确性。</p>
+<h5 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h5><p>逆元采用$exgcd$求得，但是因为$m_i$之间两两互质，使用费马小也是可以的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 10050</span></span><br><span class="line"><span class="keyword">int</span> W[MAXN],B[MAXN],k;</span><br><span class="line"><span class="comment">//有k组形如X≡B[i](mod W[i])的式子</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">exgcd</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b,<span class="keyword">int</span> &amp;x,<span class="keyword">int</span> &amp;y)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!b)&#123;x=<span class="number">1</span>,y=<span class="number">0</span>;<span class="keyword">return</span>;&#125;</span><br><span class="line">	<span class="built_in">exgcd</span>(b,a%b,x,y);</span><br><span class="line">	<span class="keyword">int</span> temp=x;x=y;y=temp-(a/b)*y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">China_Solve</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> N=<span class="number">1</span>,M,x,y,Ans=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=k;++i)N*=W[i];</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=k;++i)&#123;</span><br><span class="line">		M=N/W[i];</span><br><span class="line">		<span class="built_in">exgcd</span>(W[i],M,x,y);</span><br><span class="line">		Ans=(Ans+y*M*B[i])%N;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> Ans&gt;<span class="number">0</span>?Ans:Ans+N;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="拓展中国剩余定理-EXCRT"><a href="#拓展中国剩余定理-EXCRT" class="headerlink" title="拓展中国剩余定理$(EXCRT)$"></a>拓展中国剩余定理$(EXCRT)$</h4><p>可以说和中国剩余定理基本上毫无关系，但是可以解决比中国剩余定理更广的问题。</p>
+<p>当前问题变为：$m_i$之间如果两两并不互质，如何求解刚才的线性同余方程组？</p>
+<p>先分析一下现在的问题处境：</p>
+<ul>
+<li>$m_i$之间不互质，中国剩余定理不成立，所以其实这个方程不一定有解。</li>
+<li>$m_i$之间不互质，最戳中中国剩余定理的一个点其实是中国剩余定理所作为基础的$M$不存在（这个看下面的同余方程合并就知道为什么了）。</li>
+<li>$m_i$之间不互质，中国剩余定理所基于的逆元也不存在（或者说不正确），因此上面对中国剩余定理的证明就错误了。</li>
+</ul>
+<p>我们退而求其次，考虑如何合并两个同余方程，下面给出两个例子：</p>
+<h5 id="Exempli-Gratia-1-m-i-之间互质时"><a href="#Exempli-Gratia-1-m-i-之间互质时" class="headerlink" title="Exempli Gratia 1 $m_i$之间互质时"></a>Exempli Gratia 1 $m_i$之间互质时</h5><p>考虑合并以下两个同余式：</p>
+<script type="math/tex; mode=display">\left\{\begin{array}{l} x \equiv 4(mod \ 6) ① \\ x\equiv3(mod \ 5) ②\end{array} \right.</script><p>我们可以这样做：</p>
+<p>假设有一组针对①成立的通解$x=6k+4,k\in\mathbb{Z}$，如果$x$要满足②，那么我们可以得到：</p>
+<script type="math/tex; mode=display">6k+4\equiv3(mod\ 5)</script><p>然后我们砍掉$5k$（因为是$5$的倍数），再利用同加性得到：</p>
+<script type="math/tex; mode=display">k\equiv-1(mod \ 5) \ \ \rightarrow \ \ k=5s-1,s\in\mathbb{Z}</script><p>再将$k$带回①式中得到：</p>
+<script type="math/tex; mode=display">x=6k+4=6(5s-1)+4=30s-2</script><p>再转换成同余式又可以得到：</p>
+<script type="math/tex; mode=display">x\equiv-2\equiv28(mod \ 30)</script><p>以上合并的结果就是$x\equiv28(mod \ 30)$</p>
+<h5 id="Exempli-Gratia-2-m-i-之间不互质时"><a href="#Exempli-Gratia-2-m-i-之间不互质时" class="headerlink" title="Exempli Gratia 2 $m_i$之间不互质时"></a>Exempli Gratia 2 $m_i$之间不互质时</h5><p>考虑合并以下两个同余式：</p>
+<script type="math/tex; mode=display">\left\{\begin{array}{l} x \equiv 2(mod \ 4) ① \\ x\equiv4(mod \ 6) ②\end{array} \right.</script><p>再使用$EG1$中的办法可以得到：</p>
+<script type="math/tex; mode=display">4k+2\equiv4(mod \ 6)</script><p>用同加性质可以得到：</p>
+<script type="math/tex; mode=display">4k-2\equiv0(mod \ 6) \ \ \rightarrow \ \ 6|4k-2 \ \ \rightarrow \ \ 2k-1\equiv0(mod  \ 3)</script><p>最后可以转移出$k=3s+2,s\in\mathbb{Z}$，进一步得出：</p>
+<script type="math/tex; mode=display">x=4(3s+2)+2=12s+10(mod \ 2)</script><p>最终合并的结果即为：$x\equiv10(mod \ 12)$</p>
+<h5 id="Exempli-Gratia-3-无解"><a href="#Exempli-Gratia-3-无解" class="headerlink" title="Exempli Gratia 3 无解"></a>Exempli Gratia 3 无解</h5><p>考虑合并以下两个同余式：</p>
+<script type="math/tex; mode=display">\left\{\begin{array}{l} x \equiv 2(mod \ 4) ① \\ x\equiv3(mod \ 6) ②\end{array} \right.</script><p>合并不起来，无解。</p>
+<h5 id="同余方程合并的性质"><a href="#同余方程合并的性质" class="headerlink" title="同余方程合并的性质"></a>同余方程合并的性质</h5><ul>
+<li>新方程与原方程具有同样的形式。</li>
+<li>新方程的模数是原来方程的$lcm$。</li>
+<li>可能会无解。<br>关于为什么新的模数是$lcm$，刚才的合并已经给出了隐涩的证明。<br>有一个更好的理解思路：想象两个模数为两个周期，这两个周期重叠时的最小正整数为他们的$lcm$，所以新的模数是$lcm$是正确的。</li>
+</ul>
+<h5 id="二项同余方程的通解"><a href="#二项同余方程的通解" class="headerlink" title="二项同余方程的通解"></a>二项同余方程的通解</h5><p>通过刚才的铺垫，我们可以对于任意的一组模线性同余方程：</p>
+<script type="math/tex; mode=display">\left\{\begin{array}{l} x \equiv a_1(mod \ m_1) \\ x\equiv a_2(mod \ m_2)\end{array} \right.</script><p>我们可以得出一组等价的：$x=k_1m_1+a_1=k_2m_2+a_2,k\in\mathbb{Z}$</p>
+<p>再移项得到：$k_1m_1-k_2m_2=a_2-a_1$</p>
+<p>仔细一看，发现未知量好像只有$k_1$和$k_2$，那么这不就是个不定方程吗！</p>
+<p>于是可以使用裴蜀定理判定是否有解（$gcd(m_1,m_2)|(a_2-a_1)$）</p>
+<p>那么我们按照$exgcd$的套路构造出一组$k_1,k_2$，设$d=gcd(m_1,m_2)$，$p_1=\frac{m_1}{d}$，$p_2=\frac{m2}{d}$，刚才的式子可以转换成：</p>
+<script type="math/tex; mode=display">k_1p_1-k_2p_2=\frac{a_2-a_1}{d}</script><p>考虑$-k_2&lt;0$，我们需要进行转换，求出以下方程的解：</p>
+<script type="math/tex; mode=display">\lambda p_1+\mu p_2=1</script><p>接下来可以转换为一组$k_1$与$k_2$的特解：</p>
+<script type="math/tex; mode=display">\left\{\begin{array}{l} k_1=\lambda \frac{a_2-a_1}{d} \\ k_2=\mu \frac{a_2-a_1}{d}\end{array} \right.</script><p>于是就可以构造出$x$的一组解$x=a_1+k_1m_1=a_1+\lambda m_1 \frac{a_2-a_1}{d}$（也可以使用$k_2$和$\mu$构造）</p>
+<p>那么我们再根据特解提出一个引理：</p>
+<p>根据一个特解$x^*$，对于</p>
+<script type="math/tex; mode=display">\left\{\begin{array}{l} x \equiv a_1(mod \ m_1) \\ x\equiv a_2(mod \ m_2)\end{array} \right. 的通解为x^*+k·lcm(m_1,m_2),k\in\mathbb{Z}</script><p>对通解换种说话，也可以等价于：</p>
+<script type="math/tex; mode=display">x\equiv x^* (mod \ lcm(m_1,m_2))</script><p>我们提炼以下这里面的信息：该方程在$[0,lcm(m_1,m_2)]$有且仅有一个解（即最小整数解）并且在接下来每个长度为$lcm(m_1,m_2)$的区间内都只有一个解。</p>
+<p>对于证明刚才的通解，我们可以考虑下面的问题：</p>
+<p>针对方程</p>
+<script type="math/tex; mode=display">\left\{\begin{array}{l} x \equiv a_1(mod \ m_1) \\ x\equiv a_2(mod \ m_2)\end{array} \right.\left\{\begin{array}{l} y \equiv a_1(mod \ m_1) \\ y\equiv a_2(mod \ m_2)\end{array} \right.(x,y\in[0,lcm(m_1,m_2)])</script><p>我们可以假设$x&gt;=y$，然后就可以发现</p>
+<script type="math/tex; mode=display">\left\{\begin{array}{l} x-y \equiv a_1(mod \ m_1) \\ x-y\equiv a_2(mod \ m_2)\end{array} \right.</script><p>也就可以得出$lcm(m_1,m_2)|(x-y)$。</p>
+<p>这时候思考一下，$x,y&lt;lcm(m_1,m_2)$的数，所以$x-y&lt;lcm(m_1,m_2)$，但是如果要令$lcm(m_1,m_2)|(x-y)$，那么就必须要让$x=y$。</p>
+<p>刚才的证明同时证明了该通解的周期和在周期内的唯一性，所以通解成立。</p>
+<h5 id="求解-1"><a href="#求解-1" class="headerlink" title="求解"></a>求解</h5><p>对于$m_i$之间不互质的同余方程组的解法已经呼之欲出了：考虑从上到下合并每个同余式，用裴蜀定理检验最终求解。</p>
+<p>但是证明和实现之间总是有千山万水的距离，让我们再把理论和算法拉近一点，如何合并？</p>
+<p>我们根据之前的通解假设已经构造出前$k-1$个方程的通解</p>
+<script type="math/tex; mode=display">x=x^*+t*lcm(m_1,m_2...m_{k-1}),t\in\mathbb{Z}</script><p>那么对于加入了第$k$个方程的通解，就是要求解一个新的$t$，;使得：</p>
+<script type="math/tex; mode=display">x^* + t*lcm(m_1,m_2...m_k)\equiv a_k(mod \ m_k)</script><p>我们可以考虑移项得到一个不定方程：</p>
+<script type="math/tex; mode=display">t*lcm(m_1,m_2...m_k)\equiv a_k-x^* (mod \ m_k)</script><p>每次使用裴蜀定理检测再使用$exgcd$求解新的同余方程是否有解即可。</p>
+<p>小tip:$EXCRT$可以解决中国剩余定理的问题，所以推荐学完$EXCRT$就可以忘掉中国剩余定理了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//EXCRT luogu P4777</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 100050</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ll long long</span></span><br><span class="line">ll W[MAXN],B[MAXN],k;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> ll <span class="title">ksc</span><span class="params">(ll a,ll b, ll mod)</span></span>&#123;</span><br><span class="line">	ll ans=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(b)&#123;</span><br><span class="line">		<span class="keyword">if</span>(b&amp;<span class="number">1</span>)ans=(ans+a)%mod;</span><br><span class="line">		a=(a+a)%mod;</span><br><span class="line">		b&gt;&gt;=<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ll <span class="title">exgcd</span><span class="params">(ll a,ll b,ll &amp;x,ll &amp;y)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!b)&#123;x=<span class="number">1</span>,y=<span class="number">0</span>;<span class="keyword">return</span> a;&#125;</span><br><span class="line">	ll gcd=<span class="built_in">exgcd</span>(b,a%b,x,y);</span><br><span class="line">	<span class="keyword">int</span> temp=x;x=y;y=temp-(a/b)*y;</span><br><span class="line">	<span class="keyword">return</span> gcd;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	cin&gt;&gt;k;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=k;++i)cin&gt;&gt;W[i]&gt;&gt;B[i];</span><br><span class="line">	ll ans=B[<span class="number">1</span>],M=W[<span class="number">1</span>],t,y;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=k;++i)&#123;</span><br><span class="line">		ll a=M,b=W[i],c=(B[i]-ans%b+b)%b;</span><br><span class="line">		ll gcd=<span class="built_in">exgcd</span>(a,b,t,y);</span><br><span class="line">		<span class="comment">//构造出 M*t+mi*y≡mi-Ans(mod mi)的式子</span></span><br><span class="line">		ans+=<span class="built_in">ksc</span>(t,c/gcd,b)*M;<span class="comment">//求出线性同余方程的一组解</span></span><br><span class="line">		M*=b/gcd;<span class="comment">//更新M为新的lcm</span></span><br><span class="line">		ans=(ans%M+M)%M;</span><br><span class="line">	&#125;</span><br><span class="line">	cout&lt;&lt;ans&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h4><ul>
+<li>感谢洛谷的《深入浅出进阶篇》中对$CRT$部分的证明对本篇文章的启发。</li>
+<li>感谢东营市第一中学的郑华松教练提供了$EXCRT$中线性同余式合并的思路。</li>
+<li>感谢阮行止、$niiick$的博客对本篇文章$EXCRT$部分的启发。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>东灯
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://lampese.com/2022/02/13/%E4%B8%AD%E5%9B%BD%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86/" title="中国剩余定理">https://lampese.com/2022/02/13/中国剩余定理/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/13/%E9%80%86%E5%85%83/" rel="prev" title="逆元">
+      <i class="fa fa-chevron-left"></i> 逆元
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/14/%E6%95%B0%E8%AE%BA%E5%9F%BA%E7%A1%80%E5%AE%9A%E7%90%86%E6%95%B4%E7%90%86/" rel="next" title="数论基础定理整理">
+      数论基础定理整理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Native"><span class="nav-number">1.</span> <span class="nav-text">Native</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B1%82%E8%A7%A3"><span class="nav-number">1.1.</span> <span class="nav-text">求解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E4%B8%AD%E5%9B%BD%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86-EXCRT"><span class="nav-number">2.</span> <span class="nav-text">拓展中国剩余定理$(EXCRT)$</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Exempli-Gratia-1-m-i-%E4%B9%8B%E9%97%B4%E4%BA%92%E8%B4%A8%E6%97%B6"><span class="nav-number">2.1.</span> <span class="nav-text">Exempli Gratia 1 $m_i$之间互质时</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Exempli-Gratia-2-m-i-%E4%B9%8B%E9%97%B4%E4%B8%8D%E4%BA%92%E8%B4%A8%E6%97%B6"><span class="nav-number">2.2.</span> <span class="nav-text">Exempli Gratia 2 $m_i$之间不互质时</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Exempli-Gratia-3-%E6%97%A0%E8%A7%A3"><span class="nav-number">2.3.</span> <span class="nav-text">Exempli Gratia 3 无解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%8C%E4%BD%99%E6%96%B9%E7%A8%8B%E5%90%88%E5%B9%B6%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">2.4.</span> <span class="nav-text">同余方程合并的性质</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%8C%E9%A1%B9%E5%90%8C%E4%BD%99%E6%96%B9%E7%A8%8B%E7%9A%84%E9%80%9A%E8%A7%A3"><span class="nav-number">2.5.</span> <span class="nav-text">二项同余方程的通解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B1%82%E8%A7%A3-1"><span class="nav-number">2.6.</span> <span class="nav-text">求解</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%B4%E8%B0%A2"><span class="nav-number">3.</span> <span class="nav-text">致谢</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="东灯"
+      src="https://cdn.luogu.com.cn/upload/image_hosting/dhpjvh0c.png">
+  <p class="site-author-name" itemprop="name">东灯</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Lampese" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Lampese" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:me@Lampese.com" title="E-Mail → mailto:me@Lampese.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">东灯</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
