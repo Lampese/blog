@@ -27,10 +27,12 @@
 <meta property="og:site_name" content="东灯的寒舍">
 <meta property="og:description" content="圆方树是解决一类仙人掌问题的优秀方法。 广义圆方树是解决无向图路径问题的优秀方法，思路简单暴力且优雅。 这篇文章并不讨论解决仙人掌的圆方树，而是介绍广义圆方树和题目。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.luogu.com.cn/upload/pic/44633.png">
 <meta property="article:published_time" content="2022-03-16T13:38:30.000Z">
-<meta property="article:modified_time" content="2022-03-16T13:41:28.166Z">
+<meta property="article:modified_time" content="2022-03-17T08:19:38.437Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/pic/44633.png">
 
 <link rel="canonical" href="https://lampese.com/2022/03/16/%E5%B9%BF%E4%B9%89%E5%9C%86%E6%96%B9%E6%A0%91/">
 
@@ -178,10 +180,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-03-16 21:38:30 / Modified: 21:41:28" itemprop="dateCreated datePublished" datetime="2022-03-16T21:38:30+08:00">2022-03-16</time>
+              <time title="Created: 2022-03-16 21:38:30" itemprop="dateCreated datePublished" datetime="2022-03-16T21:38:30+08:00">2022-03-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-17 16:19:38" itemprop="dateModified" datetime="2022-03-17T16:19:38+08:00">2022-03-17</time>
+              </span>
 
           
 
@@ -198,6 +206,42 @@
 <p>广义圆方树是解决无向图路径问题的优秀方法，思路简单暴力且优雅。</p>
 <p>这篇文章并不讨论解决仙人掌的圆方树，而是介绍广义圆方树和题目。</p>
 <span id="more"></span>
+<h4 id="Native"><a href="#Native" class="headerlink" title="Native"></a>Native</h4><p><strong>定义</strong></p>
+<p>圆方树的定义十分简单，就是对于一张无向图（一般讨论的是无向联通图），对于所有点双联通分量，建立一个方点，原图中的边全部删除，一个点双联通分量中的点连接一个方点，这些点就叫做圆点，构成一棵有圆点有方点的“圆方树”。（下图是一张网络上广为传播的圆方树建树流程）</p>
+<p><img src="https://cdn.luogu.com.cn/upload/pic/44633.png" alt=""></p>
+<p><strong>基础性质</strong></p>
+<p>那么我们可以通过观察圆方树初步总结出一些毫无用处的性质：</p>
+<ul>
+<li><p>方点不会和圆点相连</p>
+</li>
+<li><p>圆方树是一棵无根树</p>
+</li>
+<li><p>圆方树貌似非常好建</p>
+</li>
+</ul>
+<p><strong>高级性质</strong></p>
+<p>进一步挖掘，可以发现圆方树的优美性质：</p>
+<ul>
+<li>圆方树可以把原图缩成树，却可以维护原图的连通性</li>
+<li>割点是圆方树上度大于$1$的点</li>
+</ul>
+<p>通过高级性质，我们发现：</p>
+<ul>
+<li>既然圆方树可以维护原图的连通性，我们就可以使用方点维护周围圆点的信息，然后进行树剖等操作来维护两点之间简单路径的信息。</li>
+<li>既然割点是圆方树上度大于$1$的点，我们就可以轻松的探究图上点与割点本身的关系。</li>
+</ul>
+<h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>为了不引起题面缩略导致的意义不全，不缩略题面。</p>
+<p><strong>CF487E Tourists</strong></p>
+<p>圆方树一开始的板子题，可以非常轻松的发现建立圆方树后，可以用方点来维护周围圆点中的最小值，然后树剖寻找最小值即可。</p>
+<p>关于带修的问题，修改一个圆点可能修改与之相连的全部方点，菊花图会爆，所以充分利用圆方树的性质，把方点改为维护子树的最小值（建立一个$multiset$），这样每次圆点修改就只需要修改其方点父亲即可。</p>
+<p><strong>[POI2008]BLO-Blockade</strong></p>
+<p>虽然只是我个人的想法…</p>
+<p>我觉得用圆方树做这题的纯属是闲的没事干。</p>
+<p><strong>[ZJOI2004]嗅探器</strong></p>
+<p>问题可以转化为对于任意一个割点，判断是否可以把$A$点和$B$点断开。</p>
+<p>建立圆方树后，如果两个圆点和相同的方点连接，那么就是无解，因为删除哪个点都不能影响它们的通讯。</p>
+<p>否则，就可以暴力上跳到它们的$LCA$，不断寻找度大于$1$的最小编号点。</p>
+<p>圆方树有效的忽略了本题中的无用割点（因为他们都不在$A$和$B$所处的子树中），思想又显得比较有趣。</p>
 
     </div>
 
@@ -292,6 +336,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Native"><span class="nav-number">1.</span> <span class="nav-text">Native</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">2.</span> <span class="nav-text">题目</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
