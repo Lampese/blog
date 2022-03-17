@@ -28,7 +28,7 @@
 <meta property="og:description" content="Native中国剩余定理用于求解线性同余方程组。 描述为： 设自然数$m_1,m_2,m_3,…,m_r$两两互质，并记$M&#x3D;\prod^r_{i&#x3D;1}m_i$，则">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-13T06:45:56.000Z">
-<meta property="article:modified_time" content="2022-03-16T15:12:29.243Z">
+<meta property="article:modified_time" content="2022-03-17T07:44:53.557Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -186,7 +186,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-16 23:12:29" itemprop="dateModified" datetime="2022-03-16T23:12:29+08:00">2022-03-16</time>
+                <time title="Modified: 2022-03-17 15:44:53" itemprop="dateModified" datetime="2022-03-17T15:44:53+08:00">2022-03-17</time>
               </span>
 
           
@@ -207,7 +207,7 @@
 <script type="math/tex; mode=display">\left\{\begin{array}{l} x \equiv a_1(mod \ m_1) \\ x \equiv a_2 (mod \ m_2) \\ ... \\ ... \\ x \equiv a_n(mod \ m_n) \end{array} \right.</script><p>在模$M$同余的意义下有唯一解。</p>
 <h5 id="求解"><a href="#求解" class="headerlink" title="求解"></a>求解</h5><p>对于解</p>
 <script type="math/tex; mode=display">\begin{vmatrix} a \\ b \\ c \\ d \end{vmatrix}=a\begin{vmatrix} 1 \\ 0 \\ 0 \\ 0 \end{vmatrix}+b\begin{vmatrix} 0 \\ 1 \\ 0 \\ 0 \end{vmatrix}+c\begin{vmatrix} 0 \\ 0 \\ 1 \\ 0 \end{vmatrix}+d\begin{vmatrix} 0 \\ 0 \\ 0 \\ 1 \end{vmatrix}</script><p>上面的看的太不明白了，让我们看着定理内容倒推证明一下正确性：</p>
-<p>我们设$M_i=\frac{M}{m_1}$，再假设$t_i=M^{-1}$那么$x$的通解为$x=a_1t_1M_1+a_2t_2M_2+…+a_nt_nM_n+KM,K\in\mathbb{Z}$</p>
+<p>我们设$M_i=\frac{M}{m_1}$，再假设$t_i=M^{-1} (mod \ m_i)$那么$x$的通解为$x=a_1t_1M_1+a_2t_2M_2+…+a_nt_nM_n+KM,K\in\mathbb{Z}$</p>
 <p>为什么呢，我们下面给出证明：</p>
 <ul>
 <li><p>对于刚才那组加和中$i$不是自己的情况(比如设$i\not=j$)，那么$m_i|M_j$，因此$a_jt_jM_j\equiv0(mod \ m_i)$，所以它的贡献是没有的。</p>
