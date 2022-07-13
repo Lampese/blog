@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lampese.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="$Tarjan$算法自提出以来，一直作为图论的经典算法被众多$coder$学习，最近重新摸回$Tarjan$，才发现自己对$Tarjan$的实质根本就不理解。 文章完成进度：$20\%$">
+<meta property="og:type" content="article">
+<meta property="og:title" content="批判与挑战——真正的Tarjan算法到底是什么">
+<meta property="og:url" content="https://lampese.com/2022/07/12/%E6%89%B9%E5%88%A4%E4%B8%8E%E6%8C%91%E6%88%98%E2%80%94%E2%80%94%E7%9C%9F%E6%AD%A3%E7%9A%84Tarjan%E7%AE%97%E6%B3%95%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="东灯的寒舍">
+<meta property="og:description" content="$Tarjan$算法自提出以来，一直作为图论的经典算法被众多$coder$学习，最近重新摸回$Tarjan$，才发现自己对$Tarjan$的实质根本就不理解。 文章完成进度：$20\%$">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
+<meta property="og:image" content="https://oiwiki.com/graph/images/dfs-tree.svg">
+<meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/lysh1xz5.png">
+<meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/meq2t89g.png">
+<meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
+<meta property="article:modified_time" content="2022-07-13T02:40:56.931Z">
+<meta property="article:author" content="东灯">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
+
+<link rel="canonical" href="https://lampese.com/2022/07/12/%E6%89%B9%E5%88%A4%E4%B8%8E%E6%8C%91%E6%88%98%E2%80%94%E2%80%94%E7%9C%9F%E6%AD%A3%E7%9A%84Tarjan%E7%AE%97%E6%B3%95%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>批判与挑战——真正的Tarjan算法到底是什么 | 东灯的寒舍</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">东灯的寒舍</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">你特别好，我喜欢你 </p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-lastest">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Lastest</a>
+
+  </li>
+        <li class="menu-item menu-item-coding">
+
+    <a href="/categories/coding/" rel="section"><i class="fa fa-fw fa-calendar"></i>Coding</a>
+
+  </li>
+        <li class="menu-item menu-item-problems">
+
+    <a href="/categories/problems/" rel="section"><i class="fa fa-fw fa-sitemap"></i>Problems</a>
+
+  </li>
+        <li class="menu-item menu-item-friends">
+
+    <a href="/friends/" rel="section"><i class="fa fa-fw fa-heartbeat"></i>Friends</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lampese.com/2022/07/12/%E6%89%B9%E5%88%A4%E4%B8%8E%E6%8C%91%E6%88%98%E2%80%94%E2%80%94%E7%9C%9F%E6%AD%A3%E7%9A%84Tarjan%E7%AE%97%E6%B3%95%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.luogu.com.cn/upload/image_hosting/dhpjvh0c.png">
+      <meta itemprop="name" content="东灯">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="东灯的寒舍">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          批判与挑战——真正的Tarjan算法到底是什么
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-07-12 10:56:21" itemprop="dateCreated datePublished" datetime="2022-07-12T10:56:21+08:00">2022-07-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-07-13 10:40:56" itemprop="dateModified" datetime="2022-07-13T10:40:56+08:00">2022-07-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/coding/" itemprop="url" rel="index"><span itemprop="name">coding</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>$Tarjan$算法自提出以来，一直作为图论的经典算法被众多$coder$学习，最近重新摸回$Tarjan$，才发现自己对$Tarjan$的实质根本就不理解。</p>
+<p>文章完成进度：$20\%$</p>
+<span id="more"></span>
+<p>注意：如果需要阅读学术内容，请直接点击链接下翻到<a href="#挑战">挑战</a>。</p>
+<h1 id="批判"><a href="#批判" class="headerlink" title="批判"></a>批判</h1><p>在此批判国内部分劣质$blog$，其分为两派：</p>
+<ul>
+<li>根本不理解就瞎写误人子弟，严谨的算法不是你们认为你们认为就可以的！</li>
+<li>所谓详解就是说个定义摆个代码吗？如果把$blog$当做自己的笔记本就请不要说详解！</li>
+</ul>
+<p>也许上面的话说的有些过分，下面我就浪费篇幅给大家列举一下以下百度搜索前几项的博客中的错误：</p>
+<ul>
+<li><p><strong>(CSDN)<a target="_blank" rel="noopener" href="https://blog.csdn.net/a_forever_dream/article/details/103019013">点双连通分量&amp;边双联通分量详解</a></strong>：对点双定义的修复确实很有价值，但是对于求割点时为什么要判断$root$和$child$的举例图片并非反例，不特判也可以成功找出割点。</p>
+</li>
+<li><p><strong>(CSDN)<a target="_blank" rel="noopener" href="https://blog.csdn.net/zsyz_ZZY/article/details/79907335">割点详解</a></strong>：试问你详解了什么？</p>
+</li>
+<li><p><strong>(百度知道)<a target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/306594162.html">图论中的点割集，割点是什么意思</a></strong>：无语。</p>
+<p><img src="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png" alt=""></p>
+</li>
+<li><p>(<strong>搬运后的cnblog)<a target="_blank" rel="noopener" href="http://www.wjhsh.net/WWHHTT-p-9745499.html">浅谈图的割点和割边（Tarjan）</a></strong>：有向图有割点……？</p>
+</li>
+<li><p><strong>(洛谷博客)<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/naruto-lfk/tarjan-ge-bian-yu-ge-dian">tarjan——割边与割点</a></strong>：“对于$DFS$树根, 判断度数是否大于$1$”描述错误，$root$点可以在图中度数大于$1$的情况下在搜索树上的度数仅为$1$，搜索树上的$root$大于$1$才可以证明该点为割点。</p>
+</li>
+<li><p>Tarjan名字都打错还不是不小心打错的博客不止一个：<strong><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/29d3885c3578">比如这个</a>，<a target="_blank" rel="noopener" href="https://www.cnblogs.com/SeanOcean/p/11262387.html">还有这个</a></strong>。</p>
+</li>
+</ul>
+<p>问了好多$OIer$，很多的回答也模糊的和这些博客一样，让我怀疑大家都跟喝了假酒一样，着实无奈，故作此文章挑战一下现有互联网博客的说法，以尝试探寻“真正的Tarjan算法到底是什么”这一问题的答案。</p>
+<h1 id="挑战"><a href="#挑战" class="headerlink" title="挑战"></a>挑战</h1><h4 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h4><p>在这里对图论中的$Tarjan$算法作一个大致的分类：</p>
+<ul>
+<li>求有向图的强联通分量($SCC$)的算法</li>
+<li>求无向图的桥的算法</li>
+<li>求无向图的割点的算法</li>
+<li>求无向图的点双联通分量($V-DCC$)的算法</li>
+<li>求无向图的边双联通分量($E-DCC$)的算法 </li>
+</ul>
+<h4 id="一个优美的栈"><a href="#一个优美的栈" class="headerlink" title="一个优美的栈"></a>一个优美的栈</h4><p>在正式内容开始前，先介绍一个封装好的栈，很多人的$Tarjan$算法中用了非常隐涩难懂的手写栈，命名还很奇怪（比如$stac,st$之类）这里将其封装起来并声明，下文不再赘述：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mystack</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> values[MAXN],top=<span class="number">0</span>;</span><br><span class="line">    bitset&lt;MAXN&gt;instack;<span class="comment">//可维护某元素是否在栈中</span></span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">        instack[x]=<span class="literal">true</span>;</span><br><span class="line">        values[top++]=x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">pop</span><span class="params">()</span></span>&#123;</span><br><span class="line">        instack[values[--top]]=<span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> values[top];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;s;</span><br></pre></td></tr></table></figure>
+<h4 id="Tarjan-SCC-求有向图的强联通分量-SCC-的算法"><a href="#Tarjan-SCC-求有向图的强联通分量-SCC-的算法" class="headerlink" title="$Tarjan-SCC$ 求有向图的强联通分量($SCC$)的算法"></a>$Tarjan-SCC$ 求有向图的强联通分量($SCC$)的算法</h4><p>在此引入一些概念（$From \ \ OIWIKI.com$）：</p>
+<p><img src="https://oiwiki.com/graph/images/dfs-tree.svg" alt="DFS 生成树"></p>
+<p>有向图的 $dfs$ 生成树主要有 4 种边(不一定全部出现)：</p>
+<ol>
+<li><p>树边($tree \ edge$)：示意图中以黑色边表示，每次搜索找到一个还没有访问过的结点的时候就形成了一条树边。</p>
+</li>
+<li><p>反祖边($back \ edge$)：示意图中以红色边表示(即 $7 \rightarrow 1$)，也被叫做回边，即指向祖先结点的边。</p>
+</li>
+<li><p>横叉边($cross \ edge$)：示意图中以蓝色边表示(即 $9 \rightarrow 7$)，它主要是在搜索的时候遇到了一个已经访问过的结点，但是这个结点<strong>并不是</strong>当前结点的祖先。</p>
+</li>
+<li><p>前向边($forward \ edge$)：示意图中以绿色边表示(即 $3 \rightarrow 6$)，它是在搜索的时候遇到子树中的结点的时候形成的。</p>
+</li>
+</ol>
+<p>对于无向图的$dfs$搜索树上的边的定义类似，只不过不存在横叉边与前向边。</p>
+<hr>
+<p>$Tarjan$在该算法中提出了两个数组来帮助求得强连通分量，分别为：</p>
+<ul>
+<li><p>$dfn[]$：表示到达该点时的$dfs$序。</p>
+</li>
+<li><p>$low[]$：能够回溯到的最早的已经在栈中的结点。设以$x$为根的子树为$Subtree_x$。 $low[x]$定义为以下结点的$dfn$的最小值： $Subtree_x$中的结点；从$Subtree_x$通过一条不在搜索树上的边能到达的结点。($OIWIKI/李煜东蓝书$)</p>
+<p>在这里给出一个$low$的更棒的定义($do-while-true$)</p>
+<p>因为在图中只有沿着返祖边走$dfn$才可以变小，而横叉边和前向边都是增大，所以上面那句话可以表达为：</p>
+</li>
+<li><p>$low[]$为$x$最多经过<strong>一条返祖边</strong>能走到的$dfn$最小的节点为多少。</p>
+</li>
+</ul>
+<p>需要注意的是，$Tarjan$算法将会做$dfs$遍历每个点来维护$dfn$和$low$，$dfn$将会是随时间戳不断严格递增的，而$low$严格非降。</p>
+<p>在这里给出的$low[]$的定义是非常完备的，这点我只在李煜东的蓝书中看到了对此的强调，关于为什么如此定义和栈到底有什么作用在下面的代码中就会说明。</p>
+<p>一般的有向图$dfn[]$和$low[]$的维护方法如下实现：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">    s.<span class="built_in">push</span>(x);</span><br><span class="line">    dfn[x]=low[x]=++nowtime;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=head[x];i;i=e[i].next)&#123;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">v</span><span class="params">(e[i].to)</span></span>;</span><br><span class="line">        <span class="keyword">if</span>(s.instack[v])low[x]=<span class="built_in">Min</span>(low[x],dfn[v]);</span><br><span class="line">        <span class="keyword">if</span>(!dfn[v])&#123;</span><br><span class="line">            <span class="built_in">tarjan</span>(v);</span><br><span class="line">            low[x]=<span class="built_in">Min</span>(low[x],low[v]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(dfn[x]==low[x])&#123;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">k</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="keyword">do</span>&#123;</span><br><span class="line">            k=s.<span class="built_in">pop</span>();</span><br><span class="line">        &#125;<span class="keyword">while</span>(k!=x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</span><br><span class="line">        <span class="keyword">if</span>(!dfn[i])<span class="built_in">tarjan</span>(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来我们来一行一行解析代码：</p>
+<ul>
+<li><p>$line2$：在$s$中将该点压栈，该栈的作用是<strong>存放还未被判定为某一$SCC$的点，在发现一个连通块后会弹出到一个位置，弹出的元素构成一个连通块。（具体为什么将在$15$行叙述）</strong></p>
+</li>
+<li><p>$line3$：$dfn[x]$和$low[x]$的初态全部赋值为$++nowtime$(递增的时间)，代表当前节点在不知道接下来的信息时，能到达栈中的$dfn$最小的节点是自己。</p>
+</li>
+<li><p>$line4-5$：枚举遍历点$x$的出度，并获取出边指向的点。</p>
+</li>
+<li><p>$line6$：如果该点已经被压栈即该点满足一个性质：<strong>该点还未被判定为某一$SCC$中的点</strong>。</p>
+<p> 于是，该点的$low$向出点的$dfn$询问是否可以经过出点走到更小的点，以更新自己的$low$。</p>
+<p> 在这里引出三个问题（这里的回答需要使用$line12$的描述，可以先行跳读$line12$）：</p>
+<ul>
+<li><p>Q1：为什么是$low[x]=min(low[x],dfn[x])$？</p>
+</li>
+<li><p>A1：这里是$low$定义，刚好是“从$Subtree_x$通过一条不在搜索树上的边能到达的结点。”</p>
+</li>
+<li><p>Q2：为什么只有栈中的元素才可以更新$x$的$low$，而栈外的元素不行</p>
+</li>
+</ul>
+<ul>
+<li><p>A2：走到栈外的元素的边可能是横叉边也可能是前向边，下面进行分类讨论：</p>
+<p>①如果是横叉边，那么边的出点已经被划归到其他的$SCC$中了，下面用一张图来描述这个问题：可以发现若$1,2,3$已经作为一个$SCC$出栈的情况下，如果$4$指向$3$更新自己的$low$为$1$，则$4,5,6$这个环路中因为不满足$dfn[x]==low[x]$的条件无论如何也不能判断自己是一个环了。<br> <img src="https://cdn.luogu.com.cn/upload/image_hosting/lysh1xz5.png" alt=""></p>
+<p>  ②如果是前向边，那么$dfn[v]&gt;low[x]$，一定不会发生更新，也没必要再去更新了。</p>
+</li>
+<li><p>Q1：为什么有些代码中$line6$写$low[x]=min(low[x],low[v])$依旧正确？</p>
+</li>
+<li><p>A2：可以发现这种写法实际上是不符合该算法思想的，因为$low$的定义是只能经过一条不在搜索树上的边，而$low[v]$的意义是可能经过多条不在搜索树上的边，其正确性也只在$Tarjan-SCC$算法中才保有。这种方法可以侥幸正确的原因是：对于有向图来说，走到一个在栈中而且已经走过的点，那么其一定是一条返祖边或者前向边，我们进行分类讨论：</p>
+<p>①如果是前向边，那么使用$low$或者$dfn$来更新都是一样的，因为无论如何都$dfn[v],low[v]&gt;low[x]$，不会发生更新。</p>
+<p>②如果是返祖边，那么使用$low$和$dfn$都会发生更新，而一个点可能有多条返祖边，构成多个环，这些环之间必定的包含的关系，因此所有点的$low$最终会与处在最大环上$dfn$最小的祖先一致，而实际上这些祖先的终态是$dfn=low$，提前更新或不提前更新均不影响结果。</p>
+</li>
+</ul>
+</li>
+<li><p>$line7-10$：若$dfn[v]=0$，则在此进一步深搜，即该点没有走过，继续进行下一步深搜。同时，在回溯时更新该节点的$low$值，因为这里是沿树边的深搜，因此可以直接用$low[x]=min(low[x],low[v])$来更新该节点的$low$的值。证明很显然：因为树边路径上的点的$low$最终是经过一条返祖边指向该点所在的最大环上$dfn$最小的祖先，满足$low$数组只经过一条返祖边的定义。</p>
+</li>
+<li><p>$line12-17$  对于一个$SCC$内某个最大环的$dfn$最小即深度最小的祖先$x$，在$dfs$回溯时若$dfn[x]==low[x]$，则可说明该点不能通过返祖边到达$dfn$更小的祖先，自己或者和自己$dfs$子树中的部分点构成一个$SCC$。接下来从栈中出栈，直到出栈到遇到$x$元素，这些元素就构成一个$SCC$。</p>
+<p>  证明：首先考虑栈顶元素的性质，一定存在一条有向路径从$x$通往栈顶元素。对于栈中$x$之后入栈的元素且回溯到$x$时还在栈中的元素，一定满足$low \not =dfn$，因为若$low=dfn$，将先一步出栈，若$low\not=dfn$，则栈顶元素一定通过一条返祖边走向一个搜索树上的祖先，而且该点不可能指向$x$的祖先，否则$low[x]&lt;dfn[x]$，若指向的是$x$或$x$的子树上的祖先，则分类讨论：</p>
+<p> ①第一种情况为被指向的点到栈顶元素之间的点与$x$之间没有返祖边，这种情况下被指向的点将会先满足$dfn[x]==low[x]$的条件先一步连带栈顶出栈，不可能与$x$处在同一栈中。</p>
+<p> ②第二种情况为被指向的点到栈顶元素之间的点与$x$之间有返祖边，则这种情况下存在一个环经过$x$到栈顶元素又到栈顶元素返祖边指向的点再到具有回到$x$的返祖边的点再回到$x$的环，构成一个$SCC$。</p>
+<p> ③第三种情况为被指向的点就是$x$，此时$x$到栈顶元素的路径构成一个环，为一个$SCC$。</p>
+<p> 这里采用了一种类似递归的论证方式，先假设当前已经到了某一步，之前步遇到$dfn[x]==low[x]$时将元素出栈的处理是正确的，进一步证明了当前步的处理的正确的，即可递归式的将该结论推广到全局证明这个结论的正确性。</p>
+<p> 细心的读者也许发现了，这种论证方式可以合理的后推，而不能说明第一次这样做的时候可以求得$SCC$，对于此的论证，可以仿照上述的论证模式，首先栈顶元素不可能指向$x$的祖先，接下来再抓住条件$dfn[x]==low[x]$是第一次被满足，如果是上述①中的情况，子树中有点满足$dfn=low$的点，那么$x$一定不是第一个满足条件的点，所以只能采用上述②中的情况，构成一个$SCC$。</p>
+<p> 更严谨的证明还需要说明环内部的路径并不影响结果，这是一个自然语言难以叙述但是非常显然正确的结论：如果有一条路径从环上一点能够到达环上的另外一点，那么实际上就构成了一个更小的环，与最大环的点之间均可互相到达，因此实际上无需担心小环包含在大环中的情况如何处理。比如下图，大环为($1\rightarrow2\rightarrow3\rightarrow4\rightarrow5\rightarrow6$)，小环为($6\rightarrow7\rightarrow3\rightarrow4\rightarrow5$)</p>
+<p> <img src="https://cdn.luogu.com.cn/upload/image_hosting/meq2t89g.png" alt=""></p>
+<p> 此处中的证明思路能证明该算法的正确性，与$Tarjan$先生的《Depth-first search and linear graph algorithms》中思路不同，如果上述证明还有部分不严谨不清楚的地方，也希望大家可以向我指出。</p>
+</li>
+<li><p>$line20-21$：枚举图中每个点，当遇到$dfn=0$的点即还未被搜索过的点便开始搜索，最终可以保证全部点都被搜索。</p>
+<p>若如果求出了$SCC$，因为一个$SCC$内的点均可互相到达，在处理某些问题的时候就可以进行缩点处理，但是不属于本文探讨的问题范畴，故在此处不详细展开了。</p>
+</li>
+</ul>
+<h4 id="Tarjan-Bridge-求无向图桥的算法"><a href="#Tarjan-Bridge-求无向图桥的算法" class="headerlink" title="$Tarjan-Bridge$ 求无向图桥的算法"></a>$Tarjan-Bridge$ 求无向图桥的算法</h4>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>东灯
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://lampese.com/2022/07/12/%E6%89%B9%E5%88%A4%E4%B8%8E%E6%8C%91%E6%88%98%E2%80%94%E2%80%94%E7%9C%9F%E6%AD%A3%E7%9A%84Tarjan%E7%AE%97%E6%B3%95%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/" title="批判与挑战——真正的Tarjan算法到底是什么">https://lampese.com/2022/07/12/批判与挑战——真正的Tarjan算法到底是什么/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/16/%E5%B9%BF%E4%B9%89%E5%9C%86%E6%96%B9%E6%A0%91/" rel="prev" title="广义圆方树">
+      <i class="fa fa-chevron-left"></i> 广义圆方树
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%B9%E5%88%A4"><span class="nav-number">1.</span> <span class="nav-text">批判</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%91%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E4%BC%98%E7%BE%8E%E7%9A%84%E6%A0%88"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">一个优美的栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-SCC-%E6%B1%82%E6%9C%89%E5%90%91%E5%9B%BE%E7%9A%84%E5%BC%BA%E8%81%94%E9%80%9A%E5%88%86%E9%87%8F-SCC-%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.3.</span> <span class="nav-text">$Tarjan-SCC$ 求有向图的强联通分量($SCC$)的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-Bridge-%E6%B1%82%E6%97%A0%E5%90%91%E5%9B%BE%E6%A1%A5%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.4.</span> <span class="nav-text">$Tarjan-Bridge$ 求无向图桥的算法</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="东灯"
+      src="https://cdn.luogu.com.cn/upload/image_hosting/dhpjvh0c.png">
+  <p class="site-author-name" itemprop="name">东灯</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Lampese" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Lampese" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:me@Lampese.com" title="E-Mail → mailto:me@Lampese.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">东灯</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
