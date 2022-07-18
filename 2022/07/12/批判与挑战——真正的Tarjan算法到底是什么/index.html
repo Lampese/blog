@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-07-15T13:15:00.009Z">
+<meta property="article:modified_time" content="2022-07-18T12:44:23.389Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-15 21:15:00" itemprop="dateModified" datetime="2022-07-15T21:15:00+08:00">2022-07-15</time>
+                <time title="Modified: 2022-07-18 20:44:23" itemprop="dateModified" datetime="2022-07-18T20:44:23+08:00">2022-07-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,7 +293,7 @@
 <p>但是在这里我们有一个对于$low$更棒的定义($do-while-true$)</p>
 <p>因为在图中只有沿着返祖边走$dfn$才可以变小，而横叉边和前向边都是增大，所以上面那句话可以表达为：</p>
 </li>
-<li><p>$low[]$为$x$最多经过<strong>一条返祖边</strong>能走到栈中的$dfn$最小的节点为多少。</p>
+<li><p>$low[]$为$x$最多经过<strong>一条返祖边</strong>能走到栈中的$dfn$最小的结点为多少。</p>
 </li>
 </ul>
 <p>需要注意的是，$Tarjan$算法将会做$dfs$遍历每个点来维护$dfn$和$low$，$dfn$将会是随时间戳不断严格递增的，而$low$严格非降。</p>
@@ -304,7 +304,7 @@
 <ul>
 <li><p>$line2$：在$s$中将该点压栈，该栈的作用是<strong>存放还未被判定为某一$SCC$的点，在发现一个连通块后会弹出到一个位置，弹出的元素构成一个连通块。（具体为什么将在$15$行叙述）</strong></p>
 </li>
-<li><p>$line3$：$dfn[x]$和$low[x]$的初态全部赋值为$++nowtime$(递增的时间)，代表当前节点在不知道接下来的信息时，能到达栈中的$dfn$最小的节点是自己。</p>
+<li><p>$line3$：$dfn[x]$和$low[x]$的初态全部赋值为$++nowtime$(递增的时间)，代表当前结点在不知道接下来的信息时，能到达栈中的$dfn$最小的结点是自己。</p>
 </li>
 <li><p>$line4-5$：枚举遍历点$x$的出度，并获取出边指向的点。</p>
 </li>
@@ -331,7 +331,7 @@
 </li>
 </ul>
 </li>
-<li><p>$line7-10$：若$dfn[v]=0$，则在此进一步深搜，即该点没有走过，继续进行下一步深搜。同时，在回溯时更新该节点的$low$值，因为这里是沿树边的深搜，因此可以直接用$low[x]=min(low[x],low[v])$来更新该节点的$low$的值。证明很显然：因为树边路径上的点的$low$最终是经过一条返祖边指向该点所在的最大环上$dfn$最小的祖先，满足$low$数组只经过一条返祖边的定义。</p>
+<li><p>$line7-10$：若$dfn[v]=0$，则在此进一步深搜，即该点没有走过，继续进行下一步深搜。同时，在回溯时更新该结点的$low$值，因为这里是沿树边的深搜，因此可以直接用$low[x]=min(low[x],low[v])$来更新该结点的$low$的值。证明很显然：因为树边路径上的点的$low$最终是经过一条返祖边指向该点所在的最大环上$dfn$最小的祖先，满足$low$数组只经过一条返祖边的定义。</p>
 </li>
 <li><p>$line12-17$  对于一个$SCC$内某个最大环的$dfn$最小即深度最小的祖先$x$，在$dfs$回溯时若$dfn[x]==low[x]$，则可说明该点不能通过返祖边到达$dfn$更小的祖先，自己或者和自己$dfs$子树中的部分点构成一个$SCC$。接下来从栈中出栈，直到出栈到遇到$x$元素，这些元素就构成一个$SCC$。</p>
 <p> ​    证明：首先考虑栈顶元素的性质，一定存在一条有向路径从$x$通往栈顶元素。对于栈中$x$之后入栈的元素且回溯到$x$时还在栈中的元素，一定满足$low \not =dfn$，因为若$low=dfn$，将先一步出栈，若$low\not=dfn$，则栈顶元素一定通过一条返祖边走向一个搜索树上的祖先，而且该点不可能指向$x$的祖先，否则$low[x]&lt;dfn[x]$，若指向的是$x$或$x$的子树上的祖先，则分类讨论：</p>
@@ -352,28 +352,28 @@
 <h4 id="Tarjan-CutPoint-求无向图割点的算法"><a href="#Tarjan-CutPoint-求无向图割点的算法" class="headerlink" title="$Tarjan-CutPoint$ 求无向图割点的算法"></a>$Tarjan-CutPoint$ 求无向图割点的算法</h4><p>   延续刚才的话题，下面给出无向图中维护$dfn$与$low$的代码实例：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">	dfn[x]=low[x]=++nowtime;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=head[x];i;i=e[i].next)&#123;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">v</span><span class="params">(e[i].to)</span></span>;</span><br><span class="line">		<span class="keyword">if</span>(!dfn[v])&#123;</span><br><span class="line">			<span class="built_in">tarjan</span>(v);</span><br><span class="line">			low[x]=<span class="built_in">min</span>(low[x],low[v]);</span><br><span class="line">		&#125;<span class="keyword">else</span> low[x]=<span class="built_in">min</span>(low[x],dfn[v]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>可以发现这里$low[]$数组的意义变为了最多经过<strong>一条返祖边</strong>能走到栈中的$dfn$最小的节点为多少，为什么少了一个“在栈中”呢？</p>
+<li><p>可以发现这里$low[]$数组的意义变为了最多经过<strong>一条返祖边</strong>能走到栈中的$dfn$最小的结点为多少，为什么少了一个“在栈中”呢？</p>
 <p> 在求$SCC$的时候，我们发现判断是否在栈中是为了避免横叉边和前向边对结果产生影响，但是可以发现的是，无向图中并没有这两种性质的边，所以没有必要进行特殊的处理。</p>
 <p> 正是因为上面的原因，李煜东的蓝书中选择将无向图连通性一节放在有向图连通性一节之前，能够看出这是一个经过慎重考虑和斟酌的决定。</p>
 <p> 下面来看如何求割点，先考虑割点在$dfs$搜索树上的性质，容易发现第一个割点判定法则：</p>
 </li>
 <li><p>若回溯时$dfn[x]&lt;=low[v]$且$x$并非搜索树的根，$x$为割点。</p>
-<p> 为什么如此呢？先$x$不是树根时，考虑为什么是$dfn[x]&lt;=low[x]$，这意味着自己以及自己子树中的节点无论怎么走最早到达的最小节点是自己或者自己靠后的节点，如果要到达$dfn$更小的节点即$x$的祖先，只能通过$x$点到达，若删去$x$，则图不连通，割点成立。</p>
-<p> 这个判据对$x$是搜索树根时无效，因为树根没有父亲，$dfn$就是最小的，如果采用上述条件来判断，子树无论如何也不能用返祖边返回$dfn$更小的节点以逃避$x$是个割点，然而事实真的如此吗？看一张图：</p>
+<p> 为什么如此呢？先$x$不是树根时，考虑为什么是$dfn[x]&lt;=low[x]$，这意味着自己以及自己子树中的结点无论怎么走最早到达的最小结点是自己或者自己靠后的结点，如果要到达$dfn$更小的结点即$x$的祖先，只能通过$x$点到达，若删去$x$，则图不连通，割点成立。</p>
+<p> 这个判据对$x$是搜索树根时无效，因为树根没有父亲，$dfn$就是最小的，如果采用上述条件来判断，子树无论如何也不能用返祖边返回$dfn$更小的结点以逃避$x$是个割点，然而事实真的如此吗？看一张图：</p>
 </li>
 </ul>
 <p><img src="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png" alt=""></p>
-<p>   该图是一张链，如果$1$是根节点，将会被判断为割点，而实则$1$并非割点。因此对于根节点，不能通过子节点无法到达根节点的任何祖先来判断根节点是否是割点，因为其根本就没有祖先，自然也不能说子节点只能通过该点到达其他点了。</p>
-<p>   对于根节点是割点的情况，只有根节点具有两个及以上子树时，因为无向图的搜索子树之间互相独立(没有横叉边、前向边导致的必然情况)，所以没有根节点是不能互相到达的，此时根节点就是一个割点。</p>
+<p>   该图是一张链，如果$1$是根结点，将会被判断为割点，而实则$1$并非割点。因此对于根结点，不能通过子结点无法到达根结点的任何祖先来判断根结点是否是割点，因为其根本就没有祖先，自然也不能说子结点只能通过该点到达其他点了。</p>
+<p>   对于根结点是割点的情况，只有根结点具有两个及以上子树时，因为无向图的搜索子树之间互相独立(没有横叉边、前向边导致的必然情况)，所以没有根结点是不能互相到达的，此时根结点就是一个割点。</p>
 <ul>
 <li>若回溯时$x$为搜索树的根且其在搜索树上有两个及以上的子树时候，$x$为割点。</li>
 </ul>
 <p>接下来就可以给出割点的代码实现：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">	dfn[x]=low[x]=++nowtime;</span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">child</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=head[x];i;i=e[i].next)&#123;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">v</span><span class="params">(e[i].to)</span></span>;</span><br><span class="line">		<span class="keyword">if</span>(!dfn[v])&#123;</span><br><span class="line">			<span class="built_in">tarjan</span>(v);</span><br><span class="line">			++child;</span><br><span class="line">			low[x]=<span class="built_in">min</span>(low[x],low[v]);</span><br><span class="line">			<span class="keyword">if</span>(x==root&amp;&amp;child&gt;<span class="number">1</span>)cutpoint[x]=<span class="literal">true</span>;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span>(x!=root&amp;&amp;dfn[x]&lt;=low[v])cutpoint[x]=<span class="literal">true</span>;</span><br><span class="line">		&#125;<span class="keyword">else</span> low[x]=<span class="built_in">min</span>(low[x],dfn[v]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</span><br><span class="line">		<span class="keyword">if</span>(!dfn[i])&#123;</span><br><span class="line">			root=i;</span><br><span class="line">			<span class="built_in">tarjan</span>(i);</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>  特别需要注意的是，割点可能被重复标记，当且仅当该割点不为根节点且具有多棵子树时，因此上述代码使用了一个布尔数组来对割点进行标记。</p>
+<p>  特别需要注意的是，割点可能被重复标记，当且仅当该割点不为根结点且具有多棵子树时，因此上述代码使用了一个布尔数组来对割点进行标记。</p>
 <h4 id="Tarjan-Bridge-求无向图桥的算法"><a href="#Tarjan-Bridge-求无向图桥的算法" class="headerlink" title="$Tarjan-Bridge$ 求无向图桥的算法"></a>$Tarjan-Bridge$ 求无向图桥的算法</h4><p>   在$Tarjan$求解$Bridge$的时候，一大争议是$low$的定义是否发生了变化，在此我的理解是，$low$的定义应发生变化。</p>
 <p>   与其每次都说$low$的定义不变，只是求解不同的东西时做了特判，不如说在求解每种东西的时候因为需求不同，$low$的定义也随之变化。</p>
-<p>   在求桥时，$low[]$的新定义应为最多经过<strong>一条非指向父亲的返祖边</strong>能走到栈中的$dfn$最小的节点为多少。</p>
+<p>   在求桥时，$low[]$的新定义应为最多经过<strong>一条非指向父亲的返祖边</strong>能走到栈中的$dfn$最小的结点为多少。</p>
 <ul>
 <li><p>为什么这里又变成了不能指向父亲呢？这事实上与桥的判断法则有关，我们尝试仿照割点判断法则的推导方式来推导：</p>
 <p> 若回溯到$u$点时时存在一条树边$(u,v)$（因为如果是），满足$dfn[u]&lt;=low[v]$，则分别考虑等于与不等于的情况：</p>
@@ -399,16 +399,16 @@
 <p>我们可以来试一试：如果$(u,v)$是返祖边，那么有可能返回环上的点，也可能返回的是环的祖先，易发现的是一定存在$dfn[u] \ge low[v]$，其一定不为桥，这是正确的。如果$(u,v)$是树边，那么如果$v$和$v$的子树都不能返祖，就不会发生$line9$的更新，只能假设$v$或$v$的子树上的点会返祖，那么假设$v$或$v$的子树中的点返回环上的点和返回环的祖先的情况都已经讨论过了，但是有可能出现$v$的子树中的点返回$v$的子树内点的情况，又构成一个小环，但是我们在这一步只需考虑该环是否对$(u,v)$是否为桥的判断造成影响，显然答案是否定的。</p>
 <p>这个论证方法实际与求$SCC$中提到的递归论证方法是不同的，因为其没有先假设这种更新方式是正确的，而是直接套用该更新方式进行更新并分类讨论更新中可能会遇到的各种情况来论证判断桥时的错误是不可能发生的，因此其对每个环的证明之间都是相互独立的。再考虑我们的证明目的是只需要对所有环证明该更新方式在判断桥时正确，所以直接对搜索树中的所有环套用该证明即可。</p>
 <p>很多读者就会产生疑惑：那为什么割点不行呢？</p>
-<p>可以注意到的是除了对于根节点的特别处理之外，割点和桥的判断条件不同仅在$dfn[u] \leq low[v]$中的一个等号，这个等号实际上是至关重要的。</p>
-<p>考虑一种情况，有一条返祖边$(u,v)$，此时假设$v$通过返祖边到达过祖先，那么$low[v]&lt;dfn[v]$，根据$low[u]=min(low[u],low[v])$的更新规则，$v$到$u$的树边路径上的$low$都会被更新为$low[v]$，而又因为$low[v]&lt;dfn[v]$，因此即使此时$v$是一个割点，也无法被判断出来。下图的搜索树($1$为根节点)表明了这种错误发生的场景：</p>
+<p>可以注意到的是除了对于根结点的特别处理之外，割点和桥的判断条件不同仅在$dfn[u] \leq low[v]$中的一个等号，这个等号实际上是至关重要的。</p>
+<p>考虑一种情况，有一条返祖边$(u,v)$，此时假设$v$通过返祖边到达过祖先，那么$low[v]&lt;dfn[v]$，根据$low[u]=min(low[u],low[v])$的更新规则，$v$到$u$的树边路径上的$low$都会被更新为$low[v]$，而又因为$low[v]&lt;dfn[v]$，因此即使此时$v$是一个割点，也无法被判断出来。下图的搜索树($1$为根结点)表明了这种错误发生的场景：</p>
 <p><img src="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png" alt=""></p>
-<p>该图中，点$3$为割点，但是如果采取$low[x]=min(low[x],low[v])$的更新方式其并不会被判断为割点。究其原因，是因为对于判断割点时在条件$dfn[u] \leq low[v]$中需要取等号才能判断成功的割点$^{[1]}$可能有不能判断其为割点的子树或自身返祖到更小的节点导致出现$low&lt;dfn$的情况，导致在另外一棵能判断其为割点的子树中的点返祖到该点时候$low$上翻到该割点的祖先发生错误。</p>
+<p>该图中，点$3$为割点，但是如果采取$low[x]=min(low[x],low[v])$的更新方式其并不会被判断为割点。究其原因，是因为对于判断割点时在条件$dfn[u] \leq low[v]$中需要取等号才能判断成功的割点$^{[1]}$可能有不能判断其为割点的子树或自身返祖到更小的结点导致出现$low&lt;dfn$的情况，导致在另外一棵能判断其为割点的子树中的点返祖到该点时候$low$上翻到该割点的祖先发生错误。</p>
 <p>注：</p>
-<p><strong>[1]</strong>忽略每次搜索根节点之外，这种割点实际上和$SCC$的根类似(不过判断$SCC$的时候成立条件也是$dfn=low$，很难说他俩没啥联系)，就是每个搜索树上的环在搜索树上$dfn$最小的节点，这种节点具有“被返祖”的性质，也就是说子树中一定有指向这个“根”点自身的返祖边。而如果这种“根”点是割点，那么还需要保证这个环路中的所有点是相对“封闭的”，最早也就只能回溯到这个“根”点。上文中“能判断其为割点的子树”实际上就是指的能够构成这种相对“封闭”的环的子树。</p>
+<p><strong>[1]</strong>忽略每次搜索根结点之外，这种割点实际上和$SCC$的根类似(不过判断$SCC$的时候成立条件也是$dfn=low$，很难说他俩没啥联系)，就是每个搜索树上的环在搜索树上$dfn$最小的结点，这种结点具有“被返祖”的性质，也就是说子树中一定有指向这个“根”点自身的返祖边。而如果这种“根”点是割点，那么还需要保证这个环路中的所有点是相对“封闭的”，最早也就只能回溯到这个“根”点。上文中“能判断其为割点的子树”实际上就是指的能够构成这种相对“封闭”的环的子树。</p>
 </li>
 </ul>
 </li>
-<li><p>$line 14$：因为搜索树的根节点不存在父亲，因此$father$传入什么都是不影响判断的，因为对于根节点一定不会发生$line9$的更新。</p>
+<li><p>$line 14$：因为搜索树的根结点不存在父亲，因此$father$传入什么都是不影响判断的，因为对于根结点一定不会发生$line9$的更新。</p>
 </li>
 </ul>
 
