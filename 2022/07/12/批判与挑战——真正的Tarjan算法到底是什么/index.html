@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"lampese.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="$Tarjan$算法自提出以来，一直作为图论的经典算法被众多$coder$学习，最近重新摸回$Tarjan$，才发现自己对$Tarjan$的实质根本就不理解。 文章完成进度：$50\%$">
+  <meta name="description" content="$Tarjan$算法自提出以来，一直作为图论的经典算法被众多$coder$学习。 最近重新摸回$Tarjan$，才发现自己对$Tarjan$的实质根本就不理解，仔细学习后作一篇文章来记录。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="批判与挑战——真正的Tarjan算法到底是什么">
 <meta property="og:url" content="https://lampese.com/2022/07/12/%E6%89%B9%E5%88%A4%E4%B8%8E%E6%8C%91%E6%88%98%E2%80%94%E2%80%94%E7%9C%9F%E6%AD%A3%E7%9A%84Tarjan%E7%AE%97%E6%B3%95%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/index.html">
 <meta property="og:site_name" content="东灯的寒舍">
-<meta property="og:description" content="$Tarjan$算法自提出以来，一直作为图论的经典算法被众多$coder$学习，最近重新摸回$Tarjan$，才发现自己对$Tarjan$的实质根本就不理解。 文章完成进度：$50\%$">
+<meta property="og:description" content="$Tarjan$算法自提出以来，一直作为图论的经典算法被众多$coder$学习。 最近重新摸回$Tarjan$，才发现自己对$Tarjan$的实质根本就不理解，仔细学习后作一篇文章来记录。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
 <meta property="og:image" content="https://oiwiki.com/graph/images/dfs-tree.svg">
@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-07-20T09:56:34.834Z">
+<meta property="article:modified_time" content="2022-07-20T14:33:33.667Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-20 17:56:34" itemprop="dateModified" datetime="2022-07-20T17:56:34+08:00">2022-07-20</time>
+                <time title="Modified: 2022-07-20 22:33:33" itemprop="dateModified" datetime="2022-07-20T22:33:33+08:00">2022-07-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -226,8 +226,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>$Tarjan$算法自提出以来，一直作为图论的经典算法被众多$coder$学习，最近重新摸回$Tarjan$，才发现自己对$Tarjan$的实质根本就不理解。</p>
-<p>文章完成进度：$50\%$</p>
+        <p>$Tarjan$算法自提出以来，一直作为图论的经典算法被众多$coder$学习。</p>
+<p>最近重新摸回$Tarjan$，才发现自己对$Tarjan$的实质根本就不理解，仔细学习后作一篇文章来记录。</p>
 <span id="more"></span>
 <p>注意：如果需要阅读学术内容，请直接点击链接下翻到<a href="#挑战">挑战</a>。</p>
 <h1 id="批判"><a href="#批判" class="headerlink" title="批判"></a>批判</h1><p>在此批判国内部分劣质$blog$，其分为两派：</p>
