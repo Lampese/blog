@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-07-20T14:33:33.667Z">
+<meta property="article:modified_time" content="2022-07-20T14:44:19.004Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-20 22:33:33" itemprop="dateModified" datetime="2022-07-20T22:33:33+08:00">2022-07-20</time>
+                <time title="Modified: 2022-07-20 22:44:19" itemprop="dateModified" datetime="2022-07-20T22:44:19+08:00">2022-07-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -343,7 +343,7 @@
 <p> 更严谨的证明还需要说明环内部的路径并不影响结果，这是一个自然语言难以叙述但是非常显然正确的结论：如果有一条路径从环上一点能够到达环上的另外一点，那么实际上就构成了一个更小的环，与最大环的点之间均可互相到达，因此实际上无需担心小环包含在大环中的情况如何处理。比如下图，大环为($1\rightarrow2\rightarrow3\rightarrow4\rightarrow5\rightarrow6$)，小环为($6\rightarrow7\rightarrow3\rightarrow4\rightarrow5$)</p>
 <p> 实际上，该图可以作为洛谷割点某个题解中一个说法的反例：求解$SCC$时候，$SCC$内所有点的终态是$dfn=low$。</p>
 <p> <img src="https://cdn.luogu.com.cn/upload/image_hosting/meq2t89g.png" alt=""></p>
-<p> 此处中的证明思路能证明该算法的正确性，与$Tarjan$老先生的《Depth-first search and linear graph algorithms》中思路不同，如果上述证明还有部分不严谨不清楚的地方，也希望大家可以向我指出。</p>
+<p> 此处中的证明思路能证明该算法的正确性，与$Tarjan$老先生的《$\mathcal{Depth-first \ search \ and \ linear \ graph \  algorithms}$》中思路不同，如果上述证明还有部分不严谨不清楚的地方，也希望大家可以向我指出。</p>
 </li>
 <li><p>$line20-21$：枚举图中每个点，当遇到$dfn=0$的点即还未被搜索过的点便开始搜索，最终可以保证全部点都被搜索。</p>
 <p>若如果求出了$SCC$，因为一个$SCC$内的点均可互相到达，在处理某些问题的时候就可以进行缩点处理，但是不属于本文探讨的问题范畴，故在此处不详细展开了。</p>
