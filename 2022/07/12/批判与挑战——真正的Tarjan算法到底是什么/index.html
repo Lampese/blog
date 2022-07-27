@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-07-20T15:02:50.087Z">
+<meta property="article:modified_time" content="2022-07-27T12:39:07.953Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-20 23:02:50" itemprop="dateModified" datetime="2022-07-20T23:02:50+08:00">2022-07-20</time>
+                <time title="Modified: 2022-07-27 20:39:07" itemprop="dateModified" datetime="2022-07-27T20:39:07+08:00">2022-07-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -325,7 +325,7 @@
 <li><p>$Q3$：为什么有些代码中$line6$写$low[x]=min(low[x],low[v])$依旧正确？</p>
 </li>
 <li><p>$A3$：可以发现这种写法实际上是不符合该算法思想的，因为$low$的定义是只能经过一条不在搜索树上的边，而$low[v]$的意义是可能经过多条不在搜索树上的边，其正确性只在$Tarjan-SCC$算法和$Tarjan-Bridge$算法中才保有。这种方法可以侥幸正确的原因是：对于有向图来说，走到一个在栈中而且已经走过的点，那么其一定是一条返祖边或者前向边，我们进行分类讨论：</p>
-<p>①如果是前向边，那么使用$low$或者$dfn$来更新都是一样的，因为无论如何都$dfn[v],low[v]&gt;low[x]$，不会发生更新。</p>
+<p>①如果是前向边，那么使用$low$或者$dfn$来更新都是一样的，因为无论如何都满足$dfn[v],low[v]&gt;low[x]$，不会发生更新。</p>
 <p>②如果是返祖边，那么使用$low$和$dfn$都会发生更新，而一个点可能有多条返祖边，构成多个环，这些环之间具有一定的交集，考虑该点处在最大环上和最大环内的情况，如果处在最大环上，那么无论如何返祖，最终其$low$都将变成该$SCC$的根的$dfn$。而如果是在最大环内的点，如果指向的是栈内的点，那么可以保证的是被指向点(设为$v$)与的指出点(设为$u$)一定满足$dfn[u]&gt;low[v]$，则点$u$就会满足$dfn[u]&gt;low[u]$，在回溯到$1$之前不会发生出栈，因此是正确的。</p>
 <p>从这个问题可以发现求$SCC$中正确性保证的条件：只要让除了$SCC$的根之外的所有点$dfn\not=low$，那么实际上算法就是正确的。</p>
 </li>
@@ -347,9 +347,9 @@
 </li>
 <li><p>$line20-21$：枚举图中每个点，当遇到$dfn=0$的点即还未被搜索过的点便开始搜索，最终可以保证全部点都被搜索。</p>
 <p>若如果求出了$SCC$，因为一个$SCC$内的点均可互相到达，在处理某些问题的时候就可以进行缩点处理，但是不属于本文探讨的问题范畴，故在此处不详细展开了。</p>
+<h4 id="Tarjan-CutPoint-求无向图割点的算法"><a href="#Tarjan-CutPoint-求无向图割点的算法" class="headerlink" title="$Tarjan-CutPoint$ 求无向图割点的算法"></a>$Tarjan-CutPoint$ 求无向图割点的算法</h4><p> 延续刚才的话题，下面给出无向图中维护$dfn$与$low$的代码实例：</p>
 </li>
 </ul>
-<h4 id="Tarjan-CutPoint-求无向图割点的算法"><a href="#Tarjan-CutPoint-求无向图割点的算法" class="headerlink" title="$Tarjan-CutPoint$ 求无向图割点的算法"></a>$Tarjan-CutPoint$ 求无向图割点的算法</h4><p>   延续刚才的话题，下面给出无向图中维护$dfn$与$low$的代码实例：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">	dfn[x]=low[x]=++nowtime;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=head[x];i;i=e[i].next)&#123;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">v</span><span class="params">(e[i].to)</span></span>;</span><br><span class="line">		<span class="keyword">if</span>(!dfn[v])&#123;</span><br><span class="line">			<span class="built_in">tarjan</span>(v);</span><br><span class="line">			low[x]=<span class="built_in">min</span>(low[x],low[v]);</span><br><span class="line">		&#125;<span class="keyword">else</span> low[x]=<span class="built_in">min</span>(low[x],dfn[v]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li><p>可以发现这里$low[]$数组的意义变为了最多经过<strong>一条返祖边</strong>能走到栈中的$dfn$最小的结点为多少，为什么少了一个“在栈中”呢？</p>
