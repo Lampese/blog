@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-08-04T09:32:11.667Z">
+<meta property="article:modified_time" content="2022-08-04T09:37:23.854Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-04 17:32:11" itemprop="dateModified" datetime="2022-08-04T17:32:11+08:00">2022-08-04</time>
+                <time title="Modified: 2022-08-04 17:37:23" itemprop="dateModified" datetime="2022-08-04T17:37:23+08:00">2022-08-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -377,7 +377,7 @@
 <ul>
 <li><p>为什么这里又变成了不能指向父亲呢？这事实上与桥的判断法则有关，我们尝试仿照割点判断法则的推导方式来推导：</p>
 <p> 若回溯到$u$点时时存在一条树边$(u,v)$（因为如果是），满足$dfn[u]&lt;=low[v]$，则分别考虑等于与不等于的情况：</p>
-<p> ①考虑若$dfn[u]&lt;low[v]$，那么证明$v$一定不能通过某条路回到$u$，($u$,$v$)为桥。</p>
+<p> ①考虑若$dfn[u]&lt;low[v]$，那么证明$v$一定不能通过某条路回到$u$，$(u,v)$为桥。</p>
 <p> ②考虑若$dfn[u] \ge low[v]$，那么有可能是$v$通过自己子树上的点的返祖边到达了$u$或$u$的祖先，$(u,v)$不为桥。但是如果不忽略指向父亲的返祖边，会导致每一条树边的$(u,v)$都满足$dfn[u] \ge low[v]$。因为对于$v$来说，$(v,u)$是一条返祖边，$low[v]$会被更新为$dfn[u]$，接下来更新只会越来越小，因此即使$(u,v)$是桥，在不忽略指向父亲的返祖边的情况下，也会被判定为非桥，这就是在求桥时$low$的定义要发生改变的原因。</p>
 </li>
 </ul>
