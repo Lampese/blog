@@ -753,7 +753,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/02/12/Gcd-%E6%8B%93%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7/" class="post-title-link" itemprop="url">Gcd+拓展欧几里德</a>
+            <a href="/2022/02/12/Gcd-%E6%8B%93%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7/" class="post-title-link" itemprop="url">GCD+拓展欧几里德</a>
         </h2>
 
         <div class="post-meta">
@@ -770,7 +770,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-08 10:36:15" itemprop="dateModified" datetime="2022-08-08T10:36:15+08:00">2022-08-08</time>
+                <time title="Modified: 2022-08-08 10:39:54" itemprop="dateModified" datetime="2022-08-08T10:39:54+08:00">2022-08-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -793,9 +793,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h4 id="Gcd"><a href="#Gcd" class="headerlink" title="Gcd"></a>Gcd</h4><h5 id="求Gcd"><a href="#求Gcd" class="headerlink" title="求Gcd"></a>求Gcd</h5><p>两种常用方法，均基于辗转相除，第二种方法在某些问题的处理上可能出锅。</p>
+          <h4 id="GCD"><a href="#GCD" class="headerlink" title="GCD"></a>GCD</h4><h5 id="求Gcd"><a href="#求Gcd" class="headerlink" title="求Gcd"></a>求Gcd</h5><p>两种常用方法，均基于辗转相除，第二种方法在某些问题的处理上可能出锅。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">gcd</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> y==<span class="number">0</span>?x:<span class="built_in">gcd</span>(y,x%y);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">int</span> _gcd(<span class="keyword">int</span> x,<span class="keyword">int</span> y)&#123;</span><br><span class="line">    <span class="keyword">while</span>(y^=x^=y^=x%=y);</span><br><span class="line">	<span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="求Lcm"><a href="#求Lcm" class="headerlink" title="求Lcm"></a>求Lcm</h5><p>$gcd(a,b)lcm(a,b)=ab$</p>
+<h5 id="求LCM"><a href="#求LCM" class="headerlink" title="求LCM"></a>求LCM</h5><p>$gcd(a,b)lcm(a,b)=ab$</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/02/12/Gcd-%E6%8B%93%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7/#more" rel="contents">
