@@ -770,7 +770,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-02 09:28:33" itemprop="dateModified" datetime="2022-07-02T09:28:33+08:00">2022-07-02</time>
+                <time title="Modified: 2022-08-08 10:36:15" itemprop="dateModified" datetime="2022-08-08T10:36:15+08:00">2022-08-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -793,7 +793,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h4 id="Gcd"><a href="#Gcd" class="headerlink" title="Gcd"></a>Gcd</h4><h5 id="求Gcd"><a href="#求Gcd" class="headerlink" title="求Gcd"></a>求Gcd</h5><p>两种常用方法，分别均基于辗转相除。</p>
+          <h4 id="Gcd"><a href="#Gcd" class="headerlink" title="Gcd"></a>Gcd</h4><h5 id="求Gcd"><a href="#求Gcd" class="headerlink" title="求Gcd"></a>求Gcd</h5><p>两种常用方法，均基于辗转相除，第二种方法在某些问题的处理上可能出锅。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">gcd</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> y==<span class="number">0</span>?x:<span class="built_in">gcd</span>(y,x%y);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">int</span> _gcd(<span class="keyword">int</span> x,<span class="keyword">int</span> y)&#123;</span><br><span class="line">    <span class="keyword">while</span>(y^=x^=y^=x%=y);</span><br><span class="line">	<span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h5 id="求Lcm"><a href="#求Lcm" class="headerlink" title="求Lcm"></a>求Lcm</h5><p>$gcd(a,b)lcm(a,b)=ab$</p>
           <!--noindex-->
@@ -853,7 +853,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-02 09:28:24" itemprop="dateModified" datetime="2022-07-02T09:28:24+08:00">2022-07-02</time>
+                <time title="Modified: 2022-08-08 10:30:51" itemprop="dateModified" datetime="2022-08-08T10:30:51+08:00">2022-08-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -876,7 +876,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="Native"><a href="#Native" class="headerlink" title="Native"></a>Native</h2><p>任意一个大于1的正整数都能被唯一分解成有限个质数的乘积，可写作：</p>
+          <h2 id="Native"><a href="#Native" class="headerlink" title="Native"></a>Native</h2><p>任意一个大于$1$的正整数都能被唯一分解成有限个质数的乘积，可写作：</p>
 <script type="math/tex; mode=display">N=p_1^{c_1}p_2^{c_2}...p_m^{c_m}</script><p>其中$c_i$都是正整数，$p_i$均为质数，且满足$p_1&lt;p_2&lt;…&lt;p_m$。</p>
           <!--noindex-->
             <div class="post-button">
