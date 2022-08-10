@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-08-05T04:28:36.270Z">
+<meta property="article:modified_time" content="2022-08-10T01:24:57.633Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-05 12:28:36" itemprop="dateModified" datetime="2022-08-05T12:28:36+08:00">2022-08-05</time>
+                <time title="Modified: 2022-08-10 09:24:57" itemprop="dateModified" datetime="2022-08-10T09:24:57+08:00">2022-08-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -312,7 +312,7 @@
 <p>于是，该点的$low$向出点的$dfn$询问是否可以经过出点走到更小的点，以更新自己的$low$。</p>
 <p>在这里引出三个问题（这里的回答需要使用$line12$的描述，可以先行跳读$line12$）：</p>
 <ul>
-<li><p>$Q1$：为什么$line9$是$low[x]=min(low[x],dfn[x])$？</p>
+<li><p>$Q1$：为什么$line9$是$low[x]=min(low[x],low[v])$？</p>
 </li>
 <li><p>$A1$：这里是$low$定义，刚好是“从$Subtree_x$通过一条不在搜索树上的边能到达的结点。”</p>
 </li>
@@ -336,7 +336,7 @@
 <li><p>$line12-17$  对于一个$SCC$内某个最大环的$dfn$最小即深度最小的祖先$x$，在$dfs$回溯时若$dfn[x]==low[x]$，则可说明该点不能通过返祖边到达$dfn$更小的祖先，自己或者和自己$dfs$子树中的部分点构成一个$SCC$。接下来从栈中出栈，直到出栈到遇到$x$元素，这些元素就构成一个$SCC$。</p>
 <p> ​    证明：首先考虑栈顶元素的性质，一定存在一条有向路径从$x$通往栈顶元素。对于栈中$x$之后入栈的元素且回溯到$x$时还在栈中的元素，一定满足$low \not =dfn$，因为若$low=dfn$，将先一步出栈，若$low\not=dfn$，则栈顶元素一定通过一条返祖边走向一个搜索树上的祖先，而且该点不可能指向$x$的祖先，否则$low[x]&lt;dfn[x]$，若指向的是$x$或$x$的子树上的祖先，则分类讨论：</p>
 <p> ①第一种情况为被指向的点到栈顶元素之间的点与$x$之间没有返祖边，这种情况下被指向的点将会先满足$dfn[x]==low[x]$的条件先一步连带栈顶出栈，不可能与$x$处在同一栈中。</p>
-<p> ②第二种情况为被指向的点到栈顶元素之间的点与$x$之间有返祖边，则这种情况下存在一个环经过$x$到栈顶元素又到栈顶元素返祖边指向的点再到具有回到$x$的返祖边的点再回到$x$的环，构成一个$SCC$。</p>
+<p> ②第二种情况为被指向的点到栈顶元素之间的点与$x$之间x有返祖边，则这种情况下存在一个环经过$x$到栈顶元素又到栈顶元素返祖边指向的点再到具有回到$x$的返祖边的点再回到$x$的环，构成一个$SCC$。</p>
 <p> ③第三种情况为被指向的点就是$x$，此时$x$到栈顶元素的路径构成一个环，为一个$SCC$。</p>
 <p> 这里采用了一种类似递归的论证方式，先假设当前已经到了某一步，之前步遇到$dfn[x]==low[x]$时将元素出栈的处理是正确的，进一步证明了当前步的处理的正确的，即可递归式的将该结论推广到全局证明这个结论的正确性。</p>
 <p> 细心的读者也许发现了，这种论证方式可以合理的后推，而不能说明第一次这样做的时候可以求得$SCC$，对于此的论证，可以仿照上述的论证模式，首先栈顶元素不可能指向$x$的祖先，接下来再抓住条件$dfn[x]==low[x]$是第一次被满足，如果是上述①中的情况，子树中有点满足$dfn=low$的点，那么$x$一定不是第一个满足条件的点，所以只能采用上述②中的情况，构成一个$SCC$。</p>
