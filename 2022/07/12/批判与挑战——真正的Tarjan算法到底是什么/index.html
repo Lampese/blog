@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-08-12T09:45:17.593Z">
+<meta property="article:modified_time" content="2022-08-12T09:48:23.640Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-12 17:45:17" itemprop="dateModified" datetime="2022-08-12T17:45:17+08:00">2022-08-12</time>
+                <time title="Modified: 2022-08-12 17:48:23" itemprop="dateModified" datetime="2022-08-12T17:48:23+08:00">2022-08-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -270,7 +270,7 @@
 </ul>
 <h4 id="一个优美的栈"><a href="#一个优美的栈" class="headerlink" title="一个优美的栈"></a>一个优美的栈</h4><p>在正式内容开始前，先介绍一个封装好的栈，很多人的 Tarjan 算法中用了非常隐涩难懂的手写栈，命名还很奇怪（比如 stac,st 之类）这里将其封装起来并声明，下文不再赘述：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mystack</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> values[MAXN],top=<span class="number">0</span>;</span><br><span class="line">    bitset&lt;MAXN&gt;instack;<span class="comment">//可维护某元素是否在栈中</span></span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">        instack[x]=<span class="literal">true</span>;</span><br><span class="line">        values[top++]=x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">pop</span><span class="params">()</span></span>&#123;</span><br><span class="line">        instack[values[--top]]=<span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> values[top];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;s;</span><br></pre></td></tr></table></figure>
-<h4 id="Tarjan-SCC-求有向图的强联通分量-SCC-的算法"><a href="#Tarjan-SCC-求有向图的强联通分量-SCC-的算法" class="headerlink" title="Tarjan-SCC 求有向图的强联通分量(SCC)的算法"></a>Tarjan-SCC 求有向图的强联通分量(SCC)的算法</h4><p>在此引入一些概念（From \ \ OIWIKI.com）：</p>
+<h4 id="Tarjan-SCC-求有向图的强联通分量-SCC-的算法"><a href="#Tarjan-SCC-求有向图的强联通分量-SCC-的算法" class="headerlink" title="Tarjan-SCC 求有向图的强联通分量(SCC)的算法"></a>Tarjan-SCC 求有向图的强联通分量(SCC)的算法</h4><p>在此引入一些概念（From OIWIKI.com）：</p>
 <p><img src="https://oiwiki.com/graph/images/dfs-tree.svg" alt="DFS 生成树"></p>
 <p>有向图的 dfs 生成树主要有 4 种边(不一定全部出现)：</p>
 <ol>
