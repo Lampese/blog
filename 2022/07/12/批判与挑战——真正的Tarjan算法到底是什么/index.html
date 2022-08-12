@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-08-12T09:48:23.640Z">
+<meta property="article:modified_time" content="2022-08-12T09:51:16.187Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-12 17:48:23" itemprop="dateModified" datetime="2022-08-12T17:48:23+08:00">2022-08-12</time>
+                <time title="Modified: 2022-08-12 17:51:16" itemprop="dateModified" datetime="2022-08-12T17:51:16+08:00">2022-08-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -398,7 +398,7 @@
 <p>那么考虑有一返祖边 $(x,y)$，则 $x$ 到被指向的点 $y$，$y$ 到 $x$ 的在搜索树上的路径将形成一个环路，又因为一定存在 $low[y]&lt;=dfn[y]$，所以可以肯定的是在搜索树上的这个环路在最终回溯时都会被更新为被指向点的 $low$。</p>
 <p>显然可知环上不会出现桥，那么根据上面的推论，这保证了环上不会出现桥，再把该环视为一个整体，考虑环与外面的连边，我们假设一边为 $(u,v)$，那么所用到的是 $dfn[u]$ 与 $low[v]$，可以发现 $u$ 点虽然在环上，但是 $dfn[u]$ 只与搜索的顺序有关，而 $low[v]$ 如何更新与这个环无关。</p>
 <p>我们可以来试一试：如果 $(u,v)$ 是返祖边，那么有可能返回环上的点，也可能返回的是环的祖先，易发现的是一定存在 $dfn[u] \ge low[v]$，其一定不为桥，这是正确的。如果 $(u,v)$ 是树边，那么如果 $v$ 和 $v$ 的子树都不能返祖，就不会发生 $line9$ 的更新，只能假设 $v$ 或 $v$ 的子树上的点会返祖，那么假设 $v$ 或 $v$ 的子树中的点返回环上的点和返回环的祖先的情况都已经讨论过了，但是有可能出现 $v$ 的子树中的点返回 $v$ 的子树内点的情况，又构成一个小环，但是我们在这一步只需考虑该环是否对 $(u,v)$ 是否为桥的判断造成影响，显然答案是否定的。</p>
-<p>这个论证方法实际与求 $SCC$ 中提到的递归论证方法是不同的，因为其没有先假设这种更新方式是正确的，而是直接套用该更新方式进行更新并分类讨论更新中可能会遇到的各种情况来论证判断桥时的错误是不可能发生的，因此其对每个环的证明之间都是相互独立的。再考虑我们的证明目的是只需要对所有环证明该更新方式在判断桥时正确，所以直接对搜索树中的所有环套用该证明即可。</p>
+<p>这个论证方法实际与求 SCC 中提到的递归论证方法是不同的，因为其没有先假设这种更新方式是正确的，而是直接套用该更新方式进行更新并分类讨论更新中可能会遇到的各种情况来论证判断桥时的错误是不可能发生的，因此其对每个环的证明之间都是相互独立的。再考虑我们的证明目的是只需要对所有环证明该更新方式在判断桥时正确，所以直接对搜索树中的所有环套用该证明即可。</p>
 <p>很多读者就会产生疑惑：那为什么割点不行呢？</p>
 <p>可以注意到的是除了对于根结点的特别处理之外，割点和桥的判断条件不同仅在 $dfn[u] \leq low[v]$ 中的一个等号，这个等号实际上是至关重要的。</p>
 <p>考虑一种情况，有一条返祖边 $(u,v)$，此时假设 $v$ 通过返祖边到达过祖先，那么 $low[v]&lt;dfn[v]$，根据 $low[u]=min(low[u],low[v])$ 的更新规则，$v$ 到 $u$ 的树边路径上的 $low$ 都会被更新为 $low[v]$，而又因为 $low[v]&lt;dfn[v]$，因此即使此时 $v$ 是一个割点，也无法被判断出来。下图的搜索树( 1 为根结点)表明了这种错误发生的场景：</p>
