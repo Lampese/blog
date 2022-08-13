@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"lampese.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="证明以前一直对容斥原理求欧拉函数的求法有些不解，昨晚领悟透彻之后准备记录一下。 首先对于一个正整数$n$，在$1-n$中与其互质的数满足一个条件：他们没有相同的质因子 因此考虑从$n$中删除这些相同质因子的贡献，针对每个质因子$p$，在$1-n$中都存在： p,2p,...,\lfloor\frac{n}{p}\rfloor×p">
+  <meta name="description" content="容斥求欧拉函数证明以前一直对容斥原理求欧拉函数的求法有些不解，昨晚领悟透彻之后准备记录一下。 首先对于一个正整数$n$，在$1-n$中与其互质的数满足一个条件：他们没有相同的质因子 因此考虑从$n$中删除这些相同质因子的贡献，针对每个质因子$p$，在$1-n$中都存在： p,2p,...,\lfloor\frac{n}{p}\rfloor×p">
 <meta property="og:type" content="article">
 <meta property="og:title" content="欧拉函数求法的理解">
 <meta property="og:url" content="https://lampese.com/2022/02/11/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0%E6%B1%82%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/index.html">
 <meta property="og:site_name" content="东灯的寒舍">
-<meta property="og:description" content="证明以前一直对容斥原理求欧拉函数的求法有些不解，昨晚领悟透彻之后准备记录一下。 首先对于一个正整数$n$，在$1-n$中与其互质的数满足一个条件：他们没有相同的质因子 因此考虑从$n$中删除这些相同质因子的贡献，针对每个质因子$p$，在$1-n$中都存在： p,2p,...,\lfloor\frac{n}{p}\rfloor×p">
+<meta property="og:description" content="容斥求欧拉函数证明以前一直对容斥原理求欧拉函数的求法有些不解，昨晚领悟透彻之后准备记录一下。 首先对于一个正整数$n$，在$1-n$中与其互质的数满足一个条件：他们没有相同的质因子 因此考虑从$n$中删除这些相同质因子的贡献，针对每个质因子$p$，在$1-n$中都存在： p,2p,...,\lfloor\frac{n}{p}\rfloor×p">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-11T00:41:44.000Z">
-<meta property="article:modified_time" content="2022-07-02T12:15:19.000Z">
+<meta property="article:modified_time" content="2022-08-13T08:38:48.323Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -196,7 +196,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-02 20:15:19" itemprop="dateModified" datetime="2022-07-02T20:15:19+08:00">2022-07-02</time>
+                <time title="Modified: 2022-08-13 16:38:48" itemprop="dateModified" datetime="2022-08-13T16:38:48+08:00">2022-08-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -219,7 +219,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h4 id="证明"><a href="#证明" class="headerlink" title="证明"></a>证明</h4><p>以前一直对容斥原理求欧拉函数的求法有些不解，昨晚领悟透彻之后准备记录一下。</p>
+        <h4 id="容斥求欧拉函数证明"><a href="#容斥求欧拉函数证明" class="headerlink" title="容斥求欧拉函数证明"></a>容斥求欧拉函数证明</h4><p>以前一直对容斥原理求欧拉函数的求法有些不解，昨晚领悟透彻之后准备记录一下。</p>
 <p>首先对于一个正整数$n$，在$1-n$中与其互质的数满足一个条件：他们没有相同的质因子</p>
 <p>因此考虑从$n$中删除这些相同质因子的贡献，针对每个质因子$p$，在$1-n$中都存在：</p>
 <script type="math/tex; mode=display">p,2p,...,\lfloor\frac{n}{p}\rfloor×p</script><span id="more"></span>
@@ -231,20 +231,17 @@
 <script type="math/tex; mode=display">n(\frac{(p-1)(q-1)}{pq})</script><p>又可得到：</p>
 <script type="math/tex; mode=display">n(1-\frac{1}{q})(1-\frac{1}{p})</script><p>因此根据乘法原理，每个质数$p$都有$(1-\frac{1}{p})$的贡献在$n$，所以根据乘法原理，得到欧拉函数公式为：</p>
 <script type="math/tex; mode=display">n×\prod_{p|n}^{p为质数}(1-\frac{1}{p})</script><p>需要注意的是，这种求法意为每一个质数只被考虑一次，即使$n/p&gt;1$。</p>
-<p>上面的方法只是一个通式，在整数为基础的大部分编程中难以实现，因此由这种方法延伸出了更多求欧拉函数的方法：</p>
-<ul>
-<li><p>分解质因子求欧拉函数</p>
-</li>
-<li><p>欧拉筛求欧拉函数</p>
-</li>
-</ul>
 <h4 id="分解质因子求欧拉函数"><a href="#分解质因子求欧拉函数" class="headerlink" title="分解质因子求欧拉函数"></a>分解质因子求欧拉函数</h4><p>可以采用<a href="https://lampese.com/2022/02/11/%E7%AE%97%E6%95%B0%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86/#more">算数基本定理</a>中的不同方法分解质因数来求欧拉函数，复杂度即分解质因数的复杂度。</p>
 <p>以经典试除法来举例，复杂度为$O(\sqrt{N})$。</p>
 <p>可以发现这个方法没有考虑$\frac{1}{pq}$的情况，实际上可以发现遇到一个质因子就被除去了，所以永远筛不到$p*q$。</p>
-<p>代码实现如下： </p>
+<p>通式应为：</p>
+<script type="math/tex; mode=display">\phi(n)=n-\sum^{p|n}_{p为质数}\frac{n}{p}</script><p>代码实现如下： </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">euler</span><span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">long</span> ans=n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">long</span> <span class="keyword">long</span> i=<span class="number">2</span>;i*i&lt;=n;++i)</span><br><span class="line">        <span class="keyword">if</span>(n%i==<span class="number">0</span>)&#123;</span><br><span class="line">            ans-=ans/i;</span><br><span class="line">            <span class="keyword">while</span>(n%i==<span class="number">0</span>)n/=i;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span> n&gt;<span class="number">1</span>?ans-ans/n:ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="欧拉筛求欧拉函数"><a href="#欧拉筛求欧拉函数" class="headerlink" title="欧拉筛求欧拉函数"></a>欧拉筛求欧拉函数</h4><h5 id="只筛欧拉函数"><a href="#只筛欧拉函数" class="headerlink" title="只筛欧拉函数"></a>只筛欧拉函数</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 100050</span></span><br><span class="line"><span class="keyword">long</span> <span class="keyword">long</span> euler[MAXN+<span class="number">10</span>];</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">euler</span><span class="params">()</span></span>&#123;</span><br><span class="line">    euler[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">long</span> <span class="keyword">long</span> i=<span class="number">2</span>;i&lt;=MAXN;++i)</span><br><span class="line">        <span class="keyword">if</span>(!euler[i])</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">long</span> <span class="keyword">long</span> j=i;j&lt;=MAXN;j+=i)&#123;</span><br><span class="line">                <span class="keyword">if</span>(!euler[j])euler[j]=j;</span><br><span class="line">                euler[j]=euler[j]/i*(i<span class="number">-1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="同时筛欧拉函数和素数"><a href="#同时筛欧拉函数和素数" class="headerlink" title="同时筛欧拉函数和素数"></a>同时筛欧拉函数和素数</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 100050</span></span><br><span class="line"><span class="keyword">long</span> <span class="keyword">long</span> phi[MAXN+<span class="number">10</span>],prime[MAXN+<span class="number">10</span>],tot;</span><br><span class="line">bitset&lt;MAXN+10&gt;check;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">euler</span><span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> N)</span></span>&#123;</span><br><span class="line">    phi[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">long</span> <span class="keyword">long</span> i=<span class="number">2</span>;i&lt;=N;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!check[i])&#123;</span><br><span class="line">            prime[tot++]=i;</span><br><span class="line">            phi[i]=i<span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">long</span> <span class="keyword">long</span> j=<span class="number">0</span>;j&lt;tot;++j)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i*prime[j]&gt;N)<span class="keyword">break</span>;</span><br><span class="line">            check[i*prime[j]]=<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span>(i%prime[j]==<span class="number">0</span>)&#123;</span><br><span class="line">                phi[i*prime[j]]=phi[i]*prime[j];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> phi[i*prime[j]]=phi[i]*(prime[j]<span class="number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="埃筛求欧拉函数"><a href="#埃筛求欧拉函数" class="headerlink" title="埃筛求欧拉函数"></a>埃筛求欧拉函数</h4><p>有一种采用埃筛实现的求欧拉函数的方法：</p>
+<p>从 $2$ 到 $n$ 枚举质数，然后对于该质数的所有倍数，如果没有被标记过，则标记为自己，接下来再执行 $phi[j]=phi[j]/i*(i-1)$ 的语句。</p>
+<p>我们对上述语句的式子展开发现实际上与分解质因子求欧拉函数的式子相同，而我们采用埃筛筛出了质数，这些质数只会出现一次，每个质因数都可以对自己的倍数做出贡献，而这些贡献重叠起来就交集成了最终解。</p>
+<p>因此该算法的思想实际上也是分解质因子，不过比刚才的方法更加高效。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> phi[MAXN];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">GetPhi</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=n;i++)phi[i]=<span class="number">0</span>;</span><br><span class="line">    phi[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!phi[i])&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=i;j&lt;=n;j+=i) &#123;</span><br><span class="line">                <span class="keyword">if</span>(!phi[j])phi[j]=j;</span><br><span class="line">                phi[j]=phi[j]/i*(i<span class="number">-1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;         </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -342,7 +339,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%81%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">证明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E8%A7%A3%E8%B4%A8%E5%9B%A0%E5%AD%90%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">分解质因子求欧拉函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AC%A7%E6%8B%89%E7%AD%9B%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">欧拉筛求欧拉函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%AA%E7%AD%9B%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0"><span class="nav-number">3.1.</span> <span class="nav-text">只筛欧拉函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%8C%E6%97%B6%E7%AD%9B%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0%E5%92%8C%E7%B4%A0%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">同时筛欧拉函数和素数</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%B9%E6%96%A5%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0%E8%AF%81%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">容斥求欧拉函数证明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E8%A7%A3%E8%B4%A8%E5%9B%A0%E5%AD%90%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">分解质因子求欧拉函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%83%E7%AD%9B%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">埃筛求欧拉函数</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -357,7 +354,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
