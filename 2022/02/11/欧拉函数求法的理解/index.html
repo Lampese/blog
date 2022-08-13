@@ -28,7 +28,7 @@
 <meta property="og:description" content="容斥求欧拉函数证明以前一直对容斥原理求欧拉函数的求法有些不解，昨晚领悟透彻之后准备记录一下。 首先对于一个正整数$n$，在$1-n$中与其互质的数满足一个条件：他们没有相同的质因子 因此考虑从$n$中删除这些相同质因子的贡献，针对每个质因子$p$，在$1-n$中都存在： p,2p,...,\lfloor\frac{n}{p}\rfloor×p">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-11T00:41:44.000Z">
-<meta property="article:modified_time" content="2022-08-13T08:38:48.323Z">
+<meta property="article:modified_time" content="2022-08-13T09:24:22.433Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -196,7 +196,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-13 16:38:48" itemprop="dateModified" datetime="2022-08-13T16:38:48+08:00">2022-08-13</time>
+                <time title="Modified: 2022-08-13 17:24:22" itemprop="dateModified" datetime="2022-08-13T17:24:22+08:00">2022-08-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,10 +233,13 @@
 <script type="math/tex; mode=display">n×\prod_{p|n}^{p为质数}(1-\frac{1}{p})</script><p>需要注意的是，这种求法意为每一个质数只被考虑一次，即使$n/p&gt;1$。</p>
 <h4 id="分解质因子求欧拉函数"><a href="#分解质因子求欧拉函数" class="headerlink" title="分解质因子求欧拉函数"></a>分解质因子求欧拉函数</h4><p>可以采用<a href="https://lampese.com/2022/02/11/%E7%AE%97%E6%95%B0%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86/#more">算数基本定理</a>中的不同方法分解质因数来求欧拉函数，复杂度即分解质因数的复杂度。</p>
 <p>以经典试除法来举例，复杂度为$O(\sqrt{N})$。</p>
-<p>可以发现这个方法没有考虑$\frac{1}{pq}$的情况，实际上可以发现遇到一个质因子就被除去了，所以永远筛不到$p*q$。</p>
-<p>通式应为：</p>
-<script type="math/tex; mode=display">\phi(n)=n-\sum^{p|n}_{p为质数}\frac{n}{p}</script><p>代码实现如下： </p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">euler</span><span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">long</span> ans=n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">long</span> <span class="keyword">long</span> i=<span class="number">2</span>;i*i&lt;=n;++i)</span><br><span class="line">        <span class="keyword">if</span>(n%i==<span class="number">0</span>)&#123;</span><br><span class="line">            ans-=ans/i;</span><br><span class="line">            <span class="keyword">while</span>(n%i==<span class="number">0</span>)n/=i;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span> n&gt;<span class="number">1</span>?ans-ans/n:ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有两种方法理解该代码，第一种为直接考虑每个质数的贡献然后除去该质数进行分解质因数的步骤，每个质数可以做出 $\frac{n}{p}$ 的贡献，而 $n$ 在计算完贡献之后就会除去 $p$，这样理解的方法不需要考虑$\frac{1}{pq}$的情况。</p>
+<p>通式见下：</p>
+<p>定义$S(n,p)=\{x|x为n的质因数且x\leq p\}$</p>
+<script type="math/tex; mode=display">\phi(n)=n-\sum_{p\in S(n,n)}\frac{n}{\prod_{k\in S(n,p)}k}</script><p>第二种方法是直接从容斥原理的式子倒推：</p>
+<script type="math/tex; mode=display">n×\prod_{p|n}^{p为质数}(1-\frac{1}{p})</script><script type="math/tex; mode=display">n×\prod_{p|n}^{p为质数}(\frac{p-1}{p})</script><p>这两种方法有什么联系呢？只需要考虑每次 $n*(\frac{p-1}{p})$ 实际上等价于 $n-\frac{n}{p}$ 即可轻松转化。</p>
+<p>代码实现如下： </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">euler</span><span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">long</span> ans=n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">long</span> <span class="keyword">long</span> i=<span class="number">2</span>;i*i&lt;=n;++i)</span><br><span class="line">        <span class="keyword">if</span>(n%i==<span class="number">0</span>)&#123;</span><br><span class="line">            ans-=ans/i;<span class="comment">//对于第二种理解方法应改为ans=ans/i*(i-1)</span></span><br><span class="line">            <span class="keyword">while</span>(n%i==<span class="number">0</span>)n/=i;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span> n&gt;<span class="number">1</span>?ans-ans/n:ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="埃筛求欧拉函数"><a href="#埃筛求欧拉函数" class="headerlink" title="埃筛求欧拉函数"></a>埃筛求欧拉函数</h4><p>有一种采用埃筛实现的求欧拉函数的方法：</p>
 <p>从 $2$ 到 $n$ 枚举质数，然后对于该质数的所有倍数，如果没有被标记过，则标记为自己，接下来再执行 $phi[j]=phi[j]/i*(i-1)$ 的语句。</p>
 <p>我们对上述语句的式子展开发现实际上与分解质因子求欧拉函数的式子相同，而我们采用埃筛筛出了质数，这些质数只会出现一次，每个质因数都可以对自己的倍数做出贡献，而这些贡献重叠起来就交集成了最终解。</p>
