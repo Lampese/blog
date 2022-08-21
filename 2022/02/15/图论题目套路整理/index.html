@@ -28,7 +28,7 @@
 <meta property="og:description" content="差分约束建边套路 A≤B \ \ \ \rightarrow \ \ \ A-B≤0A≥B \ \ \ \rightarrow \ \ \ B-A≤0A &lt; B \ \ \ \rightarrow \ \ \ A - B ≤ -1A&#x3D;B \ \ \ \rightarrow \ \ \ A-B≤0\&amp;\&amp;B-A≤0">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-15T10:11:50.000Z">
-<meta property="article:modified_time" content="2022-07-02T01:28:27.000Z">
+<meta property="article:modified_time" content="2022-08-21T07:59:11.618Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -196,7 +196,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-02 09:28:27" itemprop="dateModified" datetime="2022-07-02T09:28:27+08:00">2022-07-02</time>
+                <time title="Modified: 2022-08-21 15:59:11" itemprop="dateModified" datetime="2022-08-21T15:59:11+08:00">2022-08-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -223,21 +223,28 @@
 <script type="math/tex; mode=display">A≤B \ \ \ \rightarrow \ \ \ A-B≤0</script><script type="math/tex; mode=display">A≥B \ \ \ \rightarrow \ \ \ B-A≤0</script><script type="math/tex; mode=display">A < B \ \ \ \rightarrow \ \ \ A - B ≤ -1</script><script type="math/tex; mode=display">A=B \ \ \ \rightarrow \ \ \ A-B≤0\&\&B-A≤0</script><span id="more"></span>
 <p><strong>优化套路</strong></p>
 <ul>
-<li>尽量不跑最长路，思维量太大，最短路正确性可知而且好想好写。</li>
-<li>如果数据明显$SPFA$复杂度不正确，可以考虑把$queue$换成$deque$和$stack$。</li>
-<li>建立超级源点的时候直接把所有点入队，然后把超源架空即可。</li>
+<li><p>如果数据明显 $SPFA$ 复杂度不正确，可以考虑把 $queue$ 换成 $deque$ 和 $stack$。</p>
+</li>
+<li><p>建立超级源点的时候直接把所有点入队，然后把超源架空即可。</p>
+</li>
 </ul>
+<p><strong>最长路与最短路问题</strong></p>
+<p> 以下内容摘自 do-while-true 的“原来我不会差分约束”：</p>
+<p>差分约束系统提供了通过图论建图以最长路/最短路的形式刻画变量之间的不等关系。常见的应用是判断不等关系是否有合法解。</p>
+<p>对于最短路，我们将 $x_v−x_u≤w$ 描述为 $dis_v≤dis_u+w$，感性理解一下，在这里描述的是 $x_v$ 的上界，而且通过跑最短路找到了 $x_v$ 的上界。虽然跑的是”最短路”，但在不等式组的意义下 $x_v$ 可能会更小，所以这里是在满足不等式组的条件下让 $x_v$ 取到了它的上界。</p>
+<p>类似地，如果想要用最长路来跑差分约束，得到的是每个变量的下界。</p>
+<p>总结：最短路跑出来的是每个变量最大可能的值，最长路跑出来的是每个变量最小可能的值。</p>
 <h4 id="缩点题目套路"><a href="#缩点题目套路" class="headerlink" title="缩点题目套路"></a>缩点题目套路</h4><p>以重新建图后的图考虑。</p>
 <ul>
-<li><p>从一个点可以到达联通块内任意点的点性质：入度为0。</p>
+<li><p>从一个点可以到达联通块内任意点的点性质：入度为 $0$。</p>
 </li>
-<li><p>加边变为大联通块：$max\{入度为0的点数量,出度为0的点数量\}$。</p>
+<li><p>加边变为大联通块：$\max\{入度为0的点数量,出度为0的点数量\}$。</p>
 </li>
-<li><p>题目带$dfs$：记得判断是否经过该点，不要有环就不打$tag$。 </p>
+<li><p>题目带 $dfs$：记得判断是否经过该点，不要有环就不打 $tag$。 </p>
 </li>
 </ul>
 <h4 id="边双分量题目套路"><a href="#边双分量题目套路" class="headerlink" title="边双分量题目套路"></a>边双分量题目套路</h4><ul>
-<li>对于一个有桥图加边变成双联通图，至少要加的边数至少为边双子图收缩后的$DAG$上度为$1$的节点数$\frac{L+1}{2}$。</li>
+<li>对于一个有桥图加边变成双联通图，至少要加的边数至少为边双子图收缩后的 $DAG$ 上度为 $1$ 的节点数 $\frac{L+1}{2}$。</li>
 </ul>
 
     </div>
