@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"lampese.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="差分约束建边套路 A≤B \ \ \ \rightarrow \ \ \ A-B≤0A≥B \ \ \ \rightarrow \ \ \ B-A≤0A &lt; B \ \ \ \rightarrow \ \ \ A - B ≤ -1A&#x3D;B \ \ \ \rightarrow \ \ \ A-B≤0\&amp;\&amp;B-A≤0">
+  <meta name="description" content="差分约束建边套路 A≤B \ \ \ \rightarrow \ \ \ A-B≤0A≥B \ \ \ \rightarrow \ \ \ B-A≤0A">
 <meta property="og:type" content="article">
 <meta property="og:title" content="图论题目套路整理">
 <meta property="og:url" content="https://lampese.com/2022/02/15/%E5%9B%BE%E8%AE%BA%E9%A2%98%E7%9B%AE%E5%A5%97%E8%B7%AF%E6%95%B4%E7%90%86/index.html">
 <meta property="og:site_name" content="东灯的寒舍">
-<meta property="og:description" content="差分约束建边套路 A≤B \ \ \ \rightarrow \ \ \ A-B≤0A≥B \ \ \ \rightarrow \ \ \ B-A≤0A &lt; B \ \ \ \rightarrow \ \ \ A - B ≤ -1A&#x3D;B \ \ \ \rightarrow \ \ \ A-B≤0\&amp;\&amp;B-A≤0">
+<meta property="og:description" content="差分约束建边套路 A≤B \ \ \ \rightarrow \ \ \ A-B≤0A≥B \ \ \ \rightarrow \ \ \ B-A≤0A">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-15T10:11:50.000Z">
-<meta property="article:modified_time" content="2022-08-21T07:59:11.618Z">
+<meta property="article:modified_time" content="2022-08-22T00:42:26.991Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -196,7 +196,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-21 15:59:11" itemprop="dateModified" datetime="2022-08-21T15:59:11+08:00">2022-08-21</time>
+                <time title="Modified: 2022-08-22 08:42:26" itemprop="dateModified" datetime="2022-08-22T08:42:26+08:00">2022-08-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -220,7 +220,7 @@
 
       
         <h4 id="差分约束"><a href="#差分约束" class="headerlink" title="差分约束"></a>差分约束</h4><p><strong>建边套路</strong></p>
-<script type="math/tex; mode=display">A≤B \ \ \ \rightarrow \ \ \ A-B≤0</script><script type="math/tex; mode=display">A≥B \ \ \ \rightarrow \ \ \ B-A≤0</script><script type="math/tex; mode=display">A < B \ \ \ \rightarrow \ \ \ A - B ≤ -1</script><script type="math/tex; mode=display">A=B \ \ \ \rightarrow \ \ \ A-B≤0\&\&B-A≤0</script><span id="more"></span>
+<script type="math/tex; mode=display">A≤B \ \ \ \rightarrow \ \ \ A-B≤0</script><script type="math/tex; mode=display">A≥B \ \ \ \rightarrow \ \ \ B-A≤0</script><script type="math/tex; mode=display">A<B \ \ \ \rightarrow \ \ \ A - B ≤ -1</script><script type="math/tex; mode=display">A=B \ \ \ \rightarrow \ \ \ A-B≤0\&\&B-A≤0</script><script type="math/tex; mode=display">A-B≥C \ \ \ \rightarrow \ \ \ B-A≤-C</script><script type="math/tex; mode=display">B-A≥C \ \ \ \rightarrow \ \ \ A-B≤-C</script><script type="math/tex; mode=display">A-B \le C \ \ \ \rightarrow \ \ \ B-A\ge -C</script><script type="math/tex; mode=display">B-A \le C \ \ \ \rightarrow \ \ \ A-B\ge -C</script><span id="more"></span>
 <p><strong>优化套路</strong></p>
 <ul>
 <li><p>如果数据明显 $SPFA$ 复杂度不正确，可以考虑把 $queue$ 换成 $deque$ 和 $stack$。</p>
@@ -229,7 +229,8 @@
 </li>
 </ul>
 <p><strong>最长路与最短路问题</strong></p>
-<p> 以下内容摘自 do-while-true 的“原来我不会差分约束”：</p>
+<p>最短路建图的时候只需要建立上界约束，而最长路建图需要建立下界约束。</p>
+<p>以下内容摘自 do-while-true 的“原来我不会差分约束”：</p>
 <p>差分约束系统提供了通过图论建图以最长路/最短路的形式刻画变量之间的不等关系。常见的应用是判断不等关系是否有合法解。</p>
 <p>对于最短路，我们将 $x_v−x_u≤w$ 描述为 $dis_v≤dis_u+w$，感性理解一下，在这里描述的是 $x_v$ 的上界，而且通过跑最短路找到了 $x_v$ 的上界。虽然跑的是”最短路”，但在不等式组的意义下 $x_v$ 可能会更小，所以这里是在满足不等式组的条件下让 $x_v$ 取到了它的上界。</p>
 <p>类似地，如果想要用最长路来跑差分约束，得到的是每个变量的下界。</p>
