@@ -28,7 +28,7 @@
 <meta property="og:description" content="整理一些基础数论定理知识。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-14T05:00:26.000Z">
-<meta property="article:modified_time" content="2022-08-30T06:52:43.262Z">
+<meta property="article:modified_time" content="2022-08-30T07:35:15.516Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -196,7 +196,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-30 14:52:43" itemprop="dateModified" datetime="2022-08-30T14:52:43+08:00">2022-08-30</time>
+                <time title="Modified: 2022-08-30 15:35:15" itemprop="dateModified" datetime="2022-08-30T15:35:15+08:00">2022-08-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,10 +242,27 @@
 <li>$x$偶$y$奇  $gcd( x,y ) = gcd( x/2,y )$ 或 $gcd( x,y )=gcd( y,x/2 )$</li>
 </ul>
 <p><strong>组合恒等式</strong>：</p>
-<p>$\left( \begin{array}{c}n\\k\\\end{array}\right)=\left( \begin{array}{c}n\\{n-k}\\\end{array}\right)$  组合意义：选出一部分再反选。</p>
-<p>$\left( \begin{array}{c}n\\k\\\end{array}\right)=\left( \begin{array}{c}n-1\\k\\\end{array}\right)+\left( \begin{array}{c}n-1\\k-1\\\end{array}\right)$  组合意义：枚举第一个选或不选。</p>
-<p>$\left( \begin{array}{c}n\\k\\\end{array}\right)\left( \begin{array}{c}k\\t\\\end{array}\right)=\left( \begin{array}{c}n\\t\\\end{array}\right)\left( \begin{array}{c}n-t\\k-t\\\end{array}\right)$  组合意义：把 $n$ 个数中选 $k$ 个再选 $t$ 个转化为 $n$ 中选 $t$ 个再选出 $k-t$ 个。</p>
-<p>$\left( \begin{array}{c}n\\k\\\end{array}\right)=\sum_{i=k}^n\left( \begin{array}{c}i-1\\k-1\\\end{array}\right)$  组合意义：考虑最后一个数选在哪里，如果选在 $i$ 则前 $i-1$ 个中要选出 $k-1$ 个。</p>
+<p>恒等式编号按顺序从 $1$ 开始依次递增。</p>
+<ul>
+<li><p>$\left( \begin{array}{c}n\\k\\\end{array}\right)=\left( \begin{array}{c}n\\{n-k}\\\end{array}\right)$  组合意义：选出一部分再反选。</p>
+</li>
+<li><p>$\left( \begin{array}{c}n\\k\\\end{array}\right)=\left( \begin{array}{c}n-1\\k\\\end{array}\right)+\left( \begin{array}{c}n-1\\k-1\\\end{array}\right)$  组合意义：枚举第一个选或不选。</p>
+</li>
+<li><p>$\left( \begin{array}{c}n\\k\\\end{array}\right)\left( \begin{array}{c}k\\t\\\end{array}\right)=\left( \begin{array}{c}n\\t\\\end{array}\right)\left( \begin{array}{c}n-t\\k-t\\\end{array}\right)$  组合意义：把 $n$ 个数中选 $k$ 个再选 $t$ 个转化为 $n$ 中选 $t$ 个再选出 $k-t$ 个。</p>
+</li>
+<li><p>$\left( \begin{array}{c}n\\k\\\end{array}\right)=\sum_{i=k}^n\left( \begin{array}{c}i-1\\k-1\\\end{array}\right)$  组合意义：考虑最后一个数选在哪里，如果选在 $i$ 则前 $i-1$ 个中要选出 $k-1$ 个。</p>
+</li>
+<li><p>$\left( \begin{array}{c}n+m\\k\\\end{array}\right)=\sum_{i=0}^k\left( \begin{array}{c}n\\i\\\end{array}\right)\left( \begin{array}{c}m\\k-i\\\end{array}\right)$  组合意义：$n+m$ 里面选 $k$ 个，枚举前 $n$ 个里面选多少个。</p>
+<p>当 $n-m=k$ 时结合恒等式 $1$ 有 $\sum_{i-1}^n\left( \begin{array}{c}n\\i\\\end{array}\right)^2=\left( \begin{array}{c}2n\\n\\\end{array}\right)$。</p>
+</li>
+<li><p>$\left( \begin{array}{c}n\\a+b+1\\\end{array}\right)=\sum_{i=a+1}^{n-b}\left( \begin{array}{c}i-1\\a\\\end{array}\right)\left( \begin{array}{c}n-1\\b\\\end{array}\right)$  组合意义：考虑那个 $1$ 选在 $i$，一边选 $a$ 个一边选 $b$ 个。</p>
+<p>若 $b=0$ 则该式退化为恒等式 $4$。 </p>
+</li>
+<li><p>$(a+b)^n=\sum_{i=0}^n\left( \begin{array}{c}n\\i\\\end{array}\right)a^ib^{i-1}$  组合意义：真他妈难证，背过算了。</p>
+<p>当 $a=b=1$ 时，有 $\sum_{i=0}^n\left( \begin{array}{c}n\\i\\\end{array}\right)=2^n$。</p>
+<p>当 $a=-1,b=1$ 时，有$\sum\left( \begin{array}{c}n\\2k\\\end{array}\right)-\sum\left( \begin{array}{c}n\\2k+1\\\end{array}\right)=0(n\ge1)$、</p>
+</li>
+</ul>
 
     </div>
 
