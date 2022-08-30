@@ -28,7 +28,7 @@
 <meta property="og:description" content="整理一些基础数论定理知识。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-14T05:00:26.000Z">
-<meta property="article:modified_time" content="2022-07-02T01:28:22.000Z">
+<meta property="article:modified_time" content="2022-08-30T06:52:43.262Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -196,7 +196,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-02 09:28:22" itemprop="dateModified" datetime="2022-07-02T09:28:22+08:00">2022-07-02</time>
+                <time title="Modified: 2022-08-30 14:52:43" itemprop="dateModified" datetime="2022-08-30T14:52:43+08:00">2022-08-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -241,6 +241,11 @@
 <li>$x$奇$y$偶  $gcd( x,y ) = gcd( x,y/2 )$</li>
 <li>$x$偶$y$奇  $gcd( x,y ) = gcd( x/2,y )$ 或 $gcd( x,y )=gcd( y,x/2 )$</li>
 </ul>
+<p><strong>组合恒等式</strong>：</p>
+<p>$\left( \begin{array}{c}n\\k\\\end{array}\right)=\left( \begin{array}{c}n\\{n-k}\\\end{array}\right)$  组合意义：选出一部分再反选。</p>
+<p>$\left( \begin{array}{c}n\\k\\\end{array}\right)=\left( \begin{array}{c}n-1\\k\\\end{array}\right)+\left( \begin{array}{c}n-1\\k-1\\\end{array}\right)$  组合意义：枚举第一个选或不选。</p>
+<p>$\left( \begin{array}{c}n\\k\\\end{array}\right)\left( \begin{array}{c}k\\t\\\end{array}\right)=\left( \begin{array}{c}n\\t\\\end{array}\right)\left( \begin{array}{c}n-t\\k-t\\\end{array}\right)$  组合意义：把 $n$ 个数中选 $k$ 个再选 $t$ 个转化为 $n$ 中选 $t$ 个再选出 $k-t$ 个。</p>
+<p>$\left( \begin{array}{c}n\\k\\\end{array}\right)=\sum_{i=k}^n\left( \begin{array}{c}i-1\\k-1\\\end{array}\right)$  组合意义：考虑最后一个数选在哪里，如果选在 $i$ 则前 $i-1$ 个中要选出 $k-1$ 个。</p>
 
     </div>
 

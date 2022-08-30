@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-08-12T09:51:16.187Z">
+<meta property="article:modified_time" content="2022-08-30T06:42:24.934Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-12 17:51:16" itemprop="dateModified" datetime="2022-08-12T17:51:16+08:00">2022-08-12</time>
+                <time title="Modified: 2022-08-30 14:42:24" itemprop="dateModified" datetime="2022-08-30T14:42:24+08:00">2022-08-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -348,9 +348,9 @@
 </li>
 <li><p>$line20-21$：枚举图中每个点，当遇到 $dfn=0$ 的点即还未被搜索过的点便开始搜索，最终可以保证全部点都被搜索。</p>
 <p>若如果求出了 SCC，因为一个 SCC 内的点均可互相到达，在处理某些问题的时候就可以进行缩点处理，但是不属于本文探讨的问题范畴，故在此处不详细展开了。</p>
-<h4 id="Tarjan-CutPoint-求无向图割点的算法"><a href="#Tarjan-CutPoint-求无向图割点的算法" class="headerlink" title="$Tarjan-CutPoint$ 求无向图割点的算法"></a>$Tarjan-CutPoint$ 求无向图割点的算法</h4><p> 延续刚才的话题，下面给出无向图中维护 $dfn$ 与 $low$ 的代码实例：</p>
 </li>
 </ul>
+<h4 id="Tarjan-CutPoint-求无向图割点的算法"><a href="#Tarjan-CutPoint-求无向图割点的算法" class="headerlink" title="Tarjan-CutPoint 求无向图割点的算法"></a>Tarjan-CutPoint 求无向图割点的算法</h4><p>   延续刚才的话题，下面给出无向图中维护 $dfn$ 与 $low$ 的代码实例：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">	dfn[x]=low[x]=++nowtime;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=head[x];i;i=e[i].next)&#123;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">v</span><span class="params">(e[i].to)</span></span>;</span><br><span class="line">		<span class="keyword">if</span>(!dfn[v])&#123;</span><br><span class="line">			<span class="built_in">tarjan</span>(v);</span><br><span class="line">			low[x]=<span class="built_in">min</span>(low[x],low[v]);</span><br><span class="line">		&#125;<span class="keyword">else</span> low[x]=<span class="built_in">min</span>(low[x],dfn[v]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li><p>可以发现这里 $low[]$ 数组的意义变为了最多经过<strong>一条返祖边</strong>能走到栈中的 $dfn$ 最小的结点为多少，为什么少了一个“在栈中”呢？</p>
@@ -412,7 +412,7 @@
 <li><p>$line 14$：因为搜索树的根结点不存在父亲，因此 $father$ 传入什么都是不影响判断的，因为对于根结点一定不会发生 $line9$ 的更新。</p>
 </li>
 </ul>
-<h4 id="Tarjan-V-DCC-求无向图点双联通分量-V-DCC-的算法"><a href="#Tarjan-V-DCC-求无向图点双联通分量-V-DCC-的算法" class="headerlink" title="$Tarjan-V-DCC$ 求无向图点双联通分量($V-DCC$)的算法"></a>$Tarjan-V-DCC$ 求无向图点双联通分量($V-DCC$)的算法</h4><p>   接下来我们将开始讨论双联通分量的问题，首先是点双联通分量。</p>
+<h4 id="Tarjan-V-DCC-求无向图点双联通分量-V-DCC-的算法"><a href="#Tarjan-V-DCC-求无向图点双联通分量-V-DCC-的算法" class="headerlink" title="Tarjan-V-DCC 求无向图点双联通分量($V-DCC$)的算法"></a>Tarjan-V-DCC 求无向图点双联通分量($V-DCC$)的算法</h4><p>   接下来我们将开始讨论双联通分量的问题，首先是点双联通分量。</p>
 <p>   在文章的开始位置已经提醒过读者需要对各种联通分量的概念有一定的了解，因此关于点双联通分量定义的完善和补充并不是本篇文章的讨论内容。</p>
 <p>   对于点双联通分量的求法，我们仅需考虑：每个割点将处于两个点双联通分量中，感性理解一下就是两个割点之间夹了一个点双联通分量。</p>
 <p>以上明确后，接下来我们看代码：</p>
@@ -535,7 +535,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%B9%E5%88%A4"><span class="nav-number">1.</span> <span class="nav-text">批判</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%91%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E4%BC%98%E7%BE%8E%E7%9A%84%E6%A0%88"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">一个优美的栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-SCC-%E6%B1%82%E6%9C%89%E5%90%91%E5%9B%BE%E7%9A%84%E5%BC%BA%E8%81%94%E9%80%9A%E5%88%86%E9%87%8F-SCC-%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.3.</span> <span class="nav-text">Tarjan-SCC 求有向图的强联通分量(SCC)的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-CutPoint-%E6%B1%82%E6%97%A0%E5%90%91%E5%9B%BE%E5%89%B2%E7%82%B9%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.4.</span> <span class="nav-text">$Tarjan-CutPoint$ 求无向图割点的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-Bridge-%E6%B1%82%E6%97%A0%E5%90%91%E5%9B%BE%E6%A1%A5%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.5.</span> <span class="nav-text">Tarjan-Bridge 求无向图桥的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-V-DCC-%E6%B1%82%E6%97%A0%E5%90%91%E5%9B%BE%E7%82%B9%E5%8F%8C%E8%81%94%E9%80%9A%E5%88%86%E9%87%8F-V-DCC-%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.6.</span> <span class="nav-text">$Tarjan-V-DCC$ 求无向图点双联通分量($V-DCC$)的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-E-DCC-%E6%B1%82%E6%97%A0%E5%90%91%E5%9B%BE%E8%BE%B9%E5%8F%8C%E8%81%94%E9%80%9A%E5%88%86%E9%87%8F-E-DCC-%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.7.</span> <span class="nav-text">Tarjan-E-DCC 求无向图边双联通分量(E-DCC)的算法</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%B9%E5%88%A4"><span class="nav-number">1.</span> <span class="nav-text">批判</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%91%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E4%BC%98%E7%BE%8E%E7%9A%84%E6%A0%88"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">一个优美的栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-SCC-%E6%B1%82%E6%9C%89%E5%90%91%E5%9B%BE%E7%9A%84%E5%BC%BA%E8%81%94%E9%80%9A%E5%88%86%E9%87%8F-SCC-%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.3.</span> <span class="nav-text">Tarjan-SCC 求有向图的强联通分量(SCC)的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-CutPoint-%E6%B1%82%E6%97%A0%E5%90%91%E5%9B%BE%E5%89%B2%E7%82%B9%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.4.</span> <span class="nav-text">Tarjan-CutPoint 求无向图割点的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-Bridge-%E6%B1%82%E6%97%A0%E5%90%91%E5%9B%BE%E6%A1%A5%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.5.</span> <span class="nav-text">Tarjan-Bridge 求无向图桥的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-V-DCC-%E6%B1%82%E6%97%A0%E5%90%91%E5%9B%BE%E7%82%B9%E5%8F%8C%E8%81%94%E9%80%9A%E5%88%86%E9%87%8F-V-DCC-%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.6.</span> <span class="nav-text">Tarjan-V-DCC 求无向图点双联通分量($V-DCC$)的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tarjan-E-DCC-%E6%B1%82%E6%97%A0%E5%90%91%E5%9B%BE%E8%BE%B9%E5%8F%8C%E8%81%94%E9%80%9A%E5%88%86%E9%87%8F-E-DCC-%E7%9A%84%E7%AE%97%E6%B3%95"><span class="nav-number">2.0.0.7.</span> <span class="nav-text">Tarjan-E-DCC 求无向图边双联通分量(E-DCC)的算法</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
