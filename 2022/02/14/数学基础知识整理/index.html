@@ -28,7 +28,7 @@
 <meta property="og:description" content="整理一些数学基础知识。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-14T05:00:26.000Z">
-<meta property="article:modified_time" content="2022-08-31T01:20:41.487Z">
+<meta property="article:modified_time" content="2022-08-31T11:23:39.703Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -196,7 +196,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-31 09:20:41" itemprop="dateModified" datetime="2022-08-31T09:20:41+08:00">2022-08-31</time>
+                <time title="Modified: 2022-08-31 19:23:39" itemprop="dateModified" datetime="2022-08-31T19:23:39+08:00">2022-08-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -223,16 +223,16 @@
 <span id="more"></span>
 <p><strong>算数基本定理</strong></p>
 <p>任意一个大于1的正整数都能被唯一分解成有限个质数的乘积，可写作：</p>
-<script type="math/tex; mode=display">N=p_1^{c_1}p_2^{c_2}...p_m^{c_m}</script><p>其中$c_i$都是正整数，$p_i$均为质数，且满足$p_1&lt;p_2&lt;…&lt;p_m$。</p>
+<script type="math/tex; mode=display">N=p_1^{c_1}p_2^{c_2}...p_m^{c_m}</script><p>其中 $c_i$ 都是正整数，$p_i$ 均为质数，且满足 $p_1&lt;p_2&lt;…&lt;p_m$。</p>
 <p>显然的推广：如果两个数没有相同的质因数，则这两个数互质。</p>
-<p><strong>裴蜀定理</strong>：对于方程$ax+by=c \ \ \ x,y\in \mathbb{Z}^+$，当且仅当$gcd(a,b)|c$时，有整数解。</p>
+<p><strong>裴蜀定理</strong>：对于方程 $ax+by=c \ \ \ x,y\in \mathbb{Z}^+$，当且仅当 $gcd(a,b)|c$ 时，有整数解。</p>
 <p><strong>gcd/lcm转换</strong>：$gcd(a,b)lcm(a,b)=ab$</p>
 <p><strong>费马小定理</strong>：</p>
-<p>若$gcd(a,m)=1$，则$a^{m-1} \equiv 1(mod \ m)$</p>
-<p>推广：若$gcd(a,m)=1$，则$a^m \equiv m(mod \ m)$</p>
+<p>若 $gcd(a,m)=1 $，则 $a^{m-1} \equiv 1(mod \ m)$</p>
+<p>推广：若 $gcd(a,m)=1$，则 $a^m \equiv m(mod \ m)$</p>
 <p><strong>线性同余转换</strong>：<script type="math/tex">ax+by=c \ \leftarrow\rightarrow \ a×x\equiv c(mod \ b)</script></p>
 <p><strong>欧几里得</strong>：$gcd(a,b)=gcd(b,a \ mod \ b)  \ \ gcd(a,0)=a \ \ (b\not=0)$</p>
-<p><strong>欧拉定理</strong>：若$gcd(a,m)=1$，则$a^{\phi(m)}\equiv 1(mod \ m)$</p>
+<p><strong>欧拉定理</strong>：若 $gcd(a,m)=1$，则 $a^{\phi(m)}\equiv 1(mod \ m)$</p>
 <p><strong>拓展欧拉定理</strong>：$a^b\equiv a^{b \ mod \ \phi(m)+\phi(m)}(mod \ m)$</p>
 <p><strong>Stein算法</strong>：</p>
 <ul>
@@ -270,6 +270,19 @@
 <li>预处理阶乘，递推处理阶乘逆元，对小质数很可能失效（可用卢卡斯补救）。</li>
 </ul>
 <p><strong>Lucas定理</strong>：$\left( \begin{array}{c}n\\m\\\end{array}\right)\equiv\left( \begin{array}{c}\lfloor\frac{n}{p}\rfloor\\\lfloor\frac{m}{p}\rfloor\\\end{array}\right)\left( \begin{array}{c}n \ mod \ p\\m \ mod \ p\\\end{array}\right) \ (mod \ p)$</p>
+<p><strong>容斥原理</strong>：规律为奇加偶减。</p>
+<script type="math/tex; mode=display">\displaystyle  |\bigcup_{i=1}^nA_i|=\sum_{k=1}^n(-1)^{k-1}\sum_{1\le i_i \le i_2 \le <...<i_k\le n}|A_{i_1}\cap A_{i_2}\cap ...\cap A_{i_k}|</script><p><strong>错置排序</strong>：$D_n=n!(\sum_{i=0}^n\frac{(-1)^i}{i!})$</p>
+<p><strong>组合排列问题常见模型</strong>：</p>
+<ul>
+<li><p>捆绑法：多个对象排列在一起的问题把这些对象合并为一个整体，先考虑整体的组合再考虑整体内部的组合。</p>
+</li>
+<li><p>插空法：多个对象要分开时，把其他对象排好再在空隙中插入。</p>
+</li>
+<li><p>插板法：</p>
+<p>对于求 $x_1+x_2+…+x_n=m$ 的正整数解，考虑是在 $m$ 个球的 $m-1$ 个空隙中插入 $n-1$ 个板子，因此答案是 $C^{m-1}_{n-1}$。</p>
+<p>对于求 $x_1+x_2+…+x_n=m$ 的非负整数解，实际上可以直接把 $x_i$ 变为 $x_i+1$，答案为 $C_{n-1}^{m+n-1}$。</p>
+</li>
+</ul>
 
     </div>
 
