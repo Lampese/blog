@@ -28,7 +28,7 @@
 <meta property="og:description" content="整理一些数学基础知识。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-02-14T05:00:26.000Z">
-<meta property="article:modified_time" content="2022-08-31T11:23:39.703Z">
+<meta property="article:modified_time" content="2022-09-01T01:59:05.114Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 
@@ -196,7 +196,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-31 19:23:39" itemprop="dateModified" datetime="2022-08-31T19:23:39+08:00">2022-08-31</time>
+                <time title="Modified: 2022-09-01 09:59:05" itemprop="dateModified" datetime="2022-09-01T09:59:05+08:00">2022-09-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -279,8 +279,29 @@
 <li><p>插空法：多个对象要分开时，把其他对象排好再在空隙中插入。</p>
 </li>
 <li><p>插板法：</p>
-<p>对于求 $x_1+x_2+…+x_n=m$ 的正整数解，考虑是在 $m$ 个球的 $m-1$ 个空隙中插入 $n-1$ 个板子，因此答案是 $C^{m-1}_{n-1}$。</p>
-<p>对于求 $x_1+x_2+…+x_n=m$ 的非负整数解，实际上可以直接把 $x_i$ 变为 $x_i+1$，答案为 $C_{n-1}^{m+n-1}$。</p>
+<ul>
+<li><p>对于求 $x_1+x_2+…+x_n=m$ 的正整数解，考虑是在 $m$ 个球的 $m-1$ 个空隙中插入 $n-1$ 个板子，因此答案是 $C^{n-1}_{m-1}$。</p>
+</li>
+<li><p>对于求 $x_1+x_2+…+x_n=m$ 的非负整数解，实际上可以直接把 $x_i$ 变为 $x_i+1$，答案为 $C_{m+n-1}^{n-1}$。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>组合排列常用结论</strong>：</p>
+<ul>
+<li><p>斯特林数</p>
+<ul>
+<li><p>第一类</p>
+<p>定义：$s(n,k)$ 表示 $n$ 个元素构成 $k$ 个圆排列的方案数。</p>
+<p>递推公式：$s(n,k)=s(n-1,k-1)+(n-1)\times s(n-1,k)$。</p>
+</li>
+<li><p>第二类</p>
+<p>定义：$s(n,k)$ 表示把 $n$ 个不同的元素放入 $k$ 个无差别盒子的方案数。</p>
+<p>递推公式：$s(n,k)=s(n-1,k-1)+k\times s_2(n-1,k)$。</p>
+</li>
+</ul>
+</li>
+<li><p>圆排列：$n$ 个元素组成一个长度为 $m$ 的圆排列的方案数为 $A_n^m/m$。</p>
 </li>
 </ul>
 
