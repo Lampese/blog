@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lampese.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="很久之前就想写一篇这个文章了，但是一直没抽出时间。 今天下午刚好颓废没事做，我们来聊聊这个话题吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="咱来写个很快很快的拉链HashMap">
+<meta property="og:url" content="https://lampese.com/2022/09/03/%E5%92%B1%E6%9D%A5%E5%86%99%E4%B8%AA%E5%BE%88%E5%BF%AB%E5%BE%88%E5%BF%AB%E7%9A%84%E6%8B%89%E9%93%BEHashMap/index.html">
+<meta property="og:site_name" content="东灯的寒舍">
+<meta property="og:description" content="很久之前就想写一篇这个文章了，但是一直没抽出时间。 今天下午刚好颓废没事做，我们来聊聊这个话题吧。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/q00itivm.png">
+<meta property="article:published_time" content="2022-09-03T07:18:38.000Z">
+<meta property="article:modified_time" content="2022-09-03T12:07:03.459Z">
+<meta property="article:author" content="东灯">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/q00itivm.png">
+
+<link rel="canonical" href="https://lampese.com/2022/09/03/%E5%92%B1%E6%9D%A5%E5%86%99%E4%B8%AA%E5%BE%88%E5%BF%AB%E5%BE%88%E5%BF%AB%E7%9A%84%E6%8B%89%E9%93%BEHashMap/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>咱来写个很快很快的拉链HashMap | 东灯的寒舍</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">东灯的寒舍</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">你特别好，我喜欢你 </p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-lastest">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Lastest</a>
+
+  </li>
+        <li class="menu-item menu-item-coding">
+
+    <a href="/categories/coding/" rel="section"><i class="fa fa-fw fa-calendar"></i>Coding</a>
+
+  </li>
+        <li class="menu-item menu-item-problems">
+
+    <a href="/categories/problems/" rel="section"><i class="fa fa-fw fa-sitemap"></i>Problems</a>
+
+  </li>
+        <li class="menu-item menu-item-friends">
+
+    <a href="/friends/" rel="section"><i class="fa fa-fw fa-heartbeat"></i>Friends</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lampese.com/2022/09/03/%E5%92%B1%E6%9D%A5%E5%86%99%E4%B8%AA%E5%BE%88%E5%BF%AB%E5%BE%88%E5%BF%AB%E7%9A%84%E6%8B%89%E9%93%BEHashMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.luogu.com.cn/upload/image_hosting/dhpjvh0c.png">
+      <meta itemprop="name" content="东灯">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="东灯的寒舍">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          咱来写个很快很快的拉链HashMap
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-03 15:18:38 / Modified: 20:07:03" itemprop="dateCreated datePublished" datetime="2022-09-03T15:18:38+08:00">2022-09-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/coding/" itemprop="url" rel="index"><span itemprop="name">coding</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>很久之前就想写一篇这个文章了，但是一直没抽出时间。</p>
+<p>今天下午刚好颓废没事做，我们来聊聊这个话题吧。</p>
+<span id="more"></span>
+<p>在切入正题之前我们要先讨论两个问题：</p>
+<ul>
+<li>何谓 Map？</li>
+<li>怎么做高效的 Hash？</li>
+</ul>
+<h3 id="何谓-Map？"><a href="#何谓-Map？" class="headerlink" title="何谓 Map？"></a>何谓 Map？</h3><p>Map 是一类可以映射键值对 $key - value$ 的数据结构，可以使用 $key$ 来查询 $value$ 的值。</p>
+<p>理论上能够完成这些事情的数据结构都可以叫做 Map。</p>
+<p>而 Map 的速度很大程度上取决于应该如何高效地完成查找 $key$ 所映射的 $value$ 值的过程，HashMap 就是 Map 的一种实现，它的理想复杂度为 $O(1)$。</p>
+<h3 id="怎么做高效的-Hash？"><a href="#怎么做高效的-Hash？" class="headerlink" title="怎么做高效的 Hash？"></a>怎么做高效的 Hash？</h3><h5 id="Hash-的定义及我们采用的方法"><a href="#Hash-的定义及我们采用的方法" class="headerlink" title="Hash 的定义及我们采用的方法"></a>Hash 的定义及我们采用的方法</h5><p>Hash 就是散列，是一个定义很自由的名词，而目的是把一个 $key$ 散列为一个期望范围内的值。</p>
+<p>一旦 $key$ 被散列到了一个可以接受的范围内，就代表查找某个 $key$ 时只需要把它重新散列成那个值就可以查找到答案。</p>
+<p>可以用鸽笼定理发现的是，一个更大的范围转换到一个更小的范围一定会有很多元素冲突在一个值上，我们将其称为 <strong>Hash 碰撞</strong>，在出现碰撞时如何解决也是 HashMap 的一个重要工作。</p>
+<p>那么对于 HashMap 来说，散列后的范围越大，Hash 散列的方法越优秀，理论上来说发生碰撞的概率就越小，但是相对应的，占用的空间也成本也就越多。</p>
+<p>在这里我们介绍一种最常用的散列方法：模数散列法。</p>
+<p>其哈希散列函数的定义很简单： $hash(x)=x \ mod \ P$。</p>
+<p>其正确性如何证明？考虑一个正整数在经过该函数处理后，一定就散列到了模 $P$ 的剩余系中，散列范围即为 $[0,P-1]$。但是使用这个方法需要注意的是 $P$ 的选取最好是一个大质数，当其为小质数时，可能成为其他大整数的质因子，导致大量值在 $0$ 处堆积；当其不是质数时也会导致碰撞，<a target="_blank" rel="noopener" href="https://www.cnblogs.com/hubaoxi/p/15927241.html">证明可以见此</a>。</p>
+<p>注意到取模运算在 C++ 中的复杂度并不是很优秀，我们需要对这个方法进行一些改造，运用一个性质：当今且仅当 $P=2^n-1$ 时，$x\&amp;P=x \ mod \ 2^n$。</p>
+<p>因此我们可以直接选择模数为 $2^n-1$，用按位与解决该问题。这时候读者可能有一个疑问：如何保证 $2^n$ 不是质数不是散列出来的效果不好吗？那…其实你把这个值选的比较大别人就卡不掉了！</p>
+<p>而且目前的 $OI$ 界一般没有针对这个模数的碰撞数据，因为如果需要卡碰撞，会卡常规方法写出来的碰撞，出题人很难猜到有人用这种邪门的散列思路，想到了也觉得应该先把常规的方法卡掉再卡这种方法，因此一般来说采用 $2^n$ 作为模数来散列在算法竞赛中是不会被卡的。</p>
+<h5 id="效率比较"><a href="#效率比较" class="headerlink" title="效率比较"></a>效率比较</h5><p>我们来比较取模和按位与的效率，下面是比较采用的代码：</p>
+<p>（为了避免编译器优化已知模数，这里我们采用输入方法读入模数，而且为了避免编译器直接把这个循环优化掉，我们要输出最后的结果）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> end=<span class="number">1e8</span>,mod,<span class="built_in">ans</span>(<span class="number">0</span>);</span><br><span class="line">cin&gt;&gt;mod;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> i=<span class="number">1</span>;i&lt;end;++i)ans+=i%mod;</span><br><span class="line">cout&lt;&lt;ans&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> end=<span class="number">1e8</span>,mod,<span class="built_in">ans</span>(<span class="number">0</span>);</span><br><span class="line">cin&gt;&gt;mod;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> i=<span class="number">1</span>;i&lt;end;++i)ans+=i&amp;mod;</span><br><span class="line">cout&lt;&lt;ans&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+<p>评测鸭给出的数据显示，在输入为 $65536(65535)$ 的情况下，采用取模运算的程序运行时间为 $700.94759ms$，而按位与运算的时间仅为 $34.770499ms$。</p>
+<h3 id="来说说-HashMap？"><a href="#来说说-HashMap？" class="headerlink" title="来说说 HashMap？"></a>来说说 HashMap？</h3><p>我们这里实现拉链 HashMap 的方法是采用拉链法。</p>
+<p>拉链法很好理解，对于散射的范围 $[0,M]$，我们建立 $M+1$ 个链表，接下来：</p>
+<ul>
+<li><p>插入</p>
+<p>在插入时，我们直接将原 $key$ 散列到 $[0,M]$，然后找到对应的链表将键值对 $key - value$ 插入（注意插入时插入的是未散列的 $key$，因为如果发生了碰撞，就不能用散列值来区分这些碰撞的 $key$ 了 ，查询时需要用原始的 $key$ 来匹配）。</p>
+</li>
+<li><p>查询</p>
+<p>在查询某个 $key$ 时，先把 $key$ 散列到 $[0,M]$，接下来在散列后的值所对应链表中从头到尾寻找是否有与原始的 $key$ 相匹配的键值对 。如果有，则将其 $value$ 作为结果；否则就是查询失败，HashMap 中并没有存储过该键值对。</p>
+</li>
+</ul>
+<p>这里有一张网图作为示意：</p>
+<p><img src="https://cdn.luogu.com.cn/upload/image_hosting/q00itivm.png" alt=""></p>
+<p>可以发现我们的目的是要开很多很多链表，等于一个链表数组，什么可以快速帮我们解决这个需求呢？</p>
+<ul>
+<li><p>std::forward_list？</p>
+<p>C++ 的 STL 中提供了单向链表的实现 std::forward_list，但是常数太大，时间和空间都达不到我们的需求。</p>
+</li>
+<li><p>手写一个动态开辟空间的链表？</p>
+<p>很容易写错，而且操作十分麻烦。</p>
+</li>
+</ul>
+<p>这时候我们想起了图论中的<strong>链式前向星</strong>，这不正好贴中我们的需求吗！可以将多个链表压到一维，时间和空间的复杂度都很优秀！</p>
+<h5 id="开始行动！"><a href="#开始行动！" class="headerlink" title="开始行动！"></a>开始行动！</h5><p>首先，我们假定采用的模数为 $P=2^{10}$，而 HashMap 中最多存储 $10^5$ 个键值对。</p>
+<ul>
+<li><p>先定义一个 HashMap 所用的链式前向星节点和 head 数组以及用于统计当前已插入元素的 cnt</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 10005</span></span><br><span class="line"><span class="keyword">unsigned</span> head[<span class="number">1</span>&lt;&lt;<span class="number">10</span>],cnt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">edge</span>&#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> key,value;<span class="comment">//代表一堆 &lt;key-value&gt; 映射</span></span><br><span class="line">    <span class="keyword">unsigned</span> next;</span><br><span class="line">&#125;e[MAXN];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>接下来写一个插入函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">unsigned</span> key,<span class="keyword">unsigned</span> value)</span></span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> hashed=key&amp;((<span class="number">1</span>&lt;&lt;<span class="number">10</span>)<span class="number">-1</span>);</span><br><span class="line">    e[++cnt]=&#123;key,value,head[hashed]&#125;;</span><br><span class="line">    head[hashed]=cnt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>再写一个查询函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">unsigned</span> <span class="title">find</span><span class="params">(<span class="keyword">unsigned</span> key)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">unsigned</span> i=key&amp;((<span class="number">1</span>&lt;&lt;<span class="number">10</span>)<span class="number">-1</span>);i;i=e[i].next)</span><br><span class="line">        <span class="keyword">if</span>(e[i].key==key)<span class="keyword">return</span> e[i].value;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这样一个很快很快的拉链 HashMap 就完成了。</p>
+<h5 id="你这不行，不能弄字符串！"><a href="#你这不行，不能弄字符串！" class="headerlink" title="你这不行，不能弄字符串！"></a>你这不行，不能弄字符串！</h5><p>字符串当然可以！</p>
+<p>实际上 HashMap 实现存储字符串的方法就是把字符串映射为一个数字的 $key$，然后按照刚才我说的方法处理。</p>
+<p>如何映射呢？这里我再推荐一个 $Hash$ 函数（递推形式）：$hash(str,i)=hash(str[i-1])*131+str[i]$，最终对于一个字符串的 $hash$ 值即为 $hash(str,str.size())$。</p>
+<p>为什么这样处理？因为这样可以保证每一位都有不同的权重，而 $131$ 是字符 $z$ 在 ACSII 表中对应的值的后一个质数，保证了散列的优秀性。</p>
+<p>那么我们就可以包装一下，把它变成一个很强大的 HashMap：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> I unsigned</span></span><br><span class="line"><span class="keyword">template</span>&lt;I S,I T&gt;<span class="class"><span class="keyword">struct</span> <span class="title">HashMap</span>&#123;</span><span class="comment">//这里的S表示最多存储多少键值对，T表示模数为2^T（等于是决定了散列范围的大小）</span></span><br><span class="line">	I H[<span class="number">1</span>&lt;&lt;T|<span class="number">1</span>],M=(<span class="number">1</span>&lt;&lt;T)<span class="number">-1</span>,C=<span class="number">0</span>,i,e,U,V;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> _&#123;</span>I k,v,n;&#125;G[S+<span class="number">1</span>];</span><br><span class="line">	<span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">D</span><span class="params">(<span class="keyword">const</span> string &amp;s)</span></span>&#123;<span class="keyword">for</span>(i=U=<span class="number">0</span>,e=s.<span class="built_in">size</span>();i&lt;e;)U=(U&lt;&lt;<span class="number">7</span>)+(U&lt;&lt;<span class="number">3</span>)+U+s[i++];&#125;</span><br><span class="line">	<span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">const</span> string &amp;s,I v)</span></span>&#123;<span class="built_in">D</span>(s),V=U&amp;M,G[++C]=&#123;U,v,H[V]&#125;,H[V]=C;&#125;</span><br><span class="line">	<span class="function"><span class="keyword">inline</span> I <span class="title">find</span><span class="params">(<span class="keyword">const</span> string &amp;s)</span></span>&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="built_in">D</span>(s),i=H[U&amp;M];i&amp;&amp;G[i].k!=U;i=G[i].n);</span><br><span class="line">		<span class="keyword">return</span> i?G[i].v:<span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>东灯
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="https://lampese.com/2022/09/03/%E5%92%B1%E6%9D%A5%E5%86%99%E4%B8%AA%E5%BE%88%E5%BF%AB%E5%BE%88%E5%BF%AB%E7%9A%84%E6%8B%89%E9%93%BEHashMap/" title="咱来写个很快很快的拉链HashMap">https://lampese.com/2022/09/03/咱来写个很快很快的拉链HashMap/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/08/13/%E7%BA%BF%E7%AD%9B%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/" rel="prev" title="线筛及其应用">
+      <i class="fa fa-chevron-left"></i> 线筛及其应用
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%95%E8%B0%93-Map%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">何谓 Map？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%81%9A%E9%AB%98%E6%95%88%E7%9A%84-Hash%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">怎么做高效的 Hash？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Hash-%E7%9A%84%E5%AE%9A%E4%B9%89%E5%8F%8A%E6%88%91%E4%BB%AC%E9%87%87%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.0.1.</span> <span class="nav-text">Hash 的定义及我们采用的方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%88%E7%8E%87%E6%AF%94%E8%BE%83"><span class="nav-number">2.0.2.</span> <span class="nav-text">效率比较</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A5%E8%AF%B4%E8%AF%B4-HashMap%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">来说说 HashMap？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E8%A1%8C%E5%8A%A8%EF%BC%81"><span class="nav-number">3.0.1.</span> <span class="nav-text">开始行动！</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%A0%E8%BF%99%E4%B8%8D%E8%A1%8C%EF%BC%8C%E4%B8%8D%E8%83%BD%E5%BC%84%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%81"><span class="nav-number">3.0.2.</span> <span class="nav-text">你这不行，不能弄字符串！</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="东灯"
+      src="https://cdn.luogu.com.cn/upload/image_hosting/dhpjvh0c.png">
+  <p class="site-author-name" itemprop="name">东灯</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Lampese" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Lampese" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:me@Lampese.com" title="E-Mail → mailto:me@Lampese.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">东灯</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
