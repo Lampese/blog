@@ -29,7 +29,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/pic/44633.png">
 <meta property="article:published_time" content="2022-03-16T13:38:30.000Z">
-<meta property="article:modified_time" content="2022-07-02T01:27:56.000Z">
+<meta property="article:modified_time" content="2022-09-03T14:25:21.527Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/pic/44633.png">
@@ -198,7 +198,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-07-02 09:27:56" itemprop="dateModified" datetime="2022-07-02T09:27:56+08:00">2022-07-02</time>
+                <time title="Modified: 2022-09-03 22:25:21" itemprop="dateModified" datetime="2022-09-03T22:25:21+08:00">2022-09-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,12 +242,12 @@
 <p>进一步挖掘，可以发现圆方树的优美性质：</p>
 <ul>
 <li>圆方树可以把原图缩成树，却可以维护原图的连通性</li>
-<li>割点是圆方树上度大于$1$的圆点</li>
+<li>割点是圆方树上度大于 $1$ 的圆点</li>
 </ul>
 <p>通过高级性质，我们发现：</p>
 <ul>
 <li>既然圆方树可以维护原图的连通性，我们就可以使用方点维护周围圆点的信息，然后进行树剖等操作来维护两点之间简单路径的信息。</li>
-<li>既然割点是圆方树上度大于$1$的点，我们就可以轻松的探究图上点与割点本身的关系。</li>
+<li>既然割点是圆方树上度大于 $1$ 的点，我们就可以轻松的探究图上点与割点本身的关系。</li>
 </ul>
 <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>为了不引起题面缩略导致的意义不全，不缩略题面。</p>
 <p><strong>CF487E Tourists</strong></p>
@@ -257,10 +257,10 @@
 <p>虽然只是我个人的想法…</p>
 <p>我觉得用圆方树做这题的纯属是闲的没事干。</p>
 <p><strong>[ZJOI2004]嗅探器</strong></p>
-<p>问题可以转化为对于任意一个割点，判断是否可以把$A$点和$B$点断开。</p>
+<p>问题可以转化为对于任意一个割点，判断是否可以把 $A$ 点和 $B$ 点断开。</p>
 <p>建立圆方树后，如果两个圆点和相同的方点连接，那么就是无解，因为删除哪个点都不能影响它们的通讯。</p>
-<p>否则，就可以暴力上跳到它们的$LCA$，不断寻找度大于$1$的最小编号点。</p>
-<p>圆方树有效的忽略了本题中的无用割点（因为他们都不在$A$和$B$所处的子树中），思想又显得比较有趣。</p>
+<p>否则，就可以暴力上跳到它们的 $LCA$，不断寻找度大于 $1$ 的最小编号点。</p>
+<p>圆方树有效的忽略了本题中的无用割点（因为他们都不在 $A$ 和 $B$ 所处的子树中），思想又显得比较有趣。</p>
 
     </div>
 
