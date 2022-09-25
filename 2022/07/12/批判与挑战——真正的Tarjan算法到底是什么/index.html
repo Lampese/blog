@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-08-30T06:42:24.934Z">
+<meta property="article:modified_time" content="2022-09-25T01:45:05.620Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -203,7 +203,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-08-30 14:42:24" itemprop="dateModified" datetime="2022-08-30T14:42:24+08:00">2022-08-30</time>
+                <time title="Modified: 2022-09-25 09:45:05" itemprop="dateModified" datetime="2022-09-25T09:45:05+08:00">2022-09-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -309,7 +309,7 @@
 <li><p>$line4-5$：枚举遍历点 $x$ 的出度，并获取出边指向的点。</p>
 </li>
 <li><p>$line6$：如果该点已经被压栈即该点满足一个性质：<strong>该点还未被判定为某一 SCC 中的点</strong>。</p>
-<p>于是，该点的 $low$ 向出点的 $dfn$ 询问是否可以经过出点走到更小的点，以更新自己的 $low$。</p>
+<p>于是，当前点的 $low$ 向该点的 $dfn$ 询问是否可以经过出点走到更小的点，以更新自己的 $low$。</p>
 <p>在这里引出三个问题（这里的回答需要使用 $line12$ 的描述，可以先行跳读 $line12$）：</p>
 <ul>
 <li><p>$Q1$：为什么 $line9$ 是 $low[x]=min(low[x],low[v])$？</p>
