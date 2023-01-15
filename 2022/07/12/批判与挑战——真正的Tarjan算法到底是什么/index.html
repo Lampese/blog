@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/jrz6ngtw.png">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png">
 <meta property="article:published_time" content="2022-07-12T02:56:21.000Z">
-<meta property="article:modified_time" content="2022-09-27T01:33:36.752Z">
+<meta property="article:modified_time" content="2023-01-15T07:15:49.887Z">
 <meta property="article:author" content="东灯">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/image_hosting/iqzcwqrm.png">
@@ -127,12 +127,17 @@
   </li>
         <li class="menu-item menu-item-coding">
 
-    <a href="/categories/coding/" rel="section"><i class="fa fa-fw fa-calendar"></i>Coding</a>
+    <a href="/categories/coding/" rel="section"><i class="fa fa-fw fa-code"></i>Coding</a>
 
   </li>
         <li class="menu-item menu-item-problems">
 
-    <a href="/categories/problems/" rel="section"><i class="fa fa-fw fa-sitemap"></i>Problems</a>
+    <a href="/categories/problems/" rel="section"><i class="fa fa-fw fa-book"></i>Problems</a>
+
+  </li>
+        <li class="menu-item menu-item-writing">
+
+    <a href="/categories/writing/" rel="section"><i class="fa fa-fw fa-edit"></i>Writing</a>
 
   </li>
         <li class="menu-item menu-item-friends">
@@ -203,7 +208,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-09-27 09:33:36" itemprop="dateModified" datetime="2022-09-27T09:33:36+08:00">2022-09-27</time>
+                <time title="Modified: 2023-01-15 15:15:49" itemprop="dateModified" datetime="2023-01-15T15:15:49+08:00">2023-01-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,7 +244,7 @@
 <ul>
 <li><p><strong>(洛谷P3388题解)<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/user15232/solution-p3388">题解 P3388 【【模板】割点（割顶）】</a></strong>：一个 SCC 内点的 $low$ 最终不一定一致，该错误我会在下面求 SCC 的时候详细说明。</p>
 </li>
-<li><p><strong>(CSDN)<a target="_blank" rel="noopener" href="https://blog.csdn.net/a_forever_dream/article/details/103019013">点双连通分量&amp;边双联通分量详解</a></strong>：对点双定义的修复确实很有价值，但是对于求割点时为什么要判断 root 和 child 的举例图片并非反例，不特判也可以成功找出割点。</p>
+<li><p><strong>(CSDN)<a target="_blank" rel="noopener" href="https://blog.csdn.net/a_forever_dream/article/details/103019013">点双连通分量&amp;边双联通分量详解</a></strong>：对点双定义的修复确实很有价值，但是对于求割点时为什么要判断 $root$ 和 $child$ 的举例图片并非反例，不特判也可以成功找出割点。</p>
 </li>
 <li><p><strong>(CSDN)<a target="_blank" rel="noopener" href="https://blog.csdn.net/zsyz_ZZY/article/details/79907335">割点详解</a></strong>：试问你详解了什么？</p>
 </li>
@@ -248,7 +253,7 @@
 </li>
 <li><p>(<strong>搬运后的cnblog)<a target="_blank" rel="noopener" href="http://www.wjhsh.net/WWHHTT-p-9745499.html">浅谈图的割点和割边（Tarjan）</a></strong>：有向图有割点……？</p>
 </li>
-<li><p><strong>(洛谷博客)<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/naruto-lfk/tarjan-ge-bian-yu-ge-dian">tarjan——割边与割点</a></strong>：“对于 DFS 树根, 判断度数是否大于 1 ”描述错误，root 点可以在图中度数大于1 的情况下在搜索树上的度数仅为 1，搜索树上的 root 大于1 才可以证明该点为割点。</p>
+<li><p><strong>(洛谷博客)<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/naruto-lfk/tarjan-ge-bian-yu-ge-dian">tarjan——割边与割点</a></strong>：“对于 DFS 树根, 判断度数是否大于 1 ”描述错误，root 点可以在图中度数大于1 的情况下在搜索树上的度数仅为 1，搜索树上的 $root$ 大于 1 才可以证明该点为割点。</p>
 </li>
 <li><p>Tarjan名字都打错还不是不小心打错的博客不止一个：<strong><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/29d3885c3578">比如这个</a>，<a target="_blank" rel="noopener" href="https://www.cnblogs.com/SeanOcean/p/11262387.html">还有这个</a></strong>。</p>
 </li>
@@ -319,7 +324,7 @@
 <li><p>$Q2$：为什么只有栈中的元素才可以更新 $x$ 的 $low$，而栈外的元素不行</p>
 </li>
 <li><p>$A2$：走到栈外的元素的边可能是横叉边也可能是前向边，下面进行分类讨论：</p>
-<p>①如果是横叉边，那么边的出点已经被划归到其他的 SCC 中了，下面用一张图来描述这个问题：可以发现若 1,2,3 已经作为一个 SCC 出栈的情况下，如果 4 指向 3 更新自己的 $low$ 为 1，则4,5,6 这个环路中因为不满足 $dfn[x]==low[x]$ 的条件无论如何也不能判断自己是一个环了。<br> <img src="https://cdn.luogu.com.cn/upload/image_hosting/lysh1xz5.png" alt=""></p>
+<p>①如果是横叉边，那么边的出点已经被划归到其他的 SCC 中了，下面用一张图来描述这个问题：可以发现若 1,2,3 已经作为一个 SCC 出栈的情况下，如果 4 指向 3 更新自己的 $low$ 为 1，则4,5,6 这个环路中因为不满足 $dfn[x]=low[x]$ 的条件无论如何也不能判断自己是一个环了。<br> <img src="https://cdn.luogu.com.cn/upload/image_hosting/lysh1xz5.png" alt=""></p>
 <p>  ②如果是前向边，那么 $dfn[v]&gt;low[x]$，一定不会发生更新，也没必要再去更新了。</p>
 </li>
 <li><p>$Q3$：为什么有些代码中 $line6$ 写 $low[x]=min(low[x],low[v])$ 依旧正确？</p>
@@ -333,18 +338,18 @@
 </li>
 <li><p>$line7-10$：若 $dfn[v]=0$，则在此进一步深搜，即该点没有走过，继续进行下一步深搜。同时，在回溯时更新该结点的 $low$ 值，因为这里是沿树边的深搜，因此可以直接用 $low[x]=min(low[x],low[v])$ 来更新该结点的 $low$ 的值。证明很显然：因为树边路径上的点的 $low$ 最终是经过一条返祖边指向该点所在的最大环上 $dfn$ 最小的祖先，满足 $low$ 数组只经过一条返祖边的定义。</p>
 </li>
-<li><p>$line12-17$  对于一个 SCC 内某个最大环的 $dfn$ 最小即深度最小的祖先 $x$，在 dfs 回溯时若 $dfn[x]==low[x]$，则可说明该点不能通过返祖边到达 $dfn$ 更小的祖先，自己或者和自己 dfs 子树中的部分点构成一个 SCC。接下来从栈中出栈，直到出栈到遇到 $x$ 元素，这些元素就构成一个 SCC。</p>
-<p> ​    证明：首先考虑栈顶元素的性质，一定存在一条有向路径从 $x$ 通往栈顶元素。对于栈中 $x$ 之后入栈的元素且回溯到 $x$ 时还在栈中的元素，一定满足 $low \not =dfn$，因为若 $low=dfn$，将先一步出栈，若 $low\not=dfn$，则栈顶元素一定通过一条返祖边走向一个搜索树上的祖先，而且该点不可能指向 $x$ 的祖先，否则 $low[x]&lt;dfn[x]$，若指向的是$x$或$x$的子树上的祖先，则分类讨论：</p>
-<p> ①第一种情况为被指向的点到栈顶元素之间的点与 $x$ 之间没有返祖边，这种情况下被指向的点将会先满足 $dfn[x]==low[x]$ 的条件先一步连带栈顶出栈，不可能与 $x$ 处在同一栈中。</p>
+<li><p>$line12-17$  对于一个 SCC 内某个最大环的 $dfn$ 最小即深度最小的祖先 $x$，在 dfs 回溯时若 $dfn[x]=low[x]$，则可说明该点不能通过返祖边到达 $dfn$ 更小的祖先，自己或者和自己 dfs 子树中的部分点构成一个 SCC。接下来从栈中出栈，直到出栈到遇到 $x$ 元素，这些元素就构成一个 SCC。</p>
+<p> ​    证明：首先考虑栈顶元素的性质，一定存在一条有向路径从 $x$ 通往栈顶元素。对于栈中 $x$ 之后入栈的元素且回溯到 $x$ 时还在栈中的元素，一定满足 $low \not =dfn$，因为若 $low=dfn$，将先一步出栈，若 $low\not=dfn$，则栈顶元素一定通过一条返祖边走向一个搜索树上的祖先，而且该点不可能指向 $x$ 的祖先，否则 $low[x]&lt;dfn[x]$，若指向的是 $x$ 或 $x$ 的子树上的祖先，则分类讨论：</p>
+<p> ①第一种情况为被指向的点到栈顶元素之间的点与 $x$ 之间没有返祖边，这种情况下被指向的点将会先满足 $dfn[x]=low[x]$ 的条件先一步连带栈顶出栈，不可能与 $x$ 处在同一栈中。</p>
 <p> ②第二种情况为被指向的点到栈顶元素之间的点与 $x$ 之间x有返祖边，则这种情况下存在一个环经过 $x$ 到栈顶元素又到栈顶元素返祖边指向的点再到具有回到 $x$ 的返祖边的点再回到 $x$ 的环，构成一个 SCC。</p>
 <p> ③第三种情况为被指向的点就是 $x$，此时 $x$ 到栈顶元素的路径构成一个环，为一个 SCC。</p>
-<p> 这里采用了一种类似递归的论证方式，先假设当前已经到了某一步，之前步遇到 $dfn[x]==low[x]$ 时将元素出栈的处理是正确的，进一步证明了当前步的处理的正确的，即可递归式的将该结论推广到全局证明这个结论的正确性。</p>
-<p> 细心的读者也许发现了，这种论证方式可以合理的后推，而不能说明第一次这样做的时候可以求得 SCC，对于此的论证，可以仿照上述的论证模式，首先栈顶元素不可能指向 $x$ 的祖先，接下来再抓住条件 $dfn[x]==low[x]$ 是第一次被满足，如果是上述①中的情况，子树中有点满足 $dfn=low$ 的点，那么$x$一定不是第一个满足条件的点，所以只能采用上述②中的情况，构成一个 SCC。</p>
+<p> 这里采用了一种类似递归的论证方式，先假设当前已经到了某一步，之前步遇到 $dfn[x]=low[x]$ 时将元素出栈的处理是正确的，进一步证明了当前步的处理的正确的，即可递归式的将该结论推广到全局证明这个结论的正确性。</p>
+<p> 细心的读者也许发现了，这种论证方式可以合理的后推，而不能说明第一次这样做的时候可以求得 SCC，对于此的论证，可以仿照上述的论证模式，首先栈顶元素不可能指向 $x$ 的祖先，接下来再抓住条件 $dfn[x]=low[x]$ 是第一次被满足，如果是上述①中的情况，子树中有点满足 $dfn=low$ 的点，那么$x$一定不是第一个满足条件的点，所以只能采用上述②中的情况，构成一个 SCC。</p>
 <p> 按照以上论证的思路可以发现经过 Tarjan-SCC 算法求出的强连通分量按编号形成逆拓扑序，这是一个十分重要的性质。</p>
 <p> 更严谨的证明还需要说明环内部的路径并不影响结果，这是一个自然语言难以叙述但是非常显然正确的结论：如果有一条路径从环上一点能够到达环上的另外一点，那么实际上就构成了一个更小的环，与最大环的点之间均可互相到达，因此实际上无需担心小环包含在大环中的情况如何处理。比如下图，大环为($1\rightarrow2\rightarrow3\rightarrow4\rightarrow5\rightarrow6$)，小环为($6\rightarrow7\rightarrow3\rightarrow4\rightarrow5$)</p>
 <p> 实际上，该图可以作为<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/user15232/solution-p3388">洛谷割点某个题解</a>中一个说法的反例：求解 SCC 时候，SCC 内所有点的终态是 $dfn=low$。</p>
 <p> <img src="https://cdn.luogu.com.cn/upload/image_hosting/meq2t89g.png" alt=""></p>
-<p> 此处中的证明思路能证明该算法的正确性，与 Tarjan 的《$\mathcal{Depth-first \ search \ and \ linear \ graph \  algorithms}$》中思路并不相同，如果上述证明还有部分不严谨不清楚的地方，也希望大家可以向我指出。</p>
+<p> 此处中的证明思路能证明该算法的正确性，与 Tarjan 的《$\mathcal{Depth-first \ search \ and \ linear \ graph \  algorithms}$》中思路并不相同，如果上述证明还有部分不严谨不清楚的地方1，也希望大家可以向我指出。</p>
 </li>
 <li><p>$line20-21$：枚举图中每个点，当遇到 $dfn=0$ 的点即还未被搜索过的点便开始搜索，最终可以保证全部点都被搜索。</p>
 <p>若如果求出了 SCC，因为一个 SCC 内的点均可互相到达，在处理某些问题的时候就可以进行缩点处理，但是不属于本文探讨的问题范畴，故在此处不详细展开了。</p>
@@ -358,8 +363,8 @@
 <p> 正是因为上面的原因，李煜东的蓝书中选择将无向图连通性一节放在有向图连通性一节之前，能够看出这是一个经过慎重考虑和斟酌的决定。</p>
 <p> 下面来看如何求割点，先考虑割点在 dfs 搜索树上的性质，容易发现第一个割点判定法则：</p>
 </li>
-<li><p>若回溯时 $dfn[x] \le low[v]$ 且 $x$ 并非搜索树的根，$x$ 为割点。</p>
-<p> 为什么如此呢？考虑 $x$ 不是树根时，当 $dfn[x] \le low[x]$，这意味着自己以及自己子树中的结点无论怎么走最早到达的最小结点是自己或者自己靠后的结点，如果要到达 $dfn$ 更小的结点即$x$ 的祖先，只能通过 $x$ 点到达，若删去 $x$，则图不连通，割点成立。</p>
+<li><p>若回溯时 $dfn[x] \le low[v]$ 且 $x$ 并非搜索树的根，则 $x$ 为割点。</p>
+<p> 为什么如此呢？考虑 $x$ 不是树根时，当 $dfn[x] \le low[x]$，这意味着自己以及自己子树中的结点无论怎么走最早到达的最小结点是自己或者自己靠后的结点，如果要到达 $dfn$ 更小的结点即 $x$ 的祖先，只能通过 $x$ 点到达，若删去 $x$，则图不连通，割点成立。</p>
 <p> 这个判据对 $x$ 是搜索树根时无效，因为树根没有父亲，$dfn$ 就是最小的，如果采用上述条件来判断，子树无论如何也不能用返祖边返回 $dfn$ 更小的结点以逃避 $x$ 是个割点，然而事实真的如此吗？看一张图：</p>
 </li>
 </ul>
@@ -367,12 +372,12 @@
 <p>   该图是一张链，如果 1 是根结点，将会被判断为割点，而实则 1 并非割点。因此对于根结点，不能通过子结点无法到达根结点的任何祖先来判断根结点是否是割点，因为其根本就没有祖先，自然也不能说子结点只能通过该点到达其他点了。</p>
 <p>   对于根结点是割点的情况，只有根结点具有两个及以上子树时，因为无向图的搜索子树之间互相独立(没有横叉边、前向边导致的必然情况)，所以没有根结点是不能互相到达的，此时根结点就是一个割点。因此得出割点的第二判定法则：</p>
 <ul>
-<li>若回溯时 $x$ 为搜索树的根且其在搜索树上有两个及以上的子树时候，$x$ 为割点。</li>
+<li>若回溯时 $x$ 为搜索树的根且其在搜索树上有两个及以上的子树时候，则 $x$ 为割点。</li>
 </ul>
 <p>接下来就可以给出割点的代码实现：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">	dfn[x]=low[x]=++nowtime;</span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">child</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=head[x];i;i=e[i].next)&#123;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">v</span><span class="params">(e[i].to)</span></span>;</span><br><span class="line">		<span class="keyword">if</span>(!dfn[v])&#123;</span><br><span class="line">			<span class="built_in">tarjan</span>(v);</span><br><span class="line">			++child;</span><br><span class="line">			low[x]=<span class="built_in">min</span>(low[x],low[v]);</span><br><span class="line">			<span class="keyword">if</span>(x==root&amp;&amp;child&gt;<span class="number">1</span>)cutpoint[x]=<span class="literal">true</span>;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span>(x!=root&amp;&amp;dfn[x]&lt;=low[v])cutpoint[x]=<span class="literal">true</span>;</span><br><span class="line">		&#125;<span class="keyword">else</span> low[x]=<span class="built_in">min</span>(low[x],dfn[v]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</span><br><span class="line">		<span class="keyword">if</span>(!dfn[i])&#123;</span><br><span class="line">			root=i;</span><br><span class="line">			<span class="built_in">tarjan</span>(i);</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>  特别需要注意的是，割点可能被重复标记，当且仅当该割点不为根结点且具有多棵子树时，因此上述代码使用了一个布尔数组来对割点进行标记。</p>
-<h4 id="Tarjan-Bridge-求无向图桥的算法"><a href="#Tarjan-Bridge-求无向图桥的算法" class="headerlink" title="Tarjan-Bridge 求无向图桥的算法"></a>Tarjan-Bridge 求无向图桥的算法</h4><p>   在 Tarjan 求解无向图的桥时，一大争议是 $low$ 的定义是否发生了变化，在此我的理解是，$low$ 的定义应发生变化。</p>
+<h4 id="Tarjan-Bridge-求无向图桥的算法"><a href="#Tarjan-Bridge-求无向图桥的算法" class="headerlink" title="Tarjan-Bridge 求无向图桥的算法"></a>Tarjan-Bridge 求无向图桥的算法</h4><p>   在 Tarjan 求解无向图的桥时，一大争议是 $low$ 的定义是否发生了变化，在此鄙人的理解是，$low$ 的定义应发生变化。</p>
 <p>   与其每次都说 $low$ 的定义不变，只是求解不同的东西时做了特判，不如说在求解每种东西的时候因为需求不同，$low$ 的定义也随之变化。</p>
 <p>   在求桥时，$low[]$ 的新定义应为最多经过<strong>一条非指向父亲的返祖边</strong>能走到的 $dfn$ 最小的结点为多少。</p>
 <ul>
@@ -393,7 +398,7 @@
 <ul>
 <li><p>$Q$：为什么 $line9$ 位置填 $low[x]=min(low[x],low[v])$ 又对了，难道只有判断割点需要写 $low[x]=min(low[x],dfn[v])$ 吗？</p>
 </li>
-<li><p>$A$：答案是肯定的，除了割点有关的算法之外，$low[x]=min(low[x],low[v])$都是正确的，但是从对于算法原始理解的角度出发，这种正确是侥幸的，对于$SCC$为什一个么的正确的已经在上面论证过了，接下来我们论证为什么这种更新方式在桥中是正确的：</p>
+<li><p>$A$：答案是肯定的，除了割点有关的算法之外，$low[x]=min(low[x],low[v])$都是正确的，但是从对于算法原始理解的角度出发，这种正确是侥幸的，对于 SCC 为什一个么的正确的已经在上面论证过了，接下来我们论证为什么这种更新方式在桥中是正确的：</p>
 <p>可以注意到无向图中没有前向边，只有树边和返祖边，而发生 $line9$ 更新的只能是返祖边。所以说，要论证这种更新方式在判断桥时是正确的，只需论证出现返祖边时采用这种更新方式在判断桥时不会产生错误。</p>
 <p>那么考虑有一返祖边 $(x,y)$，则 $x$ 到被指向的点 $y$，$y$ 到 $x$ 的在搜索树上的路径将形成一个环路，又因为一定存在 $low[y]\le dfn[y]$，所以可以肯定的是在搜索树上的这个环路在最终回溯时都会被更新为被指向点的 $low$。</p>
 <p>显然可知环上不会出现桥，那么根据上面的推论，这保证了环上不会出现桥，再把该环视为一个整体，考虑环与外面的连边，我们假设一边为 $(u,v)$，那么所用到的是 $dfn[u]$ 与 $low[v]$，可以发现 $u$ 点虽然在环上，但是 $dfn[u]$ 只与搜索的顺序有关，而 $low[v]$ 如何更新与这个环无关。</p>
@@ -405,7 +410,7 @@
 <p><img src="https://cdn.luogu.com.cn/upload/image_hosting/vlpab1cp.png" alt=""></p>
 <p>该图中，点 3 为割点，但是如果采取 $low[x]=min(low[x],low[v])$ 的更新方式其并不会被判断为割点。究其原因，是因为对于判断割点时在条件 $dfn[u] \leq low[v]$ 中需要取等号才能判断成功的割点$^{[1]}$可能有不能判断其为割点的子树或自身返祖到更小的结点导致出现 $low&lt;dfn$ 的情况，导致在另外一棵能判断其为割点的子树中的点返祖到该点时候 $low$ 上翻到该割点的祖先发生错误。</p>
 <p>注：</p>
-<p><strong>[1]</strong>忽略每次搜索根结点之外，这种割点实际上和 SCC 的根类似(不过判断 SCC 的时候成立条件也是 $dfn=low$，很难说他俩没啥联系)，就是每个搜索树上的环在搜索树上 $dfn$ 最小的结点，这种结点具有“被返祖”的性质，也就是说子树中一定有指向这个“根”点自身的返祖边。而如果这种“根”点是割点，那么还需要保证这个环路中的所有点是相对“封闭的”，最早也就只能回溯到这个“根”点。上文中“能判断其为割点的子树”实际上就是指的能够构成这种相对“封闭”的环的子树。</p>
+<p><strong>[1]</strong> 忽略每次搜索根结点之外，这种割点实际上和 SCC 的根类似(不过判断 SCC 的时候成立条件也是 $dfn=low$，很难说他俩没啥联系)，就是每个搜索树上的环在搜索树上 $dfn$ 最小的结点，这种结点具有“被返祖”的性质，也就是说子树中一定有指向这个“根”点自身的返祖边。而如果这种“根”点是割点，那么还需要保证这个环路中的所有点是相对“封闭的”，最早也就只能回溯到这个“根”点。上文中“能判断其为割点的子树”实际上就是指的能够构成这种相对“封闭”的环的子树。</p>
 </li>
 </ul>
 </li>
@@ -413,13 +418,13 @@
 </li>
 </ul>
 <h4 id="Tarjan-V-DCC-求无向图点双联通分量-V-DCC-的算法"><a href="#Tarjan-V-DCC-求无向图点双联通分量-V-DCC-的算法" class="headerlink" title="Tarjan-V-DCC 求无向图点双联通分量(V-DCC)的算法"></a>Tarjan-V-DCC 求无向图点双联通分量(V-DCC)的算法</h4><p>   接下来我们将开始讨论双联通分量的问题，首先是点双联通分量。</p>
-<p>   在文章的开始位置已经提醒过读者需要对各种联通分量的概念有一定的了解，因此关于点双联通分量定义的完善和补充并不是本篇文章的讨论内容。</p>
+<p>   在文章的开始位置已经提醒过读者需要对各种联通分量的概念有一定的了解，因此关于双通分量定义的完善和补充并不是本篇文章的讨论内容。</p>
 <p>   对于点双联通分量的求法，我们仅需考虑：每个割点将处于两个点双联通分量中，感性理解一下就是两个割点之间夹了一个点双联通分量。</p>
 <p>以上明确后，接下来我们看代码：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">    dfn[x]=low[x]=++nowtime;</span><br><span class="line">    s.<span class="built_in">push</span>(x);</span><br><span class="line">    <span class="keyword">if</span>(x==root&amp;&amp;head[x]==<span class="number">0</span>)&#123;</span><br><span class="line">        dcc[++dcccnt].<span class="built_in">push_back</span>(x);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=head[x];i;i=e[i].next)&#123;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">v</span><span class="params">(e[i].to)</span></span>;</span><br><span class="line">        <span class="keyword">if</span>(!dfn[v])&#123;</span><br><span class="line">            <span class="built_in">tarjan</span>(v);</span><br><span class="line">            low[x]=<span class="built_in">min</span>(low[x],low[v]);</span><br><span class="line">            <span class="keyword">if</span>(low[v]&gt;=dfn[x])&#123; </span><br><span class="line">                ++dcccnt;</span><br><span class="line">                <span class="keyword">int</span> k;</span><br><span class="line">                <span class="keyword">do</span>&#123;</span><br><span class="line">                    k=s.<span class="built_in">pop</span>();</span><br><span class="line">                    dcc[dcccnt].<span class="built_in">push_back</span>(k);</span><br><span class="line">                &#125;<span class="keyword">while</span>(k!=v);</span><br><span class="line">                dcc[dcccnt].<span class="built_in">push_back</span>(x);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> low[x]=<span class="built_in">min</span>(low[x],dfn[v]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</span><br><span class="line">        <span class="keyword">if</span>(!dfn[i])&#123;</span><br><span class="line">            root=i;</span><br><span class="line">            <span class="built_in">tarjan</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">    dfn[x]=low[x]=++nowtime;</span><br><span class="line">    s.<span class="built_in">push</span>(x);</span><br><span class="line">    <span class="keyword">if</span>(x==root&amp;&amp;head[x]==<span class="number">0</span>)&#123;</span><br><span class="line">        dcc[++dcccnt].<span class="built_in">push_back</span>(x);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=head[x];i;i=e[i].next)&#123;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">v</span><span class="params">(e[i].to)</span></span>;</span><br><span class="line">        <span class="keyword">if</span>(!dfn[v])&#123;</span><br><span class="line">            <span class="built_in">tarjan</span>(v);</span><br><span class="line">            low[x]=<span class="built_in">min</span>(low[x],low[v]);</span><br><span class="line">            <span class="keyword">if</span>(low[v]&gt;=dfn[x])&#123;</span><br><span class="line">                ++dcccnt;</span><br><span class="line">                <span class="keyword">int</span> k;</span><br><span class="line">                <span class="keyword">do</span>&#123;</span><br><span class="line">                    k=s.<span class="built_in">pop</span>();</span><br><span class="line">                    dcc[dcccnt].<span class="built_in">push_back</span>(k);</span><br><span class="line">                &#125;<span class="keyword">while</span>(k!=v);</span><br><span class="line">                dcc[dcccnt].<span class="built_in">push_back</span>(x);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> low[x]=<span class="built_in">min</span>(low[x],dfn[v]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</span><br><span class="line">        <span class="keyword">if</span>(!dfn[i])&#123;</span><br><span class="line">            root=i;</span><br><span class="line">            <span class="built_in">tarjan</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>代码中有一部分需要特别强调的点：</p>
 <ul>
-<li><p>$line4-7$：这是对孤立点的处理，因为孤立点在也算作一个点双连通分量。</p>
+<li><p>$line4-7$：这是对孤立点的处理，因为孤立点在定义中也算作一个点双连通分量。</p>
 </li>
 <li><p>$line13-21$：这里搜索到了一个割点，把到上个割点为该割点的所有点全部出栈压入同一个点双联通分量中。</p>
 <p>这里有一个问题：</p>
@@ -437,7 +442,7 @@
 <p>对上述结论作一个简要但不严谨的说明：考虑 Tarjan-Bridge 算法实际上抽象出的有向图实际上就是一棵搜索树，而在该搜索树上构成环当且仅当出现返祖边，即在无向图中该分量内不会出现桥，容易发现的是搜索树最终可以被划分为类似环-桥-环的结构，与边双联通分量的定义实际上是相符的。关于其为什么是极大的，这点可以参照前文中对于求 SCC 算法中解释“为什么环内路径不影响结果”的部分。</p>
 <p>这样想的话，实际上这种方法是把无向图抽象为有向搜索树，通过搜索树的性质利用对于有向图求 SCC 的方法求出边双联通分量，这种抽象方式令人拍手称妙。</p>
 <p>代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> father)</span></span>&#123;</span><br><span class="line">	dfn[x]=low[x]=++nowtime;</span><br><span class="line">	s.<span class="built_in">push</span>(x);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=head[x];i;i=e[i].next)&#123;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">v</span><span class="params">(e[i].to)</span></span>;</span><br><span class="line">		<span class="keyword">if</span>(!dfn[v])&#123;</span><br><span class="line">			<span class="built_in">tarjan</span>(v,i);</span><br><span class="line">			low[x]=<span class="built_in">Min</span>(low[x],low[v]);</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(i!=(father^<span class="number">1</span>))low[x]=<span class="built_in">Min</span>(low[x],dfn[v]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(dfn[x]==low[x])&#123;</span><br><span class="line">		++dcccnt;</span><br><span class="line">		<span class="keyword">int</span> k;</span><br><span class="line">		<span class="keyword">do</span>&#123;</span><br><span class="line">			k=s.<span class="built_in">pop</span>();</span><br><span class="line">			belong[k]=dcccnt;</span><br><span class="line">		&#125;<span class="keyword">while</span>(k!=x);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</span><br><span class="line">		<span class="keyword">if</span>(!dfn[i])<span class="built_in">tarjan</span>(i,i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> father)</span></span>&#123;</span><br><span class="line">	dfn[x]=low[x]=++nowtime;</span><br><span class="line">	s.<span class="built_in">push</span>(x);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=head[x];i;i=e[i].next)&#123;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">v</span><span class="params">(e[i].to)</span></span>;</span><br><span class="line">		<span class="keyword">if</span>(!dfn[v])&#123;</span><br><span class="line">			<span class="built_in">tarjan</span>(v,i);</span><br><span class="line">			low[x]=<span class="built_in">min</span>(low[x],low[v]);</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(i!=(father^<span class="number">1</span>))low[x]=<span class="built_in">min</span>(low[x],dfn[v]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(dfn[x]==low[x])&#123;</span><br><span class="line">		++dcccnt;</span><br><span class="line">		<span class="keyword">int</span> k;</span><br><span class="line">		<span class="keyword">do</span>&#123;</span><br><span class="line">			k=s.<span class="built_in">pop</span>();</span><br><span class="line">			belong[k]=dcccnt;</span><br><span class="line">		&#125;<span class="keyword">while</span>(k!=x);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</span><br><span class="line">		<span class="keyword">if</span>(!dfn[i])<span class="built_in">tarjan</span>(i,i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -550,12 +555,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span>
       </div>
   </nav>
@@ -593,7 +598,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
