@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block main %}
+<article class="reading-page">
+  <header class="article-heading"><h1>{{ title }}</h1>{% if summary %}<p class="article-summary">{{ summary }}</p>{% endif %}</header>
+  {% include "contents.html" %}
+  <div class="reading-content" id="article-content">{{ content|safe }}</div>
+  {% if site.links %}<ul class="profile-links">{% for link in site.links %}<li><a href="{{ link.url }}">{{ link.title }}</a></li>{% endfor %}</ul>{% endif %}
+</article>
+{% endblock %}

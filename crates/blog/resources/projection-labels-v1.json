@@ -1,0 +1,14 @@
+{
+  "excerpt_source": "摘自",
+  "quote_open": "《",
+  "quote_close": "》",
+  "theorem": "定理",
+  "lemma": "引理",
+  "definition": "定义",
+  "proof": "证明。",
+  "equation": "公式",
+  "interactive_title": "交互内容",
+  "playground_title": "可运行的 JavaScript 示例",
+  "statement_title_open": "（",
+  "statement_title_close": "）"
+}

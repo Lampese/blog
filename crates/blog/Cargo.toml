@@ -1,0 +1,33 @@
+[package]
+name = "blog"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+anyhow = "1"
+axum = "0.8"
+base64 = "0.22"
+blog-ranges = { path = "../blog-ranges" }
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4", features = ["derive"] }
+html-escape = "0.2"
+fs2 = "0.4"
+kuchikiki = "0.8"
+minijinja = { version = "2", features = ["loader"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tempfile = "3"
+tokio = { version = "1", features = ["full"] }
+tokio-stream = { version = "0.1", features = ["sync"] }
+toml = "0.9"
+tower-http = { version = "0.6", features = ["fs"] }
+typst-syntax = "=0.15.1"
+walkdir = "2"
+intl_pluralrules = "7.0.2"
+unic-langid = "0.9"
+
+[[bin]]
+name = "blog"
+path = "src/main.rs"

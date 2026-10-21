@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block main %}
+<article class="reading-page">
+  <header class="article-heading">
+    <p class="article-meta"><time datetime="{{ post.date }}">{{ post.date }}</time><span>{{ t('reading_time', count=post.minutes) }}</span>{% if post.draft %}<span class="draft">{{ t('draft') }}</span>{% endif %}</p>
+    <h1>{{ post.title }}</h1>
+    {% if post.summary %}<p class="article-summary">{{ post.summary }}</p>{% endif %}
+    <ul class="tag-list">{% for tag, url in post.tag_links %}<li><a href="{{ url }}">{{ tag }}</a></li>{% endfor %}</ul>
+  </header>
+  {% include "contents.html" %}
+  <div class="reading-content" id="article-content">{{ content|safe }}</div>
+  <nav class="article-neighbors" aria-label="{{ t('adjacent_articles') }}">
+    {% if older %}<a href="{{ older.url }}"><small>{{ t('previous_article') }}</small>{{ older.title }}</a>{% else %}<span></span>{% endif %}
+    {% if newer %}<a href="{{ newer.url }}"><small>{{ t('next_article') }}</small>{{ newer.title }}</a>{% endif %}
+  </nav>
+</article>
+<div id="selection-tools" hidden><button type="button" id="copy-reference">{{ t('copy_reference') }}</button><button type="button" id="dismiss-selection" aria-label="{{ t('dismiss_selection') }}">×</button></div>
+<script type="application/json" id="post-data">{{ manifest|safe }}</script>
+{% endblock %}

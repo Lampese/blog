@@ -1,0 +1,1 @@
+{% if sections %}<aside class="article-sidebar"><nav aria-labelledby="contents-title"><details><summary id="contents-title">{{ t('contents') }}</summary><ol>{% for section in sections %}<li style="--depth:{{ section.depth }}"><a href="#{{ section.id }}" data-section="{{ section.id }}">{{ section.title }}</a></li>{% endfor %}</ol></details></nav></aside>{% endif %}

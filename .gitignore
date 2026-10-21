@@ -1,0 +1,10 @@
+_site/
+_site.build-*/
+_site.old-*/
+.DS_Store
+/target/
+/.blog/
+/.local/
+/AGENTS.md
+/web/node_modules/
+/web/__pycache__/

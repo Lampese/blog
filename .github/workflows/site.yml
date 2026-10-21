@@ -1,0 +1,52 @@
+name: Site
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install Rust
+        run: rustup toolchain install 1.94.0 --profile minimal --component rustfmt,clippy
+      - name: Install Typst 0.15.1
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 https://github.com/typst/typst/releases/download/v0.15.1/typst-x86_64-unknown-linux-musl.tar.xz -o "$RUNNER_TEMP/typst.tar.xz"
+          tar -xJf "$RUNNER_TEMP/typst.tar.xz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/typst-x86_64-unknown-linux-musl" >> "$GITHUB_PATH"
+      - run: cargo fmt --all -- --check
+      - run: npm ci --prefix web
+      - run: npm run --prefix web build
+      - run: npm test --prefix web
+      - run: git diff --exit-code -- assets/vendor
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo test --workspace --locked
+      - run: cargo run --release --locked -- build
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request' && vars.DEPLOY_PAGES == 'true'
+        with:
+          path: _site
+  deploy:
+    if: github.event_name != 'pull_request' && vars.DEPLOY_PAGES == 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

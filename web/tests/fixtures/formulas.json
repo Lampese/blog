@@ -1,0 +1,38 @@
+[
+  {
+    "mathml": "<math display=\"block\" xmlns=\"http://www.w3.org/1999/xhtml\"><munderover><mo lspace=\"0em\">∑</mo><mrow><mi>𝑖</mi><mo lspace=\"0em\" rspace=\"0em\">=</mo><mn>1</mn></mrow><mi>𝑛</mi></munderover><mi>𝑖</mi><mo>=</mo><mfrac><mrow><mi>𝑛</mi><mrow><mo>(</mo><mrow><mi>𝑛</mi><mo>+</mo><mn>1</mn></mrow><mo>)</mo></mrow></mrow><mn>2</mn></mfrac></math>",
+    "latex": "\\sum_{i = 1}^{n} i = \\frac{n \\left(n + 1\\right)}{2}"
+  },
+  {
+    "mathml": "<math display=\"block\" xmlns=\"http://www.w3.org/1999/xhtml\"><mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd><mn>4</mn></mtd></mtr></mtable><mo>)</mo></mrow></math>",
+    "latex": "\\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}"
+  },
+  {
+    "mathml": "<math display=\"block\" xmlns=\"http://www.w3.org/1999/xhtml\"><mrow><mo>{</mo><mtable class=\"cases\"><mtr><mtd><msup><mi>𝑥</mi><mn>2</mn></msup><mspace width=\"0.2222em\"></mspace><mtext>if</mtext><mspace width=\"0.2222em\"></mspace><mi>𝑥</mi><mo>≥</mo><mn>0</mn></mtd></mtr><mtr><mtd><mo>−</mo><mi>𝑥</mi><mspace width=\"0.2222em\"></mspace><mtext>otherwise</mtext></mtd></mtr></mtable></mrow></math>",
+    "latex": "\\begin{cases} x^{2} \\text{if} x \\geq 0 \\\\ - x \\text{otherwise} \\end{cases}"
+  },
+  {
+    "mathml": "<math display=\"block\" xmlns=\"http://www.w3.org/1999/xhtml\"><mtable class=\"multiline-equation aligned\"><mtr><mtd><mi>𝑓</mi><mrow><mo>(</mo><mi>𝑥</mi><mo>)</mo></mrow></mtd><mtd><mo form=\"infix\">=</mo><mi>𝑥</mi><mo>+</mo><mn>1</mn></mtd></mtr><mtr><mtd><mi>𝑔</mi><mrow><mo>(</mo><mi>𝑥</mi><mo>)</mo></mrow></mtd><mtd><mo form=\"infix\">=</mo><msup><mi>𝑥</mi><mn>2</mn></msup></mtd></mtr></mtable></math>",
+    "latex": "\\begin{aligned} f \\left(x\\right) & = x + 1 \\\\ g \\left(x\\right) & = x^{2} \\end{aligned}"
+  },
+  {
+    "mathml": "<math display=\"block\" xmlns=\"http://www.w3.org/1999/xhtml\"><msqrt><mi>𝑥</mi></msqrt><mo>+</mo><mroot><mi>𝑦</mi><mn>3</mn></mroot></math>",
+    "latex": "\\sqrt{x} + \\sqrt[3]{y}"
+  },
+  {
+    "mathml": "<math display=\"block\" xmlns=\"http://www.w3.org/1999/xhtml\"><mover accent=\"true\"><mi>𝑥</mi><mo>̂</mo></mover><mo>+</mo><mover accent=\"true\"><mi>𝑣</mi><mo stretchy=\"true\">⃗</mo></mover></math>",
+    "latex": "\\hat{x} + \\vec{v}"
+  },
+  {
+    "mathml": "<math display=\"block\" xmlns=\"http://www.w3.org/1999/xhtml\"><mi>ℝ</mi><mo>⊆</mo><mi>ℂ</mi></math>",
+    "latex": "\\mathbb{R} \\subseteq \\mathbb{C}"
+  },
+  {
+    "mathml": "<math display=\"block\" xmlns=\"http://www.w3.org/1999/xhtml\"><mtext>text_{#%&amp;}</mtext></math>",
+    "latex": "\\text{text\\_\\{\\#\\%\\&\\}}"
+  },
+  {
+    "mathml": "<math><mtext>中文 {value} &amp; 100%_x</mtext></math>",
+    "latex": "\\text{中文 \\{value\\} \\& 100\\%\\_x}"
+  }
+]

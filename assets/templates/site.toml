@@ -1,0 +1,8 @@
+title = "Notes"
+author = "作者"
+description = "技术、数学与日常思考。"
+base_url = "https://example.com"
+language = "zh-CN"
+content = "content/posts"
+about = "content/about.typ"
+output = "_site"

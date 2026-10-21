@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="{{ site.language }}">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>if(parent!==window && new URLSearchParams(location.search).get("reader")==="1")document.documentElement.classList.add("reference-document");</script>
+  <title>{{ title }}{% if title != site.title %} · {{ site.title }}{% endif %}</title>
+  <meta name="description" content="{{ description }}">
+  {% if canonical %}<link rel="canonical" href="{{ canonical }}">{% endif %}
+  <meta name="color-scheme" content="light"><meta name="theme-color" content="#f8f7f3">
+  <link rel="stylesheet" href="{{ site.prefix }}/assets/typst.css?v={{ asset_versions.typst_css }}">
+  <link rel="stylesheet" href="{{ site.prefix }}/assets/fonts/zhuque/subsets.css?v={{ asset_versions.fonts_css }}">
+  <link rel="stylesheet" href="{{ site.prefix }}/assets/site.css?v={{ asset_versions.site_css }}">
+  <link rel="preload" href="{{ site.prefix }}/assets/fonts/garamond.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ site.prefix }}/feed.xml">
+  <script defer src="{{ site.prefix }}/assets/i18n.js?v={{ asset_versions.i18n_js }}"></script>
+  <script defer src="{{ site.prefix }}/assets/site.js?v={{ asset_versions.site_js }}" data-prefix="{{ site.prefix }}" data-development="{{ 'true' if development else 'false' }}"></script>
+  {% if post or standalone_page %}<script defer src="{{ site.prefix }}/assets/vendor/math.js?v={{ asset_versions.math_js }}" data-converter="{{ site.prefix }}/assets/vendor/math-latex.js?v={{ asset_versions.math_converter }}"></script>{% endif %}
+  <script defer src="{{ site.prefix }}/assets/references.js?v={{ asset_versions.references_js }}" data-prefix="{{ site.prefix }}"></script>
+</head>
+<body>
+  <script type="application/json" id="site-text">{{ locale_json|safe }}</script>
+  <div id="reading-workspace"><div id="site-shell">
+  <a class="skip-link" href="#main">{{ t('skip_content') }}</a>
+  <header class="site-header"><a class="site-name" href="{{ site.prefix }}/">{{ site.title }}</a><nav aria-label="{{ t('main_navigation') }}"><a href="{{ site.prefix }}/">{{ t('articles') }}</a>{% if has_about %}<a href="{{ site.prefix }}/about/"{% if is_about %} aria-current="page"{% endif %}>{{ t('about') }}</a>{% endif %}<button type="button" id="search-open">{{ t('search') }} <kbd>/</kbd></button></nav></header>
+  <main id="main">{% block main %}{% endblock %}</main>
+  <footer class="site-footer"><span>{{ site.author }}</span><a href="{{ site.prefix }}/feed.xml">{{ t('subscribe_rss') }}</a></footer>
+  </div><aside id="reference-panels" aria-label="{{ t('references') }}" hidden></aside></div>
+  <div id="reference-controls" hidden><button type="button" id="references-close-all">{{ t('close_all_references') }}</button><span id="reference-count" role="status" aria-live="polite"></span></div>
+  <dialog id="search-dialog" aria-labelledby="search-label"><label id="search-label" for="search-input">{{ t('search_articles') }}</label><input id="search-input" type="search" placeholder="{{ t('search_placeholder') }}" autocomplete="off"><p id="search-status" role="status"></p><ul id="search-results"></ul></dialog>
+  <div id="notice" role="status" aria-live="polite" hidden></div>
+</body></html>

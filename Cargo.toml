@@ -1,0 +1,4 @@
+[workspace]
+members = ["crates/blog", "crates/blog-ranges"]
+default-members = ["crates/blog"]
+resolver = "3"
