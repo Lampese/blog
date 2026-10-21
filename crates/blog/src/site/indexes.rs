@@ -7,7 +7,7 @@ use chrono::{DateTime, Utc};
 pub(super) fn write(output: &Publication, catalog: &Catalog<'_>) -> Result<()> {
     let config = catalog.config;
     let ordered = &catalog.ordered;
-    let search: Vec<_> = ordered.iter().map(|p| serde_json::json!({"title":p.meta.title,"summary":p.meta.summary,"tags":p.meta.tags,"text":p.text,"url":post_url(config,&p.meta.id)})).collect();
+    let search: Vec<_> = ordered.iter().map(|p| serde_json::json!({"title":p.meta.title,"summary":p.meta.summary,"tags":p.meta.tags,"text":p.body.text(),"url":post_url(config,&p.meta.id)})).collect();
     output.write("search.json", serde_json::to_string(&search)?)?;
     let esc = |s: &str| html_escape::encode_safe(s).into_owned();
     let mut feed = format!(

@@ -3,9 +3,10 @@ mod fixtures;
 use anyhow::Result;
 use base64::{Engine, engine::general_purpose::STANDARD};
 use blog::{
-    build::{self, BuildOptions},
+    build::{self, BuildMode, BuildOptions},
     content, dom,
 };
+use blog_ranges::TextRange;
 use kuchikiki::traits::TendrilSink;
 use std::{fs, path::Path};
 
@@ -227,7 +228,7 @@ fn about_page_receipts_register_ranges_and_invalid_edits_preserve_output() -> Re
     post(root, "a", fixtures::text("shared_article"));
     let first = build::build(root, BuildOptions::default())?;
     let target = &first.posts["a"];
-    let (start, end) = offsets(&target.text, fixtures::text("shared_selection"));
+    let (start, end) = offsets(target.body.text(), fixtures::text("shared_selection"));
     let seed = STANDARD.encode(target.state.state_snapshot()?);
     let path = about(root)?;
     let source = format!(
@@ -238,7 +239,7 @@ fn about_page_receipts_register_ranges_and_invalid_edits_preserve_output() -> Re
     build::build(
         root,
         BuildOptions {
-            check: true,
+            mode: BuildMode::Check,
             ..Default::default()
         },
     )?;
@@ -271,7 +272,7 @@ fn about_page_receipts_register_ranges_and_invalid_edits_preserve_output() -> Re
         build::build(
             root,
             BuildOptions {
-                check: true,
+                mode: BuildMode::Check,
                 ..Default::default()
             }
         )
@@ -322,16 +323,17 @@ fn compacted_git_footer_conflicts_recover_without_changing_resolved_source_or_ou
     let initial = build::build(root, BuildOptions::default())?;
     let initial = &initial.posts["a"];
     let mut basis = RangeDocument::from_snapshot(&initial.state.state_snapshot()?)?;
-    let common = basis
-        .register_utf16(offsets(&basis.source(), "beta").0..offsets(&basis.source(), "beta").1)?;
+    let common = basis.register_utf16(TextRange::new(
+        offsets(&basis.source(), "beta").0..offsets(&basis.source(), "beta").1,
+    ))?;
     let mut left = basis.fork();
     let mut right = basis.fork();
     left.update_source(&format!("left {}", left.source()))?;
     right.update_source(&format!("{} right", right.source()))?;
     let (a, b) = offsets(&left.source(), "gamma");
-    let left_reference = left.register_utf16(a..b)?;
+    let left_reference = left.register_utf16(TextRange::new(a..b))?;
     let (a, b) = offsets(&right.source(), "omega");
-    let right_reference = right.register_utf16(a..b)?;
+    let right_reference = right.register_utf16(TextRange::new(a..b))?;
     post(root, "a", "left alpha beta gamma\n\nomega delta right");
     let path = root.join("content/posts/a.typ");
     let body = fs::read_to_string(&path)?;
@@ -367,9 +369,15 @@ fn recovery_preserves_observed_deletion_and_rolls_back_if_a_consumer_is_invalid(
     post(root, "a", fixtures::text("mixed_language_article"));
     let mut result = build::build(root, BuildOptions::default())?;
     let target = &result.posts["a"];
-    let (start, end) = offsets(&target.text, fixtures::text("mixed_selection"));
-    let revision = target.revision.clone();
-    let reference = build::register(root, &mut result, "a", &revision, start, end)?;
+    let (start, end) = offsets(target.body.text(), fixtures::text("mixed_selection"));
+    let revision = target.body.revision().to_owned();
+    let reference = build::register(
+        root,
+        &mut result,
+        "a",
+        &revision,
+        TextRange::new(start..end),
+    )?;
     post(root, "b", &reference.code());
     let result = build::build(root, BuildOptions::default())?;
     let left = result.posts["a"].state.fork();
@@ -424,7 +432,7 @@ fn recovery_from_backup_repairs_corrupt_state_but_rejects_unrelated_history() ->
         content::strip_state(&fs::read_to_string(&path)?)?,
         content::strip_state(&original)?
     );
-    let other = blog_ranges::RangeDocument::new("a", &result.posts["a"].text)?;
+    let other = blog_ranges::RangeDocument::new("a", result.posts["a"].body.text())?;
     fs::write(
         &backup,
         format!(
@@ -452,9 +460,15 @@ fn sidebar_navigation_keeps_authored_anchors_and_omits_transcluded_headings() ->
     );
     let mut result = build::build(root, BuildOptions::default())?;
     let target = &result.posts["a"];
-    let (start, end) = offsets(&target.text, "Overview");
-    let revision = target.revision.clone();
-    let reference = build::register(root, &mut result, "a", &revision, start, end)?;
+    let (start, end) = offsets(target.body.text(), "Overview");
+    let revision = target.body.revision().to_owned();
+    let reference = build::register(
+        root,
+        &mut result,
+        "a",
+        &revision,
+        TextRange::new(start..end),
+    )?;
     post(root, "b", &format!("= Local\n\n{}", reference.code()));
     build::build(root, BuildOptions::default())?;
     let parsed =
@@ -523,18 +537,19 @@ fn full_build_reference_edit_delete_and_publish_transaction() -> Result<()> {
             .is_some_and(|src| src.starts_with("/blog/assets/site.js?v="))
     }));
     let a = &first.posts["a"];
-    let (start, end) = offsets(&a.text, fixtures::text("mixed_selection"));
-    let revision = a.revision.clone();
-    let reference = build::register(root, &mut first, "a", &revision, start, end)?;
+    let (start, end) = offsets(a.body.text(), fixtures::text("mixed_selection"));
+    let revision = a.body.revision().to_owned();
+    let reference = build::register(root, &mut first, "a", &revision, TextRange::new(start..end))?;
     append(root, "b", &reference.code());
     let second = build::build(root, BuildOptions::default())?;
-    assert!(second.posts["b"].html.contains("<strong>"));
+    assert!(second.posts["b"].body.html().contains("<strong>"));
     assert!(
         second.posts["b"]
-            .html
+            .body
+            .html()
             .contains(fixtures::text("mixed_selection"))
     );
-    assert!(second.posts["b"].html.contains("transclusion"));
+    assert!(second.posts["b"].body.html().contains("transclusion"));
     assert!(fs::read_to_string(root.join("_site/assets/typst.css"))?.contains("math"));
     let path = root.join("content/posts/a.typ");
     let raw = fs::read_to_string(&path)?;
@@ -548,7 +563,8 @@ fn full_build_reference_edit_delete_and_publish_transaction() -> Result<()> {
     let changed = build::build(root, BuildOptions::default())?;
     assert!(
         changed.posts["b"]
-            .html
+            .body
+            .html()
             .contains(fixtures::text("edited_selection"))
     );
     let output = root.join("_site/posts/b/index.html");
@@ -575,11 +591,19 @@ fn published_receipt_rebases_and_embeds_formatted_math_without_browser_server() 
     post(root, "b", fixtures::text("excerpt_introduction"));
     let first = build::build(root, BuildOptions::default())?;
     let target = &first.posts["a"];
-    let start = target.text.find(fixtures::text("range_start")).unwrap();
-    let end =
-        target.text.find(fixtures::text("range_end")).unwrap() + fixtures::text("range_end").len();
-    let start = target.text[..start].encode_utf16().count();
-    let end = target.text[..end].encode_utf16().count();
+    let start = target
+        .body
+        .text()
+        .find(fixtures::text("range_start"))
+        .unwrap();
+    let end = target
+        .body
+        .text()
+        .find(fixtures::text("range_end"))
+        .unwrap()
+        + fixtures::text("range_end").len();
+    let start = target.body.text()[..start].encode_utf16().count();
+    let end = target.body.text()[..end].encode_utf16().count();
     let seed = STANDARD.encode(target.state.state_snapshot()?);
     append(
         root,
@@ -598,7 +622,7 @@ fn published_receipt_rebases_and_embeds_formatted_math_without_browser_server() 
         ),
     )?;
     let result = build::build(root, BuildOptions::default())?;
-    let html = &result.posts["b"].html;
+    let html = result.posts["b"].body.html();
     assert!(html.contains("<strong>"));
     assert!(html.contains("<math"));
     assert!(html.contains(fixtures::text("range_start")));
@@ -657,7 +681,7 @@ fn repeated_builds_are_stable_and_check_mode_does_not_write_sources() -> Result<
     build::build(
         root,
         BuildOptions {
-            check: true,
+            mode: BuildMode::Check,
             ..Default::default()
         },
     )?;
@@ -703,19 +727,52 @@ fn cycle_errors_and_drafts_are_enforced() -> Result<()> {
 }
 
 #[test]
+fn separate_expansions_do_not_mutate_the_compiled_document_or_each_other() -> Result<()> {
+    let compiled = dom::Document::parse(
+        "<style>p{color:navy}</style><p>Intro</p><blog-excerpt></blog-excerpt>",
+    );
+    let original = compiled
+        .expand(&[fixtures::text("formatted_html").to_owned()])?
+        .project();
+    let revision = original.revision().to_owned();
+    let replacement = compiled
+        .expand(&["<p>Replacement</p>".to_owned()])?
+        .project();
+    let repeated = compiled
+        .expand(&[fixtures::text("formatted_html").to_owned()])?
+        .project();
+    assert_eq!(original.html(), repeated.html());
+    assert_eq!(original.text(), repeated.text());
+    assert_eq!(original.revision(), revision);
+    assert_eq!(original.styles(), "p{color:navy}");
+    assert!(!original.text().contains("Replacement"));
+    assert!(replacement.text().contains("Replacement"));
+    assert!(!replacement.text().contains(fixtures::text("cjk_word")));
+    assert!(compiled.expand(&[]).is_err());
+    Ok(())
+}
+
+#[test]
 fn dom_ranges_keep_formatting_atoms_and_rewrite_links() -> Result<()> {
-    let projected = dom::project(fixtures::text("formatted_html"));
-    let start = projected.text.find(fixtures::text("cjk_word")).unwrap();
+    let projected = dom::Document::parse(fixtures::text("formatted_html"))
+        .expand(&[])?
+        .project();
+    let start = projected.text().find(fixtures::text("cjk_word")).unwrap();
     let end = projected
-        .text
+        .text()
         .find(fixtures::text("ending_marker"))
         .unwrap();
-    let range = projected.text[..start].chars().count()..projected.text[..end].chars().count();
-    let excerpt = dom::excerpt(&projected.html, &projected.text, range, "copy", "/posts/a/")?;
+    let range = projected.text()[..start].chars().count()..projected.text()[..end].chars().count();
+    let excerpt = projected.excerpt(TextRange::new(range), "copy", "/posts/a/")?;
     assert!(excerpt.contains("<strong>"));
     assert!(excerpt.contains("<math"));
     assert!(excerpt.contains("href=\"/posts/a/#note\""));
     assert!(!excerpt.contains(fixtures::text("footnote")));
+    assert!(
+        projected
+            .excerpt(TextRange::new(0..usize::MAX), "copy", "/posts/a/")
+            .is_err()
+    );
     Ok(())
 }
 
@@ -725,9 +782,18 @@ fn nested_transclusions_follow_a_shared_dependency_regardless_of_file_order() ->
     let root = dir.path();
     post(root, "z", fixtures::text("shared_article"));
     let mut result = build::build(root, BuildOptions::default())?;
-    let revision = result.posts["z"].revision.clone();
-    let (start, end) = offsets(&result.posts["z"].text, fixtures::text("shared_selection"));
-    let shared = build::register(root, &mut result, "z", &revision, start, end)?;
+    let revision = result.posts["z"].body.revision().to_owned();
+    let (start, end) = offsets(
+        result.posts["z"].body.text(),
+        fixtures::text("shared_selection"),
+    );
+    let shared = build::register(
+        root,
+        &mut result,
+        "z",
+        &revision,
+        TextRange::new(start..end),
+    )?;
     for id in ["b", "c"] {
         post(root, id, &shared.code());
     }
@@ -735,9 +801,14 @@ fn nested_transclusions_follow_a_shared_dependency_regardless_of_file_order() ->
 
     let mut nested = Vec::new();
     for id in ["b", "c"] {
-        let revision = result.posts[id].revision.clone();
-        let (start, end) = offsets(&result.posts[id].text, fixtures::text("shared_selection"));
-        nested.push(build::register(root, &mut result, id, &revision, start, end)?.code());
+        let revision = result.posts[id].body.revision().to_owned();
+        let (start, end) = offsets(
+            result.posts[id].body.text(),
+            fixtures::text("shared_selection"),
+        );
+        nested.push(
+            build::register(root, &mut result, id, &revision, TextRange::new(start..end))?.code(),
+        );
     }
     post(root, "a", &nested.join("\n\n"));
     build::build(root, BuildOptions::default())?;
@@ -754,7 +825,8 @@ fn nested_transclusions_follow_a_shared_dependency_regardless_of_file_order() ->
     let updated = build::build(root, BuildOptions::default())?;
     assert_eq!(
         updated.posts["a"]
-            .text
+            .body
+            .text()
             .matches(fixtures::text("edited_shared_selection"))
             .count(),
         2
@@ -762,7 +834,8 @@ fn nested_transclusions_follow_a_shared_dependency_regardless_of_file_order() ->
     for id in ["b", "c"] {
         assert!(
             updated.posts[id]
-                .text
+                .body
+                .text()
                 .contains(fixtures::text("edited_shared_selection"))
         );
     }
@@ -802,9 +875,9 @@ fn changing_ui_language_preserves_reference_state_and_browser_coordinates() -> R
         "#theorem(title: \"Identity\")[A body with $x=x$.] <identity>\n\n#proof[This follows from identity.]\n\nSee @identity.\n\n#playground(\"console.log(42);\")",
     );
     let mut result = build::build(root, BuildOptions::default())?;
-    let revision = result.posts["a"].revision.clone();
-    let length = result.posts["a"].text.encode_utf16().count();
-    let reference = build::register(root, &mut result, "a", &revision, 0, length)?;
+    let revision = result.posts["a"].body.revision().to_owned();
+    let length = result.posts["a"].body.text().encode_utf16().count();
+    let reference = build::register(root, &mut result, "a", &revision, TextRange::new(0..length))?;
     post(root, "b", &reference.code());
     let chinese = build::build(root, BuildOptions::default())?;
     let sources: Vec<_> = ["a", "b"]
@@ -817,8 +890,11 @@ fn changing_ui_language_preserves_reference_state_and_browser_coordinates() -> R
     )?;
     let english = build::build(root, BuildOptions::default())?;
     for (index, id) in ["a", "b"].into_iter().enumerate() {
-        assert_eq!(chinese.posts[id].revision, english.posts[id].revision);
-        assert_eq!(chinese.posts[id].text, english.posts[id].text);
+        assert_eq!(
+            chinese.posts[id].body.revision(),
+            english.posts[id].body.revision()
+        );
+        assert_eq!(chinese.posts[id].body.text(), english.posts[id].body.text());
         assert_eq!(
             chinese.posts[id].state.state_snapshot()?,
             english.posts[id].state.state_snapshot()?
@@ -843,7 +919,7 @@ fn changing_ui_language_preserves_reference_state_and_browser_coordinates() -> R
             page.select_first("#article-content").unwrap().as_node(),
             &mut projected,
         );
-        assert_eq!(projected, english.posts[id].text);
+        assert_eq!(projected, english.posts[id].body.text());
         let title = page
             .select_first(".statement-title")
             .unwrap()
@@ -913,7 +989,7 @@ fn code_highlighting_preserves_text_references_and_article_overrides() -> Result
     );
     let mut first = build::build(root, BuildOptions::default())?;
     let a = &first.posts["a"];
-    let parsed = kuchikiki::parse_html().one(a.html.clone());
+    let parsed = kuchikiki::parse_html().one(a.body.html().to_owned());
     let code = parsed.select_first("code[data-lang=rust]").unwrap();
     assert_eq!(code.text_contents(), rust);
     for language in ["rust", "haskell", "javascript", "python", "typst", "sh"] {
@@ -933,13 +1009,19 @@ fn code_highlighting_preserves_text_references_and_article_overrides() -> Result
             .text_contents(),
         fixtures::text("unknown_language_code")
     );
-    assert!(a.text.contains(fixtures::text("relative_file")));
-    let plain = kuchikiki::parse_html().one(first.posts["plain"].html.clone());
+    assert!(a.body.text().contains(fixtures::text("relative_file")));
+    let plain = kuchikiki::parse_html().one(first.posts["plain"].body.html().to_owned());
     assert_eq!(plain.select("code span[style]").unwrap().count(), 0);
-    let original_text = a.text.clone();
-    let original_revision = a.revision.clone();
-    let (start, end) = offsets(&a.text, fixtures::text("rust_selection"));
-    let reference = build::register(root, &mut first, "a", &original_revision, start, end)?;
+    let original_text = a.body.text().to_owned();
+    let original_revision = a.body.revision().to_owned();
+    let (start, end) = offsets(a.body.text(), fixtures::text("rust_selection"));
+    let reference = build::register(
+        root,
+        &mut first,
+        "a",
+        &original_revision,
+        TextRange::new(start..end),
+    )?;
     post(root, "b", &reference.code());
     build::build(root, BuildOptions::default())?;
     fs::create_dir(root.join("assets"))?;
@@ -948,14 +1030,14 @@ fn code_highlighting_preserves_text_references_and_article_overrides() -> Result
         include_str!("../../../assets/code.tmTheme").replace("#285f7a", "#123456"),
     )?;
     let changed = build::build(root, BuildOptions::default())?;
-    assert_eq!(changed.posts["a"].text, original_text);
-    assert_eq!(changed.posts["a"].revision, original_revision);
-    assert!(changed.posts["a"].html.contains("#123456"));
+    assert_eq!(changed.posts["a"].body.text(), original_text);
+    assert_eq!(changed.posts["a"].body.revision(), original_revision);
+    assert!(changed.posts["a"].body.html().contains("#123456"));
     assert_eq!(
         changed.posts["a"].state.resolve(&reference.reference)?.text,
         fixtures::text("rust_selection")
     );
-    let excerpt = kuchikiki::parse_html().one(changed.posts["b"].html.clone());
+    let excerpt = kuchikiki::parse_html().one(changed.posts["b"].body.html().to_owned());
     assert_eq!(
         excerpt.select_first("pre code").unwrap().text_contents(),
         fixtures::text("rust_selection")
@@ -1060,12 +1142,18 @@ fn rich_typst_content_and_preview_have_stable_projection() -> Result<()> {
     let preview = build::build(
         root,
         BuildOptions {
-            preview: true,
+            mode: BuildMode::Preview,
             ..Default::default()
         },
     )?;
-    assert_eq!(production.posts["a"].text, preview.posts["a"].text);
-    assert_eq!(production.posts["a"].revision, preview.posts["a"].revision);
+    assert_eq!(
+        production.posts["a"].body.text(),
+        preview.posts["a"].body.text()
+    );
+    assert_eq!(
+        production.posts["a"].body.revision(),
+        preview.posts["a"].body.revision()
+    );
     assert!(
         fs::read_to_string(root.join("_site/posts/a/index.html"))?
             .contains("src=\"/demos/example.html\"")
@@ -1085,10 +1173,16 @@ fn playground_source_and_sandbox_survive_transclusion_without_inline_execution()
     );
     let mut result = build::build(root, BuildOptions::default())?;
     let a = &result.posts["a"];
-    let atom_end = a.text.find('\u{fffd}').unwrap() + '\u{fffd}'.len_utf8();
-    let (start, end) = offsets(&a.text, &a.text[..atom_end]);
-    let revision = a.revision.clone();
-    let reference = build::register(root, &mut result, "a", &revision, start, end)?;
+    let atom_end = a.body.text().find('\u{fffd}').unwrap() + '\u{fffd}'.len_utf8();
+    let (start, end) = offsets(a.body.text(), &a.body.text()[..atom_end]);
+    let revision = a.body.revision().to_owned();
+    let reference = build::register(
+        root,
+        &mut result,
+        "a",
+        &revision,
+        TextRange::new(start..end),
+    )?;
     post(root, "b", &reference.code());
     build::build(root, BuildOptions::default())?;
     for id in ["a", "b"] {

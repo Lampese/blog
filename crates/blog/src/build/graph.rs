@@ -2,8 +2,7 @@
 use super::BuiltPost;
 use crate::{
     content::{self, Include, Page, RawPost, TypstCompiler},
-    dom,
-    fingerprint::digest,
+    dom::{Compiled, Expanded},
     locale::Locale,
 };
 use anyhow::{Context, Result, bail};
@@ -17,6 +16,52 @@ pub(super) struct ArticleGraph {
     visiting: Vec<String>,
     canonical: Locale,
     recovery: Option<(std::path::PathBuf, Vec<Vec<u8>>)>,
+}
+
+/// A failed evaluation still owns the range states updated before the failure.
+pub(super) struct Evaluation {
+    articles: ArticleGraph,
+    about: Result<Option<Page<Expanded>>>,
+}
+
+pub(super) struct ResolvedContent {
+    pub posts: BTreeMap<String, BuiltPost>,
+    pub about: Option<Page<Expanded>>,
+}
+
+impl Evaluation {
+    pub fn save_observed_states(&self) -> Result<()> {
+        self.articles
+            .built
+            .values()
+            .try_for_each(|post| content::save_state(&post.path, &post.state))
+    }
+
+    pub fn validate(self) -> Result<ResolvedContent> {
+        Ok(ResolvedContent {
+            about: self.about?,
+            posts: self.articles.built,
+        })
+    }
+}
+
+impl ResolvedContent {
+    pub fn compact_receipts(&self, root: &Path, about: Option<&str>) -> Result<()> {
+        let about = about.map(|path| root.join(path));
+        for path in self
+            .posts
+            .values()
+            .map(|post| post.path.as_path())
+            .chain(about.as_deref())
+        {
+            content::compact_receipts(path, |reference| {
+                self.posts
+                    .get(&reference.article)
+                    .is_some_and(|post| post.state.resolve(reference).is_ok())
+            })?;
+        }
+        Ok(())
+    }
 }
 
 impl ArticleGraph {
@@ -62,32 +107,24 @@ impl ArticleGraph {
         self.recovery = Some((path.to_owned(), snapshots));
     }
 
-    pub fn resolve_all(&mut self) -> Result<()> {
+    pub fn evaluate(mut self, about: Option<Page<Compiled>>) -> Evaluation {
         let ids: Vec<_> = self.sources.keys().cloned().collect();
-        ids.iter().try_for_each(|id| self.resolve(id))
-    }
-
-    pub fn save_states(&self) -> Result<()> {
-        self.built
-            .values()
-            .try_for_each(|post| content::save_state(&post.path, &post.state))
-    }
-
-    pub fn expand_page(&mut self, mut page: Page) -> Result<Page> {
-        let replacements = self.replacements("about", dom::reference_nodes(&page.html)?)?;
-        page.html = dom::replace_excerpts(&page.html, &replacements)?;
-        Ok(page)
-    }
-
-    pub fn compact_receipts(&self) -> Result<()> {
-        for source in self.sources.values() {
-            content::compact_receipts(&source.path, |reference| {
-                self.built
-                    .get(&reference.article)
-                    .is_some_and(|post| post.state.resolve(reference).is_ok())
-            })?;
+        let about = ids
+            .iter()
+            .try_for_each(|id| self.resolve(id))
+            .and_then(|()| about.map(|page| self.expand_page(page)).transpose());
+        Evaluation {
+            articles: self,
+            about,
         }
-        Ok(())
+    }
+
+    fn expand_page(&mut self, page: Page<Compiled>) -> Result<Page<Expanded>> {
+        let replacements = self.replacements("about", page.body.includes()?)?;
+        Ok(Page {
+            meta: page.meta,
+            body: page.body.expand(&replacements)?,
+        })
     }
 
     fn resolve(&mut self, id: &str) -> Result<()> {
@@ -103,23 +140,22 @@ impl ArticleGraph {
         let post = self.sources.get(id).with_context(|| {
             format!("Referenced article {id} was not found (it may be a draft)")
         })?;
-        let includes = dom::reference_nodes(&post.html)?;
+        let includes = post.body.includes()?;
         self.visiting.push(id.to_owned());
         let result = self.expand(id, includes);
         self.visiting.pop();
         result
     }
 
-    fn expand(&mut self, id: &str, includes: Vec<serde_json::Value>) -> Result<()> {
+    fn expand(&mut self, id: &str, includes: Vec<Include>) -> Result<()> {
         let replacements = self.replacements(id, includes)?;
         let post = &self.sources[id];
-        let expanded = dom::replace_excerpts(&post.html, &replacements)?;
         // Deployment URLs and asset versions are applied only during publication.
-        let projection = dom::project(&expanded);
+        let projection = post.body.expand(&replacements)?.project();
         let mut state = match &post.state {
             Some(bytes) => RangeDocument::from_snapshot(bytes)
                 .with_context(|| format!("Invalid reference state in {}", post.path.display()))?,
-            None => RangeDocument::new(&post.meta.id, &projection.text)?,
+            None => RangeDocument::new(&post.meta.id, projection.text())?,
         };
         if state.article_id() != post.meta.id {
             bail!(
@@ -127,13 +163,13 @@ impl ArticleGraph {
                 post.path.display()
             );
         }
-        state.update_source(&projection.text)?;
+        state.update_source(projection.text())?;
         if let Some((path, snapshots)) = &self.recovery
             && path == &post.path
         {
             for snapshot in snapshots {
                 let mut branch = RangeDocument::from_snapshot(snapshot)?;
-                branch.update_source(&projection.text)?;
+                branch.update_source(projection.text())?;
                 state.reconcile_ranges(&branch)?;
             }
         }
@@ -142,21 +178,16 @@ impl ArticleGraph {
             BuiltPost {
                 meta: post.meta.clone(),
                 path: post.path.clone(),
-                styles: post.styles.clone(),
-                revision: digest(&projection.text),
-                html: projection.html,
-                text: projection.text,
+                body: projection,
                 state,
             },
         );
         Ok(())
     }
 
-    fn replacements(&mut self, id: &str, includes: Vec<serde_json::Value>) -> Result<Vec<String>> {
+    fn replacements(&mut self, id: &str, includes: Vec<Include>) -> Result<Vec<String>> {
         let mut replacements = Vec::with_capacity(includes.len());
-        for (index, value) in includes.into_iter().enumerate() {
-            let include: Include =
-                serde_json::from_value(value).context("Invalid reference metadata")?;
+        for (index, include) in includes.into_iter().enumerate() {
             self.resolve(&include.reference.article)?;
             replacements.push(self.excerpt(id, index, include)?);
         }
@@ -178,7 +209,7 @@ impl ArticleGraph {
                 .context("Invalid reference receipt")?;
             target
                 .state
-                .adopt_selection(reference, &seed, receipt.start..receipt.end)
+                .adopt_selection(reference, &seed, receipt.range)
                 .with_context(|| {
                     format!(
                         "Article {id} cannot register a selection from {}",
@@ -193,13 +224,10 @@ impl ArticleGraph {
             )
         })?;
         let url = format!("/posts/{}/", reference.article);
-        let excerpt = dom::excerpt(
-            &target.html,
-            &target.text,
-            selected.unicode_range,
-            &format!("excerpt-{id}-{index}"),
-            &url,
-        )?;
+        let excerpt =
+            target
+                .body
+                .excerpt(selected.range, &format!("excerpt-{id}-{index}"), &url)?;
         let source_text = self.canonical.text("excerpt_source")?;
         let source = html_escape::encode_text(&source_text);
         let quote_open = self.canonical.text("quote_open")?;

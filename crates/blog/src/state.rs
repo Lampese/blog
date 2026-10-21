@@ -2,7 +2,7 @@
 use crate::{content, storage::atomic_write};
 use anyhow::{Context, Result, bail};
 use base64::{Engine, engine::general_purpose::STANDARD};
-use blog_ranges::{RangeDocument, RangeReference, ReferenceError};
+use blog_ranges::{RangeDocument, RangeState};
 use serde::Serialize;
 use std::{
     fs,
@@ -56,20 +56,17 @@ pub fn inspect(path: &Path) -> Result<Inspection> {
 
 pub(crate) fn describe(state: &RangeDocument) -> Result<SnapshotReport> {
     let mut ranges = Vec::new();
-    for id in state.range_ids() {
-        let reference = RangeReference {
-            schema: 1,
-            article: state.article_id().to_owned(),
-            range: id.clone(),
-        };
-        let (status, preview) = match state.resolve(&reference) {
-            Ok(selection) => ("valid", Some(selection.text.chars().take(96).collect())),
-            Err(ReferenceError::DeletedRange(_)) => ("deleted", None),
-            Err(ReferenceError::FragmentedRange(_)) => ("fragmented", None),
-            Err(error) => return Err(error.into()),
+    for registered in state.references() {
+        let registered = registered?;
+        let (status, preview) = match registered.state {
+            RangeState::Valid(selection) => {
+                ("valid", Some(selection.text.chars().take(96).collect()))
+            }
+            RangeState::Deleted => ("deleted", None),
+            RangeState::Fragmented => ("fragmented", None),
         };
         ranges.push(RangeStatus {
-            id,
+            id: registered.reference.range,
             status,
             preview,
         });

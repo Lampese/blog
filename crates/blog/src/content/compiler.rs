@@ -1,6 +1,11 @@
 //! Typst owns evaluation and macro expansion; Rust only decodes its results.
 use super::{Page, PageMeta, PostMeta, RawPost};
-use crate::{config::valid_id, dom, locale::Locale, storage::read_text_override};
+use crate::{
+    config::valid_id,
+    dom::{Compiled, Document},
+    locale::Locale,
+    storage::read_text_override,
+};
 use anyhow::{Context, Result, bail};
 use base64::{Engine, engine::general_purpose::STANDARD};
 use blog_ranges::typst_string;
@@ -18,8 +23,7 @@ struct Metadata {
 
 struct CompiledDocument {
     metadata: Metadata,
-    html: String,
-    styles: String,
+    body: Document<Compiled>,
 }
 
 /// The root and theme are shared by every document in a build.
@@ -76,13 +80,12 @@ impl<'a> TypstCompiler<'a> {
         Ok(RawPost {
             meta,
             path: path.to_owned(),
-            styles: document.styles,
-            html: document.html,
+            body: document.body,
             state,
         })
     }
 
-    pub fn compile_page(&self, path: &Path) -> Result<Page> {
+    pub fn compile_page(&self, path: &Path) -> Result<Page<Compiled>> {
         let document = self.compile_document(path)?;
         let metadata = document.metadata;
         if !metadata.posts.is_empty() || !metadata.states.is_empty() {
@@ -102,8 +105,7 @@ impl<'a> TypstCompiler<'a> {
         }
         Ok(Page {
             meta,
-            html: document.html,
-            styles: document.styles,
+            body: document.body,
         })
     }
 
@@ -160,8 +162,7 @@ impl<'a> TypstCompiler<'a> {
         let html = fs::read_to_string(output.path())?;
         Ok(CompiledDocument {
             metadata,
-            styles: dom::head_styles(&html),
-            html,
+            body: Document::parse(&html),
         })
     }
 

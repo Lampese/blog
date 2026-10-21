@@ -1,13 +1,14 @@
 mod fixtures;
 
-use blog_ranges::{RangeDocument, RangeReference, ReferenceError};
+use blog_ranges::{RangeDocument, RangeReference, ReferenceError, TextRange};
 use std::{fs, process::Command};
 
 fn select(doc: &mut RangeDocument, needle: &str) -> RangeReference {
     let source = doc.source();
     let byte_start = source.find(needle).unwrap();
     let start = source[..byte_start].chars().count();
-    doc.register(start..start + needle.chars().count()).unwrap()
+    doc.register(TextRange::new(start..start + needle.chars().count()))
+        .unwrap()
 }
 
 #[test]
@@ -57,11 +58,11 @@ fn deleting_one_overlapping_range_does_not_destroy_the_other() {
 #[test]
 fn the_selected_second_occurrence_keeps_its_identity() {
     let mut doc = RangeDocument::new("a", fixtures::text("repeated_sentence")).unwrap();
-    let reference = doc.register(8..12).unwrap();
+    let reference = doc.register(TextRange::new(8..12)).unwrap();
     doc.update_source(fixtures::text("prefixed_repeated_sentence"))
         .unwrap();
     let selection = doc.resolve(&reference).unwrap();
-    assert_eq!(selection.unicode_range, 11..15);
+    assert_eq!(selection.range, TextRange::new(11..15));
     assert_eq!(selection.text, fixtures::text("repeated_selection"));
 }
 
@@ -122,14 +123,14 @@ fn document_end_is_a_regular_nonexpanding_boundary() {
 #[test]
 fn source_utf16_offsets_preserve_emoji_and_combining_marks() {
     let mut doc = RangeDocument::new("a", fixtures::text("emoji_combining_document")).unwrap();
-    let reference = doc.register_utf16(1..8).unwrap();
+    let reference = doc.register_utf16(TextRange::new(1..8)).unwrap();
     doc.update_source(fixtures::text("prefixed_emoji_document"))
         .unwrap();
     assert_eq!(
         doc.resolve(&reference).unwrap().text,
         fixtures::text("emoji_selection")
     );
-    assert!(doc.register_utf16(7..8).is_err());
+    assert!(doc.register_utf16(TextRange::new(7..8)).is_err());
 }
 
 #[test]

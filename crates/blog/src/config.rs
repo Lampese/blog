@@ -11,27 +11,13 @@ pub struct SiteConfig {
     pub title: String,
     pub description: String,
     pub author: String,
-    pub intro: String,
     pub base_url: String,
     pub language: String,
     pub content: String,
     pub about: Option<String>,
     pub output: String,
-    pub projects: Vec<Project>,
-    pub links: Vec<Link>,
     #[serde(skip_deserializing)]
     pub prefix: String,
-}
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Project {
-    pub title: String,
-    pub description: String,
-    pub url: String,
-}
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Link {
-    pub title: String,
-    pub url: String,
 }
 impl Default for SiteConfig {
     fn default() -> Self {
@@ -39,14 +25,11 @@ impl Default for SiteConfig {
             title: "Notes".into(),
             description: "Notes on technology, mathematics, and everyday ideas.".into(),
             author: "Author".into(),
-            intro: "A record of things I am learning, thinking about, and making.".into(),
             base_url: "https://example.com".into(),
             language: "zh-CN".into(),
             content: "content/posts".into(),
             about: None,
             output: "_site".into(),
-            projects: vec![],
-            links: vec![],
             prefix: String::new(),
         }
     }

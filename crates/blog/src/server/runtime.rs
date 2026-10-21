@@ -5,9 +5,9 @@ use crate::{
     content::Include,
 };
 use anyhow::{Context, Result};
+use blog_ranges::{TextRange, Utf16};
 use serde::Serialize;
 use std::{
-    ops::Range,
     path::PathBuf,
     sync::{Arc, Mutex},
 };
@@ -61,7 +61,7 @@ impl Preview {
         &self,
         article: String,
         revision: String,
-        range: Range<usize>,
+        range: TextRange<Utf16>,
     ) -> Result<Include> {
         self.run(move |runtime| {
             let include = build::register(
@@ -69,8 +69,7 @@ impl Preview {
                 &mut runtime.result,
                 &article,
                 &revision,
-                range.start,
-                range.end,
+                range,
             )?;
             runtime.signature = source_tree(&runtime.root, &runtime.result.config)?;
             Ok(include)

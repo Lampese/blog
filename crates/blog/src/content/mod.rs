@@ -9,7 +9,8 @@ pub(crate) use state::save_state;
 pub(crate) use state::with_state;
 pub use state::{STATE_END, STATE_START, strip_state};
 
-use blog_ranges::{RangeDocument, RangeReference, typst_string};
+use crate::dom::{Compiled, Document, ProjectedDocument};
+use blog_ranges::{RangeDocument, RangeReference, TextRange, Utf16, typst_string};
 use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -35,35 +36,29 @@ pub(crate) struct PageMeta {
 }
 
 /// Standalone content has no publication date or article range identity.
-pub(crate) struct Page {
+pub(crate) struct Page<S> {
     pub meta: PageMeta,
-    pub html: String,
-    pub styles: String,
+    pub body: Document<S>,
 }
 /// Typst output before cross-article excerpts are expanded.
 pub(crate) struct RawPost {
     pub meta: PostMeta,
     pub path: PathBuf,
-    pub html: String,
-    pub styles: String,
+    pub body: Document<Compiled>,
     pub state: Option<Vec<u8>>,
 }
 /// Expanded, annotated article content and the matching range state.
 pub struct BuiltPost {
     pub meta: PostMeta,
     pub path: PathBuf,
-    pub html: String,
-    pub styles: String,
-    /// Canonical content sequence; DOM annotations use its UTF-16 offsets.
-    pub text: String,
-    pub revision: String,
+    pub body: ProjectedDocument,
     pub state: RangeDocument,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Receipt {
-    pub start: usize,
-    pub end: usize,
+    #[serde(flatten)]
+    pub range: TextRange<Utf16>,
     pub seed: String,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]

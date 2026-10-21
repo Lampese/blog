@@ -2,12 +2,12 @@
 mod assets;
 mod indexes;
 mod manifest;
-mod navigation;
 mod pages;
 
 use crate::{
     config::SiteConfig,
     content::{BuiltPost, Page, PostMeta},
+    dom::Expanded,
     fingerprint::digest,
     locale::Locale,
     storage::Publication,
@@ -40,7 +40,7 @@ fn view<'a>(config: &SiteConfig, post: &'a BuiltPost) -> PostView<'a> {
             config.base_url.trim_end_matches('/'),
             post.meta.id
         ),
-        minutes: post.text.chars().count().div_ceil(450).max(1),
+        minutes: post.body.text().chars().count().div_ceil(450).max(1),
         tag_links: post
             .meta
             .tags
@@ -52,7 +52,7 @@ fn view<'a>(config: &SiteConfig, post: &'a BuiltPost) -> PostView<'a> {
 
 struct Catalog<'a> {
     config: &'a SiteConfig,
-    about: Option<&'a Page>,
+    about: Option<&'a Page<Expanded>>,
     ordered: Vec<&'a BuiltPost>,
     text: &'a Locale,
 }
@@ -61,7 +61,7 @@ impl<'a> Catalog<'a> {
     fn new(
         config: &'a SiteConfig,
         posts: &'a BTreeMap<String, BuiltPost>,
-        about: Option<&'a Page>,
+        about: Option<&'a Page<Expanded>>,
         text: &'a Locale,
     ) -> Self {
         let mut ordered: Vec<_> = posts.values().collect();
@@ -84,7 +84,7 @@ pub(crate) fn publish(
     root: &Path,
     config: &SiteConfig,
     posts: &BTreeMap<String, BuiltPost>,
-    about: Option<&Page>,
+    about: Option<&Page<Expanded>>,
     text: &Locale,
     preview: bool,
 ) -> Result<()> {
@@ -92,8 +92,8 @@ pub(crate) fn publish(
     let catalog = Catalog::new(config, posts, about, text);
     let styles = posts
         .values()
-        .map(|post| post.styles.as_str())
-        .chain(about.map(|page| page.styles.as_str()));
+        .map(|post| post.body.styles())
+        .chain(about.map(|page| page.body.styles()));
     let assets = assets::Assets::load(root, styles, text)?;
     pages::write(root, &output, &catalog, &assets, preview)?;
     assets.write(&output)?;

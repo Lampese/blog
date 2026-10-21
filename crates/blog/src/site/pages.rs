@@ -1,7 +1,6 @@
 //! HTML templates consume view models; they do not load or mutate article state.
-use super::{Catalog, assets::Assets, manifest, navigation, view};
+use super::{Catalog, assets::Assets, manifest, view};
 use crate::{
-    dom,
     fingerprint::digest,
     storage::{Publication, read_text_override},
 };
@@ -81,24 +80,9 @@ pub(super) fn write(
     }
     let ordered = &catalog.ordered;
     let views: Vec<_> = ordered.iter().map(|p| view(config, p)).collect();
-    let mut site = config.clone();
-    for project in &mut site.projects {
-        if project.url.starts_with('/') && !project.url.starts_with("//") {
-            project.url = format!("{}{}", site.prefix, project.url);
-        }
-    }
+    let site = config;
     let render = |template: &str, context: minijinja::Value| -> Result<String> {
         Ok(env.get_template(template)?.render(context)?)
-    };
-    let prepare_content = |html: &str| -> Result<_> {
-        let content = dom::prefix_urls(
-            &dom::localize(
-                &dom::version_playgrounds(html, &assets.versions.playground),
-                catalog.text,
-            )?,
-            &config.prefix,
-        );
-        Ok(navigation::outline(&content))
     };
     output.write(
         "index.html",
@@ -151,7 +135,9 @@ pub(super) fn write(
         let manifest = manifest::write(output, config, post)?;
         let newer = index.checked_sub(1).map(|i| view(config, ordered[i]));
         let older = ordered.get(index + 1).map(|p| view(config, p));
-        let (content, sections) = prepare_content(&post.html)?;
+        let prepared =
+            post.body
+                .prepare(catalog.text, &assets.versions.playground, &config.prefix)?;
         output.write(
             format!("posts/{}/index.html", post.meta.id),
             render(
@@ -162,8 +148,8 @@ pub(super) fn write(
                     title => post.meta.title,
                     description => post.meta.summary,
                     canonical => format!("{}/posts/{}/", config.base_url.trim_end_matches('/'), post.meta.id),
-                    content => content,
-                    sections => sections,
+                    content => prepared.html,
+                    sections => prepared.sections,
                     manifest => manifest,
                     newer => newer,
                     older => older,
@@ -172,7 +158,9 @@ pub(super) fn write(
         )?;
     }
     if let Some(page) = catalog.about {
-        let (content, sections) = prepare_content(&page.html)?;
+        let prepared =
+            page.body
+                .prepare(catalog.text, &assets.versions.playground, &config.prefix)?;
         output.write(
             "about/index.html",
             render(
@@ -185,8 +173,8 @@ pub(super) fn write(
                     description => if page.meta.summary.is_empty() { &config.description } else { &page.meta.summary },
                     summary => page.meta.summary,
                     canonical => format!("{}/about/", config.base_url.trim_end_matches('/')),
-                    content => content,
-                    sections => sections,
+                    content => prepared.html,
+                    sections => prepared.sections,
                 ),
             )?,
         )?;

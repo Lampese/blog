@@ -4,7 +4,7 @@
 //! overlapping ranges do not overwrite one another. The generator uses the
 //! rendered content projection as this document's text.
 
-use crate::{AnchorError, typst_string, utf16_to_unicode};
+use crate::{AnchorError, Scalar, TextRange, Utf16, typst_string};
 use loro::{
     ExpandType, ExportMode, LoroDoc, LoroValue, StyleConfig, StyleConfigMap, TextDelta,
     ValueOrContainer,
@@ -65,8 +65,21 @@ impl RangeReference {
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Selection {
-    pub unicode_range: Range<usize>,
+    pub range: TextRange<Scalar>,
     pub text: String,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum RangeState {
+    Valid(Selection),
+    Deleted,
+    Fragmented,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct RegisteredRange {
+    pub reference: RangeReference,
+    pub state: RangeState,
 }
 
 /// A single article's source text and registered ranges in the same CRDT state.
@@ -141,13 +154,31 @@ impl RangeDocument {
         ids
     }
 
+    /// Known invalid ranges remain queryable; corrupt state remains an error.
+    pub fn references(&self) -> impl Iterator<Item = Result<RegisteredRange, ReferenceError>> + '_ {
+        self.range_ids().into_iter().map(|id| {
+            let reference = RangeReference {
+                schema: SCHEMA,
+                article: self.article.clone(),
+                range: id,
+            };
+            let state = match self.resolve(&reference) {
+                Ok(selection) => RangeState::Valid(selection),
+                Err(ReferenceError::DeletedRange(_)) => RangeState::Deleted,
+                Err(ReferenceError::FragmentedRange(_)) => RangeState::Fragmented,
+                Err(error) => return Err(error),
+            };
+            Ok(RegisteredRange { reference, state })
+        })
+    }
+
     /// Adopt a selection made against a published snapshot. Rebase its marks
     /// through the latest rendered text; existing registered ranges stay intact.
     pub fn adopt_selection(
         &mut self,
         reference: &RangeReference,
         seed: &[u8],
-        utf16_range: Range<usize>,
+        utf16_range: TextRange<Utf16>,
     ) -> Result<(), ReferenceError> {
         if reference.schema != SCHEMA {
             return Err(ReferenceError::UnsupportedSchema(reference.schema));
@@ -164,16 +195,15 @@ impl RangeDocument {
             return Err(ReferenceError::UnrelatedHistory);
         }
         let source = basis.source();
-        let range = utf16_to_unicode(&source, utf16_range.start)?
-            ..utf16_to_unicode(&source, utf16_range.end)?;
+        let range = utf16_range.convert::<Scalar>(&source)?;
         basis.register_named(&reference.range, range)?;
         basis.update_source(&self.source())?;
         let current = basis.resolve(reference)?;
-        self.register_named(&reference.range, current.unicode_range)?;
+        self.register_named(&reference.range, current.range)?;
         Ok(())
     }
 
-    fn register_named(&mut self, id: &str, range: Range<usize>) -> Result<(), ReferenceError> {
+    fn register_named(&mut self, id: &str, range: TextRange<Scalar>) -> Result<(), ReferenceError> {
         if id.is_empty()
             || id.len() > 128
             || !id
@@ -183,25 +213,25 @@ impl RangeDocument {
             return Err(ReferenceError::InvalidState("invalid range ID".into()));
         }
         let text = self.doc.get_text("source");
-        if range.start >= range.end || range.end > text.len_unicode() {
+        if range.is_empty() || range.end() > text.len_unicode() {
             return Err(AnchorError::InvalidRange.into());
         }
-        text.mark(range, &style_key(id), true)?;
+        text.mark(range.offsets(), &style_key(id), true)?;
         self.doc.get_map("ranges").insert(id, true)?;
         self.doc.commit();
         Ok(())
     }
 
-    pub fn register(&mut self, range: Range<usize>) -> Result<RangeReference, ReferenceError> {
+    pub fn register(&mut self, range: TextRange<Scalar>) -> Result<RangeReference, ReferenceError> {
         let text = self.doc.get_text("source");
-        if range.start >= range.end || range.end > text.len_unicode() {
+        if range.is_empty() || range.end() > text.len_unicode() {
             return Err(AnchorError::InvalidRange.into());
         }
         self.doc.commit();
         let peer = self.doc.peer_id();
         let counter = self.doc.oplog_vv().get(&peer).copied().unwrap_or(0);
         let id = format!("r-{peer:016x}-{counter:x}");
-        text.mark(range, &style_key(&id), true)?;
+        text.mark(range.offsets(), &style_key(&id), true)?;
         self.doc.get_map("ranges").insert(&id, true)?;
         self.doc.commit();
         Ok(RangeReference {
@@ -214,12 +244,10 @@ impl RangeDocument {
     /// Input is a source-text UTF-16 range, not yet a rendered DOM selection.
     pub fn register_utf16(
         &mut self,
-        range: Range<usize>,
+        range: TextRange<Utf16>,
     ) -> Result<RangeReference, ReferenceError> {
         let source = self.source();
-        self.register(
-            utf16_to_unicode(&source, range.start)?..utf16_to_unicode(&source, range.end)?,
-        )
+        self.register(range.convert::<Scalar>(&source)?)
     }
 
     pub fn resolve(&self, reference: &RangeReference) -> Result<Selection, ReferenceError> {
@@ -264,7 +292,7 @@ impl RangeDocument {
         match spans.as_slice() {
             [] => Err(ReferenceError::DeletedRange(reference.range.clone())),
             [span] => Ok(Selection {
-                unicode_range: span.clone(),
+                range: TextRange::new(span.clone()),
                 text: selected,
             }),
             _ => Err(ReferenceError::FragmentedRange(reference.range.clone())),
@@ -335,7 +363,7 @@ impl RangeDocument {
                     Ok(_) | Err(ReferenceError::DeletedRange(_)) => {}
                     Err(error) => return Err(error),
                 },
-                Ok(selection) => staged.register_named(&id, selection.unicode_range)?,
+                Ok(selection) => staged.register_named(&id, selection.range)?,
                 Err(error) => return Err(error),
             }
         }
@@ -402,11 +430,40 @@ mod recovery_tests {
     use super::*;
 
     #[test]
+    fn querying_registered_ranges_distinguishes_deletion_from_corrupt_state() {
+        let mut document = RangeDocument::new("a", "abcdef").unwrap();
+        let deleted = document.register(TextRange::new(0..2)).unwrap();
+        let valid = document.register(TextRange::new(4..6)).unwrap();
+        document.update_source("cdef").unwrap();
+        let ranges = document
+            .references()
+            .collect::<Result<Vec<_>, _>>()
+            .unwrap();
+        assert!(
+            ranges
+                .iter()
+                .any(|entry| entry.reference == deleted && entry.state == RangeState::Deleted)
+        );
+        assert!(ranges.iter().any(|entry| entry.reference == valid
+            && matches!(&entry.state, RangeState::Valid(selection) if selection.text == "ef")));
+        document
+            .doc
+            .get_map("ranges")
+            .insert(&valid.range, "invalid registration")
+            .unwrap();
+        assert!(
+            document
+                .references()
+                .any(|entry| matches!(entry, Err(ReferenceError::InvalidState(_))))
+        );
+    }
+
+    #[test]
     fn compacted_branches_reconcile_new_ranges_and_preserve_deletions() {
         let mut basis = RangeDocument::new("a", "AabcdefB").unwrap();
-        let first = basis.register(1..5).unwrap();
+        let first = basis.register(TextRange::new(1..5)).unwrap();
         let mut branch = basis.fork();
-        let second = branch.register(3..7).unwrap();
+        let second = branch.register(TextRange::new(3..7)).unwrap();
         branch.update_source("AefB").unwrap();
         branch.update_source("AabcdefB").unwrap();
         let mut restored = RangeDocument::from_snapshot(&basis.state_snapshot().unwrap()).unwrap();
@@ -427,14 +484,17 @@ mod recovery_tests {
     #[test]
     fn divergent_positions_fail_without_mutating_the_selected_basis() {
         let mut basis = RangeDocument::new("a", "abab").unwrap();
-        let reference = basis.register(0..2).unwrap();
+        let reference = basis.register(TextRange::new(0..2)).unwrap();
         let branch = basis.fork();
         let text = branch.doc.get_text("source");
         text.unmark(0..4, &style_key(&reference.range)).unwrap();
         text.mark(2..4, &style_key(&reference.range), true).unwrap();
         branch.doc.commit();
         assert!(basis.reconcile_ranges(&branch).is_err());
-        assert_eq!(basis.resolve(&reference).unwrap().unicode_range, 0..2);
+        assert_eq!(
+            basis.resolve(&reference).unwrap().range,
+            TextRange::new(0..2)
+        );
         assert_eq!(basis.source(), "abab");
     }
 }

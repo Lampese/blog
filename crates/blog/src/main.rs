@@ -95,8 +95,11 @@ async fn run() -> Result<()> {
                 &root,
                 BuildOptions {
                     drafts,
-                    check,
-                    preview: false,
+                    mode: if check {
+                        build::BuildMode::Check
+                    } else {
+                        build::BuildMode::Publish
+                    },
                 },
             )?;
             eprintln!(
@@ -130,9 +133,16 @@ async fn run() -> Result<()> {
                 .posts
                 .get(&article)
                 .context("Article not found")?
-                .revision
-                .clone();
-            let include = build::register(&root, &mut result, &article, &revision, start, end)?;
+                .body
+                .revision()
+                .to_owned();
+            let include = build::register(
+                &root,
+                &mut result,
+                &article,
+                &revision,
+                blog_ranges::TextRange::new(start..end),
+            )?;
             println!("{}", include.code());
         }
         Command::Init { .. } => unreachable!(),

@@ -2,7 +2,7 @@
 use crate::{config::SiteConfig, content::BuiltPost, fingerprint::digest, storage::Publication};
 use anyhow::Result;
 use base64::{Engine, engine::general_purpose::STANDARD};
-use blog_ranges::RangeReference;
+use blog_ranges::{RangeState, Utf16};
 use serde::Serialize;
 use std::collections::BTreeMap;
 
@@ -24,31 +24,17 @@ pub(super) fn write(output: &Publication, config: &SiteConfig, post: &BuiltPost)
         &digest(&snapshot)[..16]
     );
     output.write(&snapshot_name, &snapshot)?;
-    let references = post
-        .state
-        .range_ids()
-        .into_iter()
-        .filter_map(|id| {
-            let reference = RangeReference {
-                schema: 1,
-                article: post.meta.id.clone(),
-                range: id.clone(),
-            };
-            post.state.resolve(&reference).ok().map(|selection| {
-                let start = post
-                    .text
-                    .chars()
-                    .take(selection.unicode_range.start)
-                    .map(char::len_utf16)
-                    .sum::<usize>();
-                let end = start + selection.text.encode_utf16().count();
-                (id, [start, end])
-            })
-        })
-        .collect();
+    let mut references = BTreeMap::new();
+    for registered in post.state.references() {
+        let registered = registered?;
+        if let RangeState::Valid(selection) = registered.state {
+            let range = selection.range.convert::<Utf16>(post.body.text())?;
+            references.insert(registered.reference.range, [range.start(), range.end()]);
+        }
+    }
     let manifest = ArticleManifest {
         article: &post.meta.id,
-        revision: &post.revision,
+        revision: post.body.revision(),
         snapshot: format!("{}/{}", config.prefix, snapshot_name),
         seed: STANDARD.encode(&snapshot),
         prefix: &config.prefix,

@@ -1,6 +1,10 @@
 //! Persistent, overlapping text references backed by Loro's native marks.
+mod coordinates;
 pub mod references;
-pub use references::{RangeDocument, RangeReference, ReferenceError, Selection};
+pub use coordinates::{Byte, Scalar, TextRange, Unit, Utf16};
+pub use references::{
+    RangeDocument, RangeReference, RangeState, ReferenceError, RegisteredRange, Selection,
+};
 
 #[derive(Debug, thiserror::Error)]
 pub enum AnchorError {
@@ -8,24 +12,6 @@ pub enum AnchorError {
     InvalidRange,
     #[error("UTF-16 offset is outside the text or splits a surrogate pair")]
     InvalidUtf16Offset,
-}
-
-pub fn utf16_to_unicode(text: &str, offset: usize) -> Result<usize, AnchorError> {
-    let mut units = 0;
-    for (scalars, ch) in text.chars().enumerate() {
-        if units == offset {
-            return Ok(scalars);
-        }
-        units += ch.len_utf16();
-        if units > offset {
-            return Err(AnchorError::InvalidUtf16Offset);
-        }
-    }
-    if units == offset {
-        Ok(text.chars().count())
-    } else {
-        Err(AnchorError::InvalidUtf16Offset)
-    }
 }
 
 pub fn typst_string(value: &str) -> String {

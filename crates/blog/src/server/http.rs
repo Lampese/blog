@@ -11,6 +11,7 @@ use axum::{
     },
     routing::{get, post},
 };
+use blog_ranges::{TextRange, Utf16};
 use serde::{Deserialize, Serialize};
 use std::{convert::Infallible, time::Duration};
 use tokio_stream::{StreamExt, wrappers::BroadcastStream};
@@ -20,8 +21,8 @@ use tower_http::services::{ServeDir, ServeFile};
 struct CaptureRequest {
     article: String,
     revision: String,
-    start: usize,
-    end: usize,
+    #[serde(flatten)]
+    range: TextRange<Utf16>,
 }
 
 #[derive(Serialize)]
@@ -64,11 +65,7 @@ async fn capture(
 ) -> Result<Json<CaptureResponse>, ApiError> {
     validate_origin(&headers, preview.port)?;
     let include = preview
-        .capture(
-            request.article,
-            request.revision,
-            request.start..request.end,
-        )
+        .capture(request.article, request.revision, request.range)
         .await
         .map_err(|error| api_error(StatusCode::CONFLICT, &format!("{error:#}")))?;
     Ok(Json(CaptureResponse {

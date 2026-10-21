@@ -9,6 +9,7 @@ use crate::{
     storage::{BuildLock, Publication},
 };
 use anyhow::{Context, Result, bail};
+use blog_ranges::{TextRange, Utf16};
 use graph::ArticleGraph;
 use std::{collections::BTreeMap, path::Path};
 
@@ -22,16 +23,22 @@ pub struct BuildResult {
 #[derive(Default, Clone, Copy)]
 pub struct BuildOptions {
     pub drafts: bool,
-    pub check: bool,
-    pub preview: bool,
+    pub mode: BuildMode,
+}
+
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
+pub enum BuildMode {
+    Check,
+    #[default]
+    Publish,
+    Preview,
 }
 
 impl BuildOptions {
     pub const fn preview() -> Self {
         Self {
             drafts: true,
-            check: false,
-            preview: true,
+            mode: BuildMode::Preview,
         }
     }
 }
@@ -45,16 +52,15 @@ pub fn register(
     result: &mut BuildResult,
     article: &str,
     revision: &str,
-    start: usize,
-    end: usize,
+    range: TextRange<Utf16>,
 ) -> Result<Include> {
     let session = BuildSession::acquire(root)?;
     *result = session.build(BuildOptions::preview())?;
     let post = result.posts.get_mut(article).context("Article not found")?;
-    if post.revision != revision {
+    if post.body.revision() != revision {
         bail!("The page has changed; refresh it and select the range again");
     }
-    let reference = post.state.register_utf16(start..end)?;
+    let reference = post.state.register_utf16(range)?;
     content::save_state(&post.path, &post.state)?;
     // Keep the lock across both builds so the published snapshot includes the
     // registered range, and another process cannot observe a half-finished edit.
@@ -117,8 +123,7 @@ pub fn recover_state(
         .build_with_recovery(
             BuildOptions {
                 drafts: true,
-                check: true,
-                preview: false,
+                mode: BuildMode::Check,
             },
             Some((&path, snapshots)),
         )
@@ -170,7 +175,7 @@ impl<'a> BuildSession<'a> {
     ) -> Result<BuildResult> {
         let mut config = SiteConfig::load(self.root)?;
         Publication::validate(&self.root.join(&config.output))?;
-        if options.preview {
+        if options.mode == BuildMode::Preview {
             config.prefix.clear();
         }
 
@@ -194,38 +199,28 @@ impl<'a> BuildSession<'a> {
         if let Some((path, snapshots)) = recovery {
             articles.recover(path, snapshots);
         }
-        let resolved = articles
-            .resolve_all()
-            .and_then(|()| about.map(|page| articles.expand_page(page)).transpose());
+        let evaluation = articles.evaluate(about);
         // Persist observed deletions even when a dependent reference is invalid;
         // otherwise a later edit could accidentally revive a deleted range.
-        if !options.check {
-            articles.save_states()?;
+        if options.mode != BuildMode::Check {
+            evaluation.save_observed_states()?;
         }
-        let about = resolved?;
+        let content = evaluation.validate()?;
 
-        if !options.check {
-            articles.compact_receipts()?;
-            if let Some(path) = &config.about {
-                content::compact_receipts(&self.root.join(path), |reference| {
-                    articles
-                        .built
-                        .get(&reference.article)
-                        .is_some_and(|post| post.state.resolve(reference).is_ok())
-                })?;
-            }
+        if options.mode != BuildMode::Check {
+            content.compact_receipts(self.root, config.about.as_deref())?;
             site::publish(
                 self.root,
                 &config,
-                &articles.built,
-                about.as_ref(),
+                &content.posts,
+                content.about.as_ref(),
                 &text,
-                options.preview,
+                options.mode == BuildMode::Preview,
             )?;
         }
         Ok(BuildResult {
             config,
-            posts: articles.built,
+            posts: content.posts,
         })
     }
 }
