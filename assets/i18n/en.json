@@ -1,5 +1,8 @@
 {
   "articles": "Articles",
+  "article_sections": "Article sections",
+  "section_tech": "Technology",
+  "section_literature": "Literature",
   "about": "About",
   "present": "Present",
   "contents": "On this page",

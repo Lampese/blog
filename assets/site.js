@@ -5,6 +5,15 @@
   const development = document.currentScript?.dataset.development === 'true';
   const reader = document.documentElement.classList.contains('reference-document');
   const $ = id => document.getElementById(id);
+  const sections = document.querySelectorAll('[data-section-link]');
+  if (sections.length) {
+    const updateSection = () => {
+      const current = location.hash === '#literature' ? 'literature' : 'tech';
+      sections.forEach(link => { if (link.dataset.sectionLink === current) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current'); });
+    };
+    window.addEventListener('hashchange', updateSection);
+    updateSection();
+  }
   const contents = document.querySelector('.article-sidebar');
   if (contents) {
     const details = contents.querySelector('details'), media = matchMedia('(min-width: 1200px)');

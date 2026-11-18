@@ -1,6 +1,7 @@
 //! HTML templates consume view models; they do not load or mutate article state.
 use super::{Catalog, assets::Assets, manifest, view};
 use crate::{
+    content::Section,
     fingerprint::digest,
     storage::{Publication, read_text_override},
 };
@@ -59,6 +60,10 @@ pub(super) fn write(
             include_str!("../../../../assets/templates/list.html"),
         ),
         (
+            "article-list.html",
+            include_str!("../../../../assets/templates/article-list.html"),
+        ),
+        (
             "post.html",
             include_str!("../../../../assets/templates/post.html"),
         ),
@@ -80,6 +85,14 @@ pub(super) fn write(
     }
     let ordered = &catalog.ordered;
     let views: Vec<_> = ordered.iter().map(|p| view(config, p)).collect();
+    let tech_posts: Vec<_> = views
+        .iter()
+        .filter(|post| post.meta.section == Section::Tech)
+        .collect();
+    let literature_posts: Vec<_> = views
+        .iter()
+        .filter(|post| post.meta.section == Section::Literature)
+        .collect();
     let site = config;
     let render = |template: &str, context: minijinja::Value| -> Result<String> {
         Ok(env.get_template(template)?.render(context)?)
@@ -91,6 +104,8 @@ pub(super) fn write(
             context!(
                 site => site,
                 posts => views,
+                tech_posts => tech_posts,
+                literature_posts => literature_posts,
                 title => config.title,
                 description => config.description,
                 canonical => format!("{}/", config.base_url.trim_end_matches('/')),
@@ -100,10 +115,12 @@ pub(super) fn write(
     output.write(
         "articles/index.html",
         render(
-            "list.html",
+            "home.html",
             context!(
                 site => site,
                 posts => views,
+                tech_posts => tech_posts,
+                literature_posts => literature_posts,
                 title => catalog.text.text("articles")?,
                 description => config.description,
                 canonical => format!("{}/articles/", config.base_url.trim_end_matches('/')),

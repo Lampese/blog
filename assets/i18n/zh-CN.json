@@ -1,5 +1,8 @@
 {
   "articles": "文章",
+  "article_sections": "文章板块",
+  "section_tech": "技术",
+  "section_literature": "文学",
   "about": "关于",
   "present": "至今",
   "contents": "本文目录",

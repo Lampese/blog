@@ -15,6 +15,14 @@ use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Section {
+    #[default]
+    Tech,
+    Literature,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostMeta {
     pub id: String,
@@ -24,6 +32,8 @@ pub struct PostMeta {
     pub summary: String,
     #[serde(default)]
     pub tags: Vec<String>,
+    #[serde(default)]
+    pub section: Section,
     #[serde(default)]
     pub draft: bool,
 }

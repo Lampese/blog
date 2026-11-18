@@ -1,2 +1,13 @@
-{% extends "list.html" %}
-{% block list_title %}{{ t('articles') }}{% endblock %}
+{% extends "base.html" %}
+{% block main %}
+<header class="page-heading"><h1>{{ t('articles') }}</h1></header>
+<div class="article-catalog">
+  <span id="tech" class="section-anchor"></span><span id="literature" class="section-anchor"></span>
+  <nav class="section-nav" aria-label="{{ t('article_sections') }}">
+    <a href="#tech" data-section-link="tech">{{ t('section_tech') }} <span>{{ tech_posts|length }}</span></a>
+    <a href="#literature" data-section-link="literature">{{ t('section_literature') }} <span>{{ literature_posts|length }}</span></a>
+  </nav>
+  <section class="section-panel section-tech" aria-label="{{ t('section_tech') }}">{% set posts = tech_posts %}{% include "article-list.html" %}</section>
+  <section class="section-panel section-literature" aria-label="{{ t('section_literature') }}">{% set posts = literature_posts %}{% include "article-list.html" %}</section>
+</div>
+{% endblock %}

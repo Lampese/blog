@@ -25,7 +25,7 @@ pub fn new_post(root: &Path, slug: &str, title: Option<String>) -> Result<PathBu
     fs::write(
         &path,
         format!(
-            "#import \"/typst/blog.typ\": *\n#post(id: {}, title: {}, date: \"{date}\", summary: \"\", tags: (), draft: true)\n\nStart writing here.\n",
+            "#import \"/typst/blog.typ\": *\n#post(id: {}, title: {}, date: \"{date}\", summary: \"\", tags: (), section: \"tech\", draft: true)\n\nStart writing here.\n",
             typst_string(slug),
             typst_string(&title)
         ),

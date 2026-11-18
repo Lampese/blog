@@ -33,6 +33,43 @@ fn post(root: &Path, id: &str, body: &str) {
     )
     .unwrap();
 }
+
+#[test]
+fn articles_are_grouped_by_section_and_old_posts_default_to_technology() -> Result<()> {
+    let dir = site();
+    let root = dir.path();
+    post(root, "legacy", "Legacy article");
+    post(root, "literary", "Literary article");
+    let path = root.join("content/posts/literary.typ");
+    let source = fs::read_to_string(&path)?.replace(
+        "id: \"literary\",",
+        "id: \"literary\", section: \"literature\",",
+    );
+    fs::write(&path, source)?;
+    build::build(root, BuildOptions::default())?;
+    for route in ["index.html", "articles/index.html"] {
+        let page = dom::body(&fs::read_to_string(root.join("_site").join(route))?);
+        assert!(
+            page.select_first(".section-tech a[href='/blog/posts/legacy/']")
+                .is_ok()
+        );
+        assert!(
+            page.select_first(".section-literature a[href='/blog/posts/literary/']")
+                .is_ok()
+        );
+        assert!(
+            page.select_first(".section-tech a[href='/blog/posts/literary/']")
+                .is_err()
+        );
+        assert!(
+            page.select_first(".section-literature a[href='/blog/posts/legacy/']")
+                .is_err()
+        );
+        assert!(page.select_first("a[href='#tech']").is_ok());
+        assert!(page.select_first("a[href='#literature']").is_ok());
+    }
+    Ok(())
+}
 fn append(root: &Path, id: &str, body: &str) {
     let path = root.join(format!("content/posts/{id}.typ"));
     let old = fs::read_to_string(&path).unwrap();
@@ -173,7 +210,13 @@ fn standalone_about_page_uses_typst_without_entering_article_chronology() -> Res
         !fs::read_to_string(root.join("_site/feed.xml"))?.contains(fixtures::text("about_title"))
     );
     let archive = dom::body(&fs::read_to_string(root.join("_site/articles/index.html"))?);
-    assert_eq!(archive.select(".article-list > li").unwrap().count(), 1);
+    assert_eq!(
+        archive
+            .select(".section-tech .article-list > li")
+            .unwrap()
+            .count(),
+        1
+    );
 
     let config = root.join("site.toml");
     fs::write(

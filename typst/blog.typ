@@ -4,8 +4,8 @@
 #let blog-label-text(key, fallback) = canonical-text.at(key, default: fallback)
 #let blog-label(key, fallback) = html.elem("span", attrs: ("data-blog-i18n": key), blog-label-text(key, fallback))
 
-#let post(id: none, title: none, date: none, summary: "", tags: (), draft: false) = {
-  [#metadata((id: id, title: title, date: date, summary: summary, tags: tags, draft: draft)) <blog-post>]
+#let post(id: none, title: none, date: none, summary: "", tags: (), section: "tech", draft: false) = {
+  [#metadata((id: id, title: title, date: date, summary: summary, tags: tags, section: section, draft: draft)) <blog-post>]
 }
 
 #let site-page(title: none, summary: "") = {
