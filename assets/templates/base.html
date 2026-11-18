@@ -21,7 +21,7 @@
   <script type="application/json" id="site-text">{{ locale_json|safe }}</script>
   <div id="reading-workspace"><div id="site-shell">
   <a class="skip-link" href="#main">{{ t('skip_content') }}</a>
-  <header class="site-header"><a class="site-name" href="{{ site.prefix }}/">{{ site.title }}</a><nav aria-label="{{ t('main_navigation') }}"><a href="{{ site.prefix }}/">{{ t('articles') }}</a>{% if has_about %}<a href="{{ site.prefix }}/about/"{% if is_about %} aria-current="page"{% endif %}>{{ t('about') }}</a>{% endif %}<button type="button" id="search-open">{{ t('search') }} <kbd>/</kbd></button></nav></header>
+  <header class="site-header"><a class="site-name" href="{{ site.prefix }}/">{{ site.title }}</a><nav aria-label="{{ t('main_navigation') }}"><a href="{{ site.prefix }}/">{{ t('articles') }}</a>{% if has_about %}<a href="{{ site.prefix }}/about/"{% if is_about %} aria-current="page"{% endif %}>{{ t('about') }}</a>{% endif %}<button type="button" id="search-open">{{ t('search') }}</button></nav></header>
   <main id="main">{% block main %}{% endblock %}</main>
   <footer class="site-footer"><span>{{ site.author }}</span><a href="{{ site.prefix }}/feed.xml">{{ t('subscribe_rss') }}</a></footer>
   </div><aside id="reference-panels" aria-label="{{ t('references') }}" hidden></aside></div>
