@@ -4,7 +4,10 @@
 我是东灯，也叫 Lampese。目前供职于 MoonBit 和 Lody，也是创业公司 Calculus Singularity 的创始人。
 
 #html.elem("p", attrs: (class: "profile-elsewhere"))[
-  #link("https://github.com/Lampese")[GitHub ↗]
+  #link("https://github.com/Lampese")[
+    #html.elem("img", attrs: (class: "profile-link-icon", src: "/images/icons/github.svg", alt: "", width: "16", height: "16"))
+    GitHub #html.elem("span", attrs: ("aria-hidden": "true"))[↗]
+  ]
 ]
 
 = 经历
