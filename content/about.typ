@@ -19,7 +19,7 @@
     #link("https://lody.ai")[Lody] 是供团队共享和使用编程智能体的工作空间
   ],
 )[
-  #experience-position("Developer", from: "2026-09", team: "Lody")
+  #experience-position("Developer Intern", from: "2026-09", team: "Lody")
   #experience-position("Algorithm Intern", from: "2024-07", until: "2024-08", team: "Loro")
 ]
 
@@ -27,7 +27,7 @@
   "MoonBit", url: "https://www.moonbitlang.com", logos: ("/images/organizations/moonbit.png",),
   description: [通用编程语言及其工具链，包含编译器、运行时、IDE 和构建系统。],
 )[
-  #experience-position("Programming Language Tool Developer", from: "2026-09")
+  #experience-position("Programming Language Tool Development Intern", from: "2026-09")
   #experience-position("AI Intern", from: "2025-12", until: "2026-02")
   #experience-position("Programming Language Tool Development Intern", from: "2025-01", until: "2025-03")
 ]
